@@ -1,3 +1,12 @@
+# [0.3.0](https://github.com/bscotch/node-util/compare/v0.2.1...v0.3.0) (2020-10-08)
+
+
+### Features
+
+* Have path listing methods ignore .git and node_modules folders by default ([58aead5](https://github.com/bscotch/node-util/commit/58aead5f9afaa596a6569aa68962abf2253daabc))
+
+
+
 ## [0.2.1](https://github.com/bscotch/node-util/compare/v0.2.0...v0.2.1) (2020-10-08)
 
 

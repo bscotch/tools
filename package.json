@@ -1,5 +1,5 @@
 {
-  "name": "@bscotch/util",
+  "name": "@bscotch/utility",
   "version": "0.0.1",
   "description": "Bscotch Utilities: Methods for common Node.js needs.",
   "engines": {

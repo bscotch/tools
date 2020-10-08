@@ -1,3 +1,3 @@
 
-export {undent, oneline} from "./lib/strings";
-
+export * from "./lib/strings";
+export * from "./lib/paths";

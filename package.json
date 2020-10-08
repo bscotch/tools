@@ -27,7 +27,8 @@
     "utility",
     "util",
     "string",
-    "template"
+    "template",
+    "path"
   ],
   "author": "Adam Coster (https://www.bscotch.net/about)",
   "license": "MIT",

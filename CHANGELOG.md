@@ -1,4 +1,13 @@
-# 0.1.0 (2020-10-08)
+# [0.2.0](https://github.com/bscotch/node-util/compare/v0.1.0...v0.2.0) (2020-10-08)
+
+
+### Features
+
+* Add methods for listing folders and files (with optional recursion) ([6d516cb](https://github.com/bscotch/node-util/commit/6d516cb786dc5e53f674f5b71353a21cc12407d6))
+
+
+
+# [0.1.0](https://github.com/bscotch/node-util/compare/d1264e78319521c9667206330a9aaa36fa82e1a5...v0.1.0) (2020-10-08)
 
 
 ### Features

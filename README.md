@@ -102,3 +102,22 @@ parentPaths('/hello/world/foo/bar.txt') // =>
  */
 
 ```
+
+## Files
+
+```ts
+import {
+  listPathsSync,
+  listFoldersSync,
+  listFilesSync,
+  listFilesByExtensionSync,
+} from '@bscotch/utility';
+
+const recursive = true;
+
+listPathsSync('.',recursive); // => paths to all files and folders in cwd
+listFoldersSync('.',recursive); // => the subset of paths that are folders
+listFilesSync('.',recursive); // => the subset of paths that are files
+listFilesByExtensionSync('.','txt',recursive); // => the subset of files that end with '.txt'
+listFilesByExtensionSync('.',['txt','md'],recursive); // => the subset of files that end with '.txt' or '.md'
+```

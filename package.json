@@ -28,7 +28,10 @@
     "util",
     "string",
     "template",
-    "path"
+    "path",
+    "file",
+    "bscotch",
+    "butterscotch shenanigans"
   ],
   "author": "Adam Coster (https://www.bscotch.net/about)",
   "license": "MIT",

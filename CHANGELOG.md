@@ -1,3 +1,12 @@
+## [0.3.1](https://github.com/bscotch/node-util/compare/v0.3.0...v0.3.1) (2020-10-12)
+
+
+### Bug Fixes
+
+* Listing paths/folders/files should now properly exclude .git and node_modules folders. ([6f463da](https://github.com/bscotch/node-util/commit/6f463da1630cf0dea518c4659ca7e6316b70e65a))
+
+
+
 # [0.3.0](https://github.com/bscotch/node-util/compare/v0.2.1...v0.3.0) (2020-10-08)
 
 

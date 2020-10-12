@@ -1,3 +1,12 @@
+# [0.4.0](https://github.com/bscotch/node-util/compare/v0.3.1...v0.4.0) (2020-10-12)
+
+
+### Features
+
+* When listing files/folders in a directory, will now return an empty array for non-existent paths instead of throwing an error. ([8fe2a5c](https://github.com/bscotch/node-util/commit/8fe2a5cad9b59f4ba64549874670bc238d4149c7))
+
+
+
 ## [0.3.1](https://github.com/bscotch/node-util/compare/v0.3.0...v0.3.1) (2020-10-12)
 
 

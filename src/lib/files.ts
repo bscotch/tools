@@ -25,7 +25,7 @@ export function listPathsSync(dir:string,recursive=false,options?:ListPathOption
     excludedDirs.push('node_modules');
   }
   const paths = fs.readdirSync(dir)
-    .filter(aPath=>!excludedDirs.includes(aPath))
+    .filter(aPath=>!excludedDirs.includes(path.basename(aPath)))
     .map(aPath=>path.join(dir,aPath));
   if(recursive){
     const morePaths = paths

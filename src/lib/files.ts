@@ -17,6 +17,9 @@ export function listPathsSync(dir:string,recursive=false,options?:ListPathOption
   if(fs.statSync(dir).isFile()){
     return [dir];
   }
+  else if(!fs.existsSync(dir)){
+    return [];
+  }
   const excludedDirs:string[] = [];
   if(!options?.includeDotGit){
     excludedDirs.push('.git');

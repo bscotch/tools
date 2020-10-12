@@ -72,3 +72,16 @@ export function listFilesByExtensionSync(dir:string,extension:string|string[],re
       return extensions.includes(ext);
     });
 }
+
+/**
+ * Find and delete all empty directories.
+ */
+export function removeEmptyDirsSync(startDir:string){
+  const folders = listFoldersSync(startDir,true);
+  for(const folder of folders){
+    try{
+      fs.rmdirSync(folder);
+    }
+    catch{}
+  }
+}

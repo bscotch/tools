@@ -111,6 +111,7 @@ import {
   listFoldersSync,
   listFilesSync,
   listFilesByExtensionSync,
+  removeEmptyDirsSync,
 } from '@bscotch/utility';
 
 const recursive = true;
@@ -120,4 +121,5 @@ listFoldersSync('.',recursive); // => the subset of paths that are folders
 listFilesSync('.',recursive); // => the subset of paths that are files
 listFilesByExtensionSync('.','txt',recursive); // => the subset of files that end with '.txt'
 listFilesByExtensionSync('.',['txt','md'],recursive); // => the subset of files that end with '.txt' or '.md'
+removeEmptyDirsSync('.'); // Remove all empty directories (recursively)
 ```

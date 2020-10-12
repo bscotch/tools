@@ -1,3 +1,12 @@
+# [0.5.0](https://github.com/bscotch/node-util/compare/v0.4.0...v0.5.0) (2020-10-12)
+
+
+### Features
+
+* Add method for finding and deleting empty folders. ([386b32d](https://github.com/bscotch/node-util/commit/386b32dac671386a931dd837bb08d70c78e53e35))
+
+
+
 # [0.4.0](https://github.com/bscotch/node-util/compare/v0.3.1...v0.4.0) (2020-10-12)
 
 

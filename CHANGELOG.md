@@ -1,3 +1,12 @@
+## [0.5.1](https://github.com/bscotch/node-util/compare/v0.5.0...v0.5.1) (2020-10-15)
+
+
+### Bug Fixes
+
+* Recursively removing empty directories now works. Previously it would remove *some* directories and never the root one. ([c3daaf0](https://github.com/bscotch/node-util/commit/c3daaf06330e0d9a7d2c1f61ad5adcbee846bdf0))
+
+
+
 # [0.5.0](https://github.com/bscotch/node-util/compare/v0.4.0...v0.5.0) (2020-10-12)
 
 

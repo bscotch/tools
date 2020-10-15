@@ -6,8 +6,23 @@ import {
   listFilesByExtensionSync,
   listFilesSync,
   listFoldersSync,
-  listPathsSync
+  listPathsSync,
+  removeEmptyDirsSync
 } from "../lib/files";
+import fs from "fs-extra";
+
+const sandboxRoot = "sandbox";
+
+function resetSandbox() {
+  fs.ensureDirSync(sandboxRoot);
+  try {
+    fs.emptyDirSync(sandboxRoot);
+  }
+  catch (err) {
+    console.log(err);
+  }
+}
+
 
 describe("Bscotch Utilities", function () {
   describe("Strings", function () {
@@ -158,6 +173,13 @@ at it goooo ${interp2}
         path.join('subdir','subsubdir','sub-sub-file.md')
       ]);
       expect(listFilesByExtensionSync(samplePathsRoot,['json','md'],recursive),'cannot list recursive').to.eql(expected);
+    });
+
+    it('can recursively delete empty folders',function(){
+      resetSandbox();
+      fs.ensureDirSync(path.join(sandboxRoot,'dir','subdir','subsubdir'));
+      removeEmptyDirsSync(path.join(sandboxRoot,'dir'));
+      expect(fs.existsSync(path.join(sandboxRoot,'dir'))).to.be.false;
     });
   });
 });

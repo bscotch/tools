@@ -1,3 +1,12 @@
+# [0.6.0](https://github.com/bscotch/node-util/compare/v0.5.2...v0.6.0) (2020-11-11)
+
+
+### Features
+
+* Rename wait methods to 'resolveInSeconds' etc to be more explicit about what's happening. ([df5c6ab](https://github.com/bscotch/node-util/commit/df5c6abd41c4c60587e26d4a8e9f3fde04c67cea))
+
+
+
 ## [0.5.2](https://github.com/bscotch/node-util/compare/v0.5.1...v0.5.2) (2020-11-11)
 
 

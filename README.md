@@ -130,6 +130,7 @@ removeEmptyDirsSync('.'); // Remove all empty directories (recursively)
 import {
   resolveInMillis,
   resolveInSeconds,
+  resolveInNextTick,
 } from '@bscotch/utility';
 
 async myAsynFunction(){
@@ -137,5 +138,7 @@ async myAsynFunction(){
   await resolveInMillis(1000);
   // Wait for 1 second
   await resolveInSeconds(1);
+  // Wait until next tick
+  await resolveInNextTick();
 }
 ```

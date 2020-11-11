@@ -123,3 +123,19 @@ listFilesByExtensionSync('.','txt',recursive); // => the subset of files that en
 listFilesByExtensionSync('.',['txt','md'],recursive); // => the subset of files that end with '.txt' or '.md'
 removeEmptyDirsSync('.'); // Remove all empty directories (recursively)
 ```
+
+## Waits
+
+```ts
+import {
+  resolveInMillis,
+  resolveInSeconds,
+} from '@bscotch/utility';
+
+async myAsynFunction(){
+  // Wait for 1 second
+  await resolveInMillis(1000);
+  // Wait for 1 second
+  await resolveInSeconds(1);
+}
+```

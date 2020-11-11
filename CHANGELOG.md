@@ -1,3 +1,12 @@
+# [0.7.0](https://github.com/bscotch/node-util/compare/v0.6.0...v0.7.0) (2020-11-11)
+
+
+### Features
+
+* Can now get a promise that resolves after one tick. ([157e280](https://github.com/bscotch/node-util/commit/157e280960ebe11546d27847b36dec15e72f8a7a))
+
+
+
 # [0.6.0](https://github.com/bscotch/node-util/compare/v0.5.2...v0.6.0) (2020-11-11)
 
 

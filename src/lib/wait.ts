@@ -11,5 +11,5 @@ export function resolveInSeconds(seconds:number){
 }
 
 export function resolveInNextTick(){
-  return new Promise(res=>nextTick(res));
+  return new Promise(res=>setImmediate(res));
 }

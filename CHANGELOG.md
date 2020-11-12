@@ -1,3 +1,12 @@
+## [0.7.1](https://github.com/bscotch/node-util/compare/v0.7.0...v0.7.1) (2020-11-12)
+
+
+### Bug Fixes
+
+* resolveInNextTick no longer uses nextTick, instead using setImmediate, which works as intended. ([a3d8dc0](https://github.com/bscotch/node-util/commit/a3d8dc0523a659578e9a66445bd9980c895c209a))
+
+
+
 # [0.7.0](https://github.com/bscotch/node-util/compare/v0.6.0...v0.7.0) (2020-11-11)
 
 

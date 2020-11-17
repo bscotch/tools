@@ -3,7 +3,10 @@ import { assert } from "./errors";
 export function isPlainObject(something:any){
   return something &&
     typeof something == 'object' &&
-    something?.toString?.()=='[object Object]';
+      (
+        !something.toString ||
+        something.toString?.()=='[object Object]'
+      );
 }
 
 export function isPlainObjectOrArray(something:any){
@@ -124,7 +127,7 @@ type Transformer = (value:any)=>any;
  * to the data structure.
  */
 export function transformValueByPath(object:{[key:string]:any}|any[],path:string,transformer:Transformer){
-  if(!isPlainObjectOrArray){
+  if(!isPlainObjectOrArray(object)){
     return object;
   }
   const paths = objectPathsFromWildcardPath(path,object);

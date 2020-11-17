@@ -1,3 +1,12 @@
+# [0.8.0](https://github.com/bscotch/node-util/compare/v0.7.1...v0.8.0) (2020-11-17)
+
+
+### Features
+
+* Object path and related functions added. ([6ebcd72](https://github.com/bscotch/node-util/commit/6ebcd727bb86be26373caf4834e6247975590b40))
+
+
+
 ## [0.7.1](https://github.com/bscotch/node-util/compare/v0.7.0...v0.7.1) (2020-11-12)
 
 

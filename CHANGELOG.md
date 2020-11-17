@@ -1,3 +1,12 @@
+## [0.8.1](https://github.com/bscotch/node-util/compare/v0.8.0...v0.8.1) (2020-11-17)
+
+
+### Bug Fixes
+
+* isPlainObject now returns true for objects without a toString() function. ([412c697](https://github.com/bscotch/node-util/commit/412c697fd9e9052512dd20763e9a084d91b1c615))
+
+
+
 # [0.8.0](https://github.com/bscotch/node-util/compare/v0.7.1...v0.8.0) (2020-11-17)
 
 

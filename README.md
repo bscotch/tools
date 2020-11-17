@@ -142,3 +142,51 @@ async myAsynFunction(){
   await resolveInNextTick();
 }
 ```
+
+## Objects
+
+```ts
+import {
+  isPlainObject,
+  isPlainObjectOrArray,
+  asObjectIfArray,
+  flattenObjectPaths,
+  objectPaths,
+  getValueAtPath,
+  setValueAtPath,
+  objectPathsFromWildcardPath,
+  transformValueByPath,
+} from '@bscotch/utility';
+
+asObjectIfArray(['hello']); // return {'0':'hello'}
+const testObject = {
+  hello: 'world',
+  nested: {
+    layer: 1,
+    array: [
+      4,
+      6,
+      7
+    ]
+  }
+}
+flattenObjectPaths(testObject); // returns:
+/**
+ * {
+ *  'hello':'world',
+ *  'nested.layer': 1,
+ *  'nested.array.0': 4,
+ *  'nested.array.1': 6,
+ *  'nested.array.2': 7,
+ * }
+ */
+objectPaths(testObject); // returns keys from flattenObjectPaths(testObject)
+getValueAtPath(testObject,'nested.array.2'); // returns 7
+setValueAtPath(testObject,'new.0.field',10); // adds 'new' field to set to [{field:10}]
+objectPathsFromWildcardPath('nested.*',testObject); // returns:
+// ['nested.layer','nested.array']
+objectPathsFromWildcardPath('nested.array.*',testObject); // returns:
+// ['nested.array.0','nested.array.1','nested.array.2]
+transformValueByPath(testObject,'nested.array.*',n=>++n); // Increments all array values by 1
+```
+

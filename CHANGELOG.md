@@ -1,3 +1,12 @@
+## [0.8.2](https://github.com/bscotch/node-util/compare/v0.8.1...v0.8.2) (2020-11-27)
+
+
+### Features
+
+* Simple hashing functions added (md5, sha1, sha256, choose-your-own-adventure). ([56b49ce](https://github.com/bscotch/node-util/commit/56b49cedfd387928b45a2056450bcec2a1859ad5))
+
+
+
 ## [0.8.1](https://github.com/bscotch/node-util/compare/v0.8.0...v0.8.1) (2020-11-17)
 
 

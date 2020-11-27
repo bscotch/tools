@@ -190,3 +190,17 @@ objectPathsFromWildcardPath('nested.array.*',testObject); // returns:
 transformValueByPath(testObject,'nested.array.*',n=>++n); // Increments all array values by 1
 ```
 
+## Crypto
+
+```ts
+import {
+  md5,
+  sha1,
+  sha256,
+  createHash,
+} from '@bscotch/utility';
+
+let hash = md5('hello world'); // hex hash
+hash = sha256('hello world','base64'); // Base64 hash
+hash = createHash('sha1','hello world');
+```

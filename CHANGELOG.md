@@ -1,3 +1,12 @@
+# [0.9.0](https://github.com/bscotch/node-util/compare/v0.8.3...v0.9.0) (2020-12-16)
+
+
+### Features
+
+* Add misc. date functions, mostly for comparing dates. ([2346417](https://github.com/bscotch/node-util/commit/2346417b57d7a44cf9d48363b6d15f003c7e90f2))
+
+
+
 ## [0.8.3](https://github.com/bscotch/node-util/compare/v0.8.2...v0.8.3) (2020-12-16)
 
 

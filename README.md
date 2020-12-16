@@ -204,3 +204,22 @@ let hash = md5('hello world'); // hex hash
 hash = sha256('hello world','base64'); // Base64 hash
 hash = createHash('sha1','hello world');
 ```
+
+## Dates
+
+```ts
+import {
+  isValidDate,
+  dateIsOlderThanSecondsAgo,
+  dateIsOlderThanMinutesAgo,
+  dateIsOlderThanHoursAgo,
+  dateIsOlderThanDaysAgo,
+  dateIsInTheFuture,
+  dateIsInThePast,
+  dateIsGreaterThan,
+  dateIsLessThan,
+  chronologySortReverse,
+  chronologySort
+} from '@bscotch/utility';
+
+```

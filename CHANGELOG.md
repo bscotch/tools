@@ -1,3 +1,12 @@
+## [0.9.1](https://github.com/bscotch/node-util/compare/v0.9.0...v0.9.1) (2020-12-16)
+
+
+### Bug Fixes
+
+* Types for the crypto node module have a breaking change. ([e93a91a](https://github.com/bscotch/node-util/commit/e93a91a684747ce7de67601c869ff6536b1da2bd))
+
+
+
 # [0.9.0](https://github.com/bscotch/node-util/compare/v0.8.3...v0.9.0) (2020-12-16)
 
 

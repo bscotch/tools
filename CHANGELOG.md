@@ -1,3 +1,7 @@
+## [0.8.3](https://github.com/bscotch/node-util/compare/v0.8.2...v0.8.3) (2020-12-16)
+
+
+
 ## [0.8.2](https://github.com/bscotch/node-util/compare/v0.8.1...v0.8.2) (2020-11-27)
 
 

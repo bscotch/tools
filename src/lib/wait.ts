@@ -1,7 +1,6 @@
-import { nextTick } from "process";
 
 /** Get a promise that resolves in some number of milliseconds. */
-export function resolveInMillis(millis:number){
+export function resolveInMillis(millis:number): Promise<void>{
   return new Promise(res=>setTimeout(res,millis));
 }
 
@@ -12,4 +11,8 @@ export function resolveInSeconds(seconds:number){
 
 export function resolveInNextTick(){
   return new Promise(res=>setImmediate(res));
+}
+
+export function wait(millis:number){
+  return resolveInMillis(millis);
 }

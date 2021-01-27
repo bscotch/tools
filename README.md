@@ -198,11 +198,17 @@ import {
   sha1,
   sha256,
   createHash,
+  encrypt,
+  decrypt,
 } from '@bscotch/utility';
 
 let hash = md5('hello world'); // hex hash
 hash = sha256('hello world','base64'); // Base64 hash
 hash = createHash('sha1','hello world');
+
+const key = "00000000000000000000000000000000";
+const encrypted = encrypt("Hello World",key);
+const sourceAsBuffer = decrypt(encrypted,key);
 ```
 
 ## Dates

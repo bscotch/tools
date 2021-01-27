@@ -11,7 +11,7 @@ import {
 } from "../lib/files";
 import {asObjectIfArray, flattenObjectPaths, getValueAtPath, transformValueByPath, objectPathsFromWildcardPath, setValueAtPath, objectPaths} from "../lib/objects";
 import fs from "fs-extra";
-import { md5, sha256 } from "../lib/crypto";
+import { decrypt, encrypt, md5, sha256 } from "../lib/crypto";
 
 const sandboxRoot = "sandbox";
 
@@ -48,6 +48,13 @@ describe("Bscotch Utilities", function () {
         hex: 'b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9',
         b64: 'uU0nuZNNPgilLlLX2n2r+sSE7+N6U4DukIj3rOLvzek='
       });
+    });
+    it("can encrypt/decrypt a string or buffer",function(){
+      const key = "00000000000000000000000000000000";
+      const string = "Hello World";
+      const buffer = Buffer.from(string);
+      expect(decrypt(encrypt(string,key),key).toString()).to.equal(string);
+      expect(decrypt(encrypt(buffer,key),key).toString()).to.equal(string);
     });
   });
 

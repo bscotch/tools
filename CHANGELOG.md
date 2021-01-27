@@ -1,3 +1,12 @@
+# [0.11.0](https://github.com/bscotch/node-util/compare/v0.10.0...v0.11.0) (2021-01-27)
+
+
+### Features
+
+* Add simple encrypt/decrypt functions. ([9887240](https://github.com/bscotch/node-util/commit/98872409d5cd87667ba116f0a9c9173014da5019))
+
+
+
 # [0.10.0](https://github.com/bscotch/node-util/compare/v0.9.1...v0.10.0) (2021-01-27)
 
 

@@ -1,3 +1,12 @@
+## [0.11.1](https://github.com/bscotch/node-util/compare/v0.11.0...v0.11.1) (2021-02-24)
+
+
+### Bug Fixes
+
+* The interpolated values for tagged templates are typed as strings instead of 'any'. ([5f1d2dc](https://github.com/bscotch/node-util/commit/5f1d2dc8d5e1255bc99b8a0a1ddcca279478f6b3))
+
+
+
 # [0.11.0](https://github.com/bscotch/node-util/compare/v0.10.0...v0.11.0) (2021-01-27)
 
 

@@ -35,7 +35,8 @@ const {method} = require('@bscotch/utility');
 ```ts
 import {
   undent,
-  oneline
+  oneline,
+  nodent,
 } from '@bscotch/utility';
 
 oneline`
@@ -58,6 +59,19 @@ undent`
 //be un-inindented
 //    based on the line
 //  with the smallest indentation.`
+
+nodent`
+    All lines will
+be un-inindented
+      completely
+    but still on separate lines.
+`;
+// =>
+//`All lines will
+//be un-inindented
+//completely
+//but still on separate lines.`
+
 ```
 
 ### Paths

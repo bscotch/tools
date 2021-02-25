@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import { oneline, undent } from "../lib/strings";
+import { nodent, oneline, undent } from "../lib/strings";
 import path from "path";
 import {toPosixPath,sortedPaths,parentPaths} from "../lib/paths";
 import {
@@ -182,6 +182,25 @@ describe("Bscotch Utilities", function () {
   });
 
   describe("Strings", function () {
+
+    it("can nodent string literals", function(){
+      const interp1 = 'hello';
+      const interp2 = 'goodbye';
+      const nodented = nodent`
+        Here is a:
+          multine string ${interp1}
+          look
+      at it goooo ${interp2}
+              weeee!
+
+      `;
+      const expected = `Here is a:
+multine string ${interp1}
+look
+at it goooo ${interp2}
+weeee!`;
+      expect(expected).to.equal(nodented);
+    });
 
     it("can dedent string literals", function () {
       const interp1 = 'hello';

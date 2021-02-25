@@ -30,6 +30,21 @@ export function undent(strings:TemplateStringsArray,...interps:any[]){
   return dedented;
 }
 
+
+/**
+ * Remove ALL indents, from every line.
+ */
+export function nodent(strings:TemplateStringsArray,...interps:any[]){
+  let string = populateTemplate(strings,...interps);
+  // Remove initial and final newlines
+  string = string
+    .replace(/^[\r\n]+/,'')
+    .replace(/\s+$/,'');
+  return string.split(/\r?\n/g)
+    .map(line=>line.replace(/^\s*(.*?)/,"$1"))
+    .join("\n");
+}
+
 /**
  * Remove linebreaks and extra spacing in a template string.
  */

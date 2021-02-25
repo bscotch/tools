@@ -1,3 +1,12 @@
+# [0.12.0](https://github.com/bscotch/node-util/compare/v0.11.1...v0.12.0) (2021-02-25)
+
+
+### Features
+
+* Add a 'nodent' tagged template to remove all indentation from a multiline string. ([4029137](https://github.com/bscotch/node-util/commit/4029137ca5ba237e3268dfe2d5789fc78470f427))
+
+
+
 ## [0.11.1](https://github.com/bscotch/node-util/compare/v0.11.0...v0.11.1) (2021-02-24)
 
 

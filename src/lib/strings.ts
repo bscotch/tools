@@ -83,12 +83,46 @@ export function capitalize(string: string) {
   return `${string}`.charAt(0).toLocaleUpperCase() + `${string}`.slice(1);
 }
 
+/**
+ * Explode a string using a separator.
+ */
+export function explode(
+  string?: string,
+  options?: {
+    /** Only return first `limit` results (returns all by default) */
+    limit?: number | null;
+    /** Separator to explode on */
+    sep?: string | RegExp;
+    /** Nullstrings are skipped unless this is set to `true` */
+    keepEmpty?: boolean;
+    /** If `true`, only unique values returned (order not guaranteed) */
+    unique?: boolean;
+    /** By default the original string and all values are trimmed.
+     * Set to `true` to prevent this behavior.
+     */
+    noTrim?: boolean;
+  },
+) {
+  options ||= {};
+  options.sep = typeof options.sep == 'undefined' ? /\s*,\s*/ : options.sep;
+  if (!string || typeof string != 'string' || options.limit === 0) {
+    return [];
+  }
+  let entries = string[options?.noTrim ? 'toString' : 'trim']()
+    .split(options.sep)
+    .map((entry) => (options?.noTrim ? entry : entry.trim()))
+    .filter((entry) => entry || options?.keepEmpty);
+  entries = entries.slice(0, options.limit || entries.length);
+  return options.unique ? [...new Set(entries)] : entries;
+}
+
 export const strings = {
   capitalize,
   decodeFromBase64,
   decodeFromBase64JsonString,
   encodeToBase64,
   encodeToBase64JsonString,
+  explode,
   nodent,
   oneline,
   undent,

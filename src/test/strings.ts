@@ -5,6 +5,7 @@ import {
   decodeFromBase64JsonString,
   encodeToBase64,
   encodeToBase64JsonString,
+  explode,
   nodent,
   oneline,
   undent,
@@ -82,5 +83,21 @@ at it goooo ${interp2}
 
   it('can capitalize strings', function () {
     expect(capitalize('hello world')).to.equal('Hello world');
+  });
+
+  it('can explode strings', function () {
+    expect(explode('hello, world,,, ')).to.eql(['hello', 'world']);
+    expect(
+      explode('hello, world,,, ', { keepEmpty: true, sep: ',', noTrim: true }),
+      'should be able to keep nullstrings',
+    ).to.eql(['hello', ' world', '', '', ' ']);
+    expect(
+      explode('hello, world,good,bye ', { limit: 2 }),
+      'should be able to limit total returned values',
+    ).to.eql(['hello', 'world']);
+    expect(
+      explode('hello, hello,world,world ', { unique: true }).sort(),
+      'should be filterable by uniqueness',
+    ).to.eql(['hello', 'world'].sort());
   });
 });

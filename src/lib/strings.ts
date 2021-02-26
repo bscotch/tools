@@ -1,3 +1,5 @@
+import { BscotchUtilError } from './errors';
+
 function populateTemplate(strings: TemplateStringsArray, ...interps: any[]) {
   let string = '';
   for (let i = 0; i < strings.length; i++) {
@@ -51,8 +53,38 @@ export function oneline(strings: TemplateStringsArray, ...interps: any[]) {
     .replace(/\s+/g, ' ');
 }
 
+export function encodeToBase64(content: string | Buffer) {
+  return (Buffer.isBuffer(content) ? content : Buffer.from(content)).toString(
+    'base64',
+  );
+}
+
+export function decodeFromBase64(base64: string) {
+  return Buffer.from(base64, 'base64').toString();
+}
+
+export function decodeFromBase64JsonString(string: string) {
+  try {
+    return JSON.parse(decodeFromBase64(string));
+  } catch {
+    throw new BscotchUtilError('Object is not JSON parseable');
+  }
+}
+
+export function encodeToBase64JsonString(something: any) {
+  try {
+    return encodeToBase64(JSON.stringify(something));
+  } catch {
+    throw new BscotchUtilError('Object is not JSON stringifiable');
+  }
+}
+
 export const strings = {
-  undent,
-  oneline,
+  decodeFromBase64,
+  encodeToBase64,
+  decodeFromBase64JsonString,
+  encodeToBase64JsonString,
   nodent,
+  oneline,
+  undent,
 };

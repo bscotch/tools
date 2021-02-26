@@ -55,9 +55,13 @@ type PromiseContent = UnwrappedPromise<Promise<"hello">>;
 
 ```ts
 import {
-  undent,
-  oneline,
+  decodeFromBase64,
+  encodeToBase64,
+  decodeFromBase64JsonString,
+  encodeToBase64JsonString,
   nodent,
+  oneline,
+  undent,
 } from '@bscotch/utility';
 
 oneline`

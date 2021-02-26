@@ -1,8 +1,7 @@
-
-class BscotchUtilError extends Error {
+export class BscotchUtilError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = "BscotchUtilError";
+    this.name = 'BscotchUtilError';
     Error.captureStackTrace(this, this.constructor);
   }
 }

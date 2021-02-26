@@ -142,7 +142,7 @@ parentPaths('/hello/world/foo/bar.txt') // =>
 
 ```
 
-## Files
+### Files
 
 ```ts
 import {
@@ -163,7 +163,7 @@ listFilesByExtensionSync('.',['txt','md'],recursive); // => the subset of files 
 removeEmptyDirsSync('.'); // Remove all empty directories (recursively)
 ```
 
-## Waits
+### Waits
 
 ```ts
 import {
@@ -182,7 +182,7 @@ async myAsynFunction(){
 }
 ```
 
-## Objects
+### Objects
 
 ```ts
 import {
@@ -229,7 +229,7 @@ objectPathsFromWildcardPath('nested.array.*',testObject); // returns:
 transformValueByPath(testObject,'nested.array.*',n=>++n); // Increments all array values by 1
 ```
 
-## Crypto
+### Crypto
 
 ```ts
 import {
@@ -250,7 +250,7 @@ const encrypted = encrypt("Hello World",key);
 const sourceAsBuffer = decrypt(encrypted,key);
 ```
 
-## Dates
+### Dates
 
 ```ts
 import {
@@ -268,7 +268,7 @@ import {
 } from '@bscotch/utility';
 ```
 
-## Arrays
+### Arrays
 
 ```ts
 import {
@@ -287,4 +287,4 @@ valuesAreIncreasing([-10,99,1111]); // => true
 selfOrFirstItem( "hello" );           // => "hello"
 selfOrFirstItem(["hello"]);           // => "hello"
 selfOrFirstItem(["hello","goodbye"]); // => "hello"
-```
+```git 

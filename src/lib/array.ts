@@ -1,4 +1,4 @@
-import { EmptyArray } from "./types";
+import { EmptyArray } from './types';
 
 /**
  * If the provided value is not an array,
@@ -83,3 +83,11 @@ export function selfOrFirstItem<Item extends any>(
   // @ts-expect-error (see prior comment)
   return items;
 }
+
+export const array = {
+  eachTruthyComparedToLast,
+  selfOrFirstItem,
+  valuesAreDecreasing,
+  valuesAreIncreasing,
+  wrapIfNotArray,
+};

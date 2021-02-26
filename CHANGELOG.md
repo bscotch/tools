@@ -1,3 +1,14 @@
+# [0.13.0](https://github.com/bscotch/node-util/compare/v0.12.0...v0.13.0) (2021-02-26)
+
+
+### Features
+
+* Add default exports to each collection so that finding things on import can be easier. ([89a3775](https://github.com/bscotch/node-util/commit/89a3775373fd67add7010609c424b87884eeb44d))
+* Add miscellaneous array functions, e.g. for ensuring an item is in an array, ensuring an item isn't an array, asking if an array's values are increasing/decreasing, etc. ([f3b1dd2](https://github.com/bscotch/node-util/commit/f3b1dd288cb5cbe35b551797f7bb47f1283b12ce))
+* Add useful utility types, such as for getting the contents of a Promise and making subsets of object fields required or partial. ([4a51190](https://github.com/bscotch/node-util/commit/4a5119056ec293d2f68ba83825b79d6b4e288de7))
+
+
+
 # [0.12.0](https://github.com/bscotch/node-util/compare/v0.11.1...v0.12.0) (2021-02-25)
 
 

@@ -1,3 +1,15 @@
+# [0.14.0](https://github.com/bscotch/node-util/compare/v0.13.0...v0.14.0) (2021-02-26)
+
+
+### Features
+
+* Add an option to the removeEmptyDirsSync function to exclude the root directory. ([73a6671](https://github.com/bscotch/node-util/commit/73a6671850ae8008a022eb7033fb27aee73ab1a0))
+* Add capitalize function. ([e8cba5e](https://github.com/bscotch/node-util/commit/e8cba5e37ebe3f0e744bd46f8e620cca8ad61fe1))
+* Add explode string function. ([a379dd5](https://github.com/bscotch/node-util/commit/a379dd55fd5160c6ebf8d0a6948047d02ba84e2e))
+* Add string functions related to converting strings and objects back and forth, including via Base64-encoded string intermediates. ([a051091](https://github.com/bscotch/node-util/commit/a0510911a7ab1b2b2551f5843d03c9f59a3383fa))
+
+
+
 # [0.13.0](https://github.com/bscotch/node-util/compare/v0.12.0...v0.13.0) (2021-02-26)
 
 

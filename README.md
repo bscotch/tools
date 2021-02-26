@@ -30,6 +30,27 @@ JavaScript:
 const {method} = require('@bscotch/utility');
 ```
 
+### Utility Types
+
+```ts
+import {
+  EmptyArray,
+  PartialBy,
+  RequiredBy,
+  UnwrappedPromise,
+  AnyFunction, // Matches any arbitrary function
+} from '@bscotch/utility';
+
+const nothingHere: EmptyArray = ["hello"];
+// => Typescript Error!
+
+type MixedPartial = PartialBy<{wasRequired:boolean, stillRequired:number},"soonNotRequired">;
+// => {wasRequired?: boolean, stillRequired: number}
+
+type PromiseContent = UnwrappedPromise<Promise<"hello">>;
+// => yields type "hello"
+```
+
 ### Strings
 
 ```ts
@@ -241,5 +262,25 @@ import {
   chronologySortReverse,
   chronologySort
 } from '@bscotch/utility';
+```
 
+## Arrays
+
+```ts
+import {
+  wrapIfNotArray,
+  valuesAreIncreasing,
+  valuesAreDecreasing,
+  selfOrFirstItem,
+} from '@bscotch/utility';
+
+wrapIfNotArray( "hello" ); // => ["hello"]
+wrapIfNotArray(["hello"]); // => ["hello"]
+wrapIfNotArray( undefined ); // => []
+
+valuesAreIncreasing([-10,99,1111]); // => true
+
+selfOrFirstItem( "hello" );           // => "hello"
+selfOrFirstItem(["hello"]);           // => "hello"
+selfOrFirstItem(["hello","goodbye"]); // => "hello"
 ```

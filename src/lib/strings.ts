@@ -79,10 +79,15 @@ export function encodeToBase64JsonString(something: any) {
   }
 }
 
+export function capitalize(string: string) {
+  return `${string}`.charAt(0).toLocaleUpperCase() + `${string}`.slice(1);
+}
+
 export const strings = {
+  capitalize,
   decodeFromBase64,
-  encodeToBase64,
   decodeFromBase64JsonString,
+  encodeToBase64,
   encodeToBase64JsonString,
   nodent,
   oneline,

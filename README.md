@@ -55,6 +55,7 @@ type PromiseContent = UnwrappedPromise<Promise<"hello">>;
 
 ```ts
 import {
+  capitalize,
   decodeFromBase64,
   encodeToBase64,
   decodeFromBase64JsonString,

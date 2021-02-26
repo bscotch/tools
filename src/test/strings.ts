@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import {
+  capitalize,
   decodeFromBase64,
   decodeFromBase64JsonString,
   encodeToBase64,
@@ -77,5 +78,9 @@ at it goooo ${interp2}
     expect(decodeFromBase64JsonString(encodedStringifiedStructure)).to.eql(
       dataStructure,
     );
+  });
+
+  it('can capitalize strings', function () {
+    expect(capitalize('hello world')).to.equal('Hello world');
   });
 });

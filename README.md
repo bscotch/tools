@@ -30,6 +30,27 @@ JavaScript:
 const {method} = require('@bscotch/utility');
 ```
 
+### Utility Types
+
+```ts
+import {
+  EmptyArray,
+  PartialBy,
+  RequiredBy,
+  UnwrappedPromise,
+  AnyFunction, // Matches any arbitrary function
+} from '@bscotch/utility';
+
+const nothingHere: EmptyArray = ["hello"];
+// => Typescript Error!
+
+type MixedPartial = PartialBy<{wasRequired:boolean, stillRequired:number},"soonNotRequired">;
+// => {wasRequired?: boolean, stillRequired: number}
+
+type PromiseContent = UnwrappedPromise<Promise<"hello">>;
+// => yields type "hello"
+```
+
 ### Strings
 
 ```ts

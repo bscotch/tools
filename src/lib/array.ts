@@ -13,7 +13,7 @@ export function wrapIfNotArray<Item>(
     return item;
   }
   // @ts-expect-error Help! Does work, but Typescript doesn't like it.
-  return typeof item == 'undefined' ? undefined : [item];
+  return typeof item == 'undefined' ? [] : [item];
 }
 
 /**

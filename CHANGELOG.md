@@ -1,3 +1,13 @@
+# [0.15.0](https://github.com/bscotch/node-util/compare/v0.14.0...v0.15.0) (2021-03-17)
+
+
+### Features
+
+* Add utility types for nullish and not-nullish. ([f579d1a](https://github.com/bscotch/node-util/commit/f579d1a1e58fd343ffa524d5374d3c77e1a7dd91))
+* Change 'undent' behavior to ignore whitespace-only lines when calculating the minimum indent. ([91c8e6e](https://github.com/bscotch/node-util/commit/91c8e6edc056c224b19db9417298a7f25334e45b))
+
+
+
 # [0.14.0](https://github.com/bscotch/node-util/compare/v0.13.0...v0.14.0) (2021-02-26)
 
 

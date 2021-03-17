@@ -39,6 +39,10 @@ import {
   RequiredBy,
   UnwrappedPromise,
   AnyFunction, // Matches any arbitrary function
+  Nullish,
+  NotNullish,
+  NotNull,
+  Defined,
 } from '@bscotch/utility';
 
 const nothingHere: EmptyArray = ["hello"];

@@ -11,12 +11,29 @@ function populateTemplate(strings: TemplateStringsArray, ...interps: any[]) {
 /**
  * Shift all lines left by the *smallest* indentation level,
  * and remove initial newline and all trailing spaces.
+ * Does not take into account indentation on lines that only
+ * have spaces.
  */
 export function undent(strings: TemplateStringsArray, ...interps: any[]) {
   let string = populateTemplate(strings, ...interps);
   // Remove initial and final newlines
   string = string.replace(/^[\r\n]+/, '').replace(/\s+$/, '');
-  const dents = string.match(/^([ \t])*/gm);
+  // Find all indentations *on lines that are not just whitespace!*
+  const indentRegex = /^(?<indent>[ \t]*)(?<nonSpace>[^\s])?/;
+  const dents: string[] | null = string
+    .match(new RegExp(indentRegex, 'gm'))
+    ?.map((dentedLine): string | undefined => {
+      const { indent, nonSpace } = dentedLine.match(indentRegex)!.groups as {
+        indent?: string;
+        nonSpace?: string;
+      };
+      const isNotJustWhitespace = nonSpace?.length;
+      if (isNotJustWhitespace) {
+        return indent || '';
+      }
+      return;
+    })
+    .filter((indentLevel) => typeof indentLevel == 'string') as string[];
   if (!dents || dents.length == 0) {
     return string;
   }

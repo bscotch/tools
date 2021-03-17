@@ -12,9 +12,9 @@
     "build/types/**/*"
   ],
   "scripts": {
-    "test": "mocha --inspect --require source-map-support/register --bail ./build/test/",
     "build": "rm -rf build && npx tsc",
-    "preversion": "git checkout develop && npm run build && npm test",
+    "test": "npm run build && mocha --inspect --require source-map-support/register --bail ./build/test/",
+    "preversion": "git checkout develop && npm test",
     "version": "npx conventional-changelog -p angular -i CHANGELOG.md -s -r 0 && git add -A",
     "postversion": "git push origin develop && git checkout main && git merge develop && git push origin main --follow-tags && npm publish && git checkout develop && git merge main",
     "tsc-live": "npx tsc -w"
@@ -36,7 +36,6 @@
   "author": "Adam Coster (https://www.bscotch.net/about)",
   "license": "MIT",
   "homepage": "https://github.com/bscotch/node-util",
-  "dependencies": {},
   "devDependencies": {
     "@types/chai": "^4.2.15",
     "@types/fs-extra": "^9.0.7",

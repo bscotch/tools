@@ -37,12 +37,14 @@ weeee!`;
       Here is a:
         multine string ${interp1}
         look
+
     at it goooo ${interp2}
             weeee!
     `;
     const expected = `  Here is a:
     multine string ${interp1}
     look
+
 at it goooo ${interp2}
         weeee!`;
     expect(expected).to.equal(dedented);

@@ -1,3 +1,12 @@
+# [0.16.0](https://github.com/bscotch/node-util/compare/v0.15.0...v0.16.0) (2021-04-08)
+
+
+### Features
+
+* Add more date functions, numeric array sorting functions, and missing test cases. ([2a8f7b0](https://github.com/bscotch/node-util/commit/2a8f7b08886e794a2fa0fb361c277aa096a215e2))
+
+
+
 # [0.15.0](https://github.com/bscotch/node-util/compare/v0.14.0...v0.15.0) (2021-03-17)
 
 

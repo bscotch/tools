@@ -16,6 +16,9 @@ export function wrapIfNotArray<Item>(
   return typeof item == 'undefined' ? [] : [item];
 }
 
+/** @alias wrapIfNotArray */
+export const arrayTouch = wrapIfNotArray;
+
 /**
  * Return `true` if the `comparison` function returns true
  * when applied to each adjacent pair of values. For example,
@@ -38,6 +41,8 @@ export function eachTruthyComparedToLast<ArrayOfComparables extends any[]>(
     },
   );
 }
+/** @alias eachTruthyComparedToLast */
+export const arrayEachTruthyComparedToLast = eachTruthyComparedToLast;
 
 /**
  * Return true if each value is greater than the last
@@ -50,6 +55,8 @@ export function valuesAreIncreasing<ArrayOfValues extends any[]>(
     (curr: ArrayOfValues[number], last: ArrayOfValues[number]) => curr > last,
   );
 }
+/** @alias valuesAreIncreasing */
+export const arrayValuesAreIncreasing = valuesAreIncreasing;
 
 /**
  * Return true if each value is greater than the last
@@ -62,6 +69,8 @@ export function valuesAreDecreasing<ArrayOfValues extends any[]>(
     (curr: ArrayOfValues[number], last: ArrayOfValues[number]) => curr < last,
   );
 }
+/** @alias valuesAreDecreasing */
+export const arrayValuesAreDecreasing = valuesAreDecreasing;
 
 type FirstItemArray<Item> =
   | Item[]
@@ -83,8 +92,97 @@ export function selfOrFirstItem<Item extends any>(
   // @ts-expect-error (see prior comment)
   return items;
 }
+/** @alias selfOrFirstItem */
+export const arrayUntouch = selfOrFirstItem;
+
+type SortReturn = number;
+
+function sortResult<N extends number[]>(
+  numbers: N,
+  descending?: boolean,
+): number[];
+function sortResult<N extends number>(
+  array1Item: N,
+  array2Item: N,
+  descending?: boolean,
+): SortReturn;
+function sortResult<N extends number | number[]>(
+  numbersOrArrayItem1: N,
+  array2ItemOrDescending?: number | boolean,
+  descending = false,
+): N extends number ? SortReturn : number[] {
+  if (typeof numbersOrArrayItem1 == 'number') {
+    if (typeof array2ItemOrDescending != 'number') {
+      throw new Error('Second argument must be a number');
+    }
+    const diff = numbersOrArrayItem1 - array2ItemOrDescending;
+    // @ts-ignore
+    return descending ? -diff : diff;
+  } else if (Array.isArray(numbersOrArrayItem1)) {
+    // @ts-ignore
+    return numbersOrArrayItem1.sort((a, b) => sortResult(a, b, descending));
+  }
+  throw new Error('Invalid arguments for arraySortNumeric');
+}
+
+/**
+ * Ascending-sort an array of numeric values.
+ * Can call on an array, or pass to `Array.sort`
+ *
+ * ```js
+ * const array = [10,3,11];
+ * // Both ways work
+ * arraySortNumeric(array);
+ * array.sort(arraySortNumeric);
+ * ```
+ */
+export function arraySortNumeric<N extends number[]>(numbers: N): number[];
+export function arraySortNumeric<N extends number>(
+  array1Item: N,
+  array2Item: N,
+): SortReturn;
+export function arraySortNumeric<N extends number | number[]>(
+  numbersOrArrayItem1: N,
+  array2Item?: number,
+): N extends number ? SortReturn : number[] {
+  // @ts-ignore
+  return sortResult(numbersOrArrayItem1, array2Item);
+}
+
+/**
+ * Descending-sort an array of numeric values.
+ * Can call on an array, or pass to `Array.sort`
+ *
+ * ```js
+ * const array = [10,3,11];
+ * // Both ways work
+ * arraySortNumericDescending(array);
+ * array.sort(arraySortNumericDescending);
+ * ```
+ */
+export function arraySortNumericDescending<N extends number[]>(
+  numbers: N,
+): number[];
+export function arraySortNumericDescending<N extends number>(
+  array1Item: N,
+  array2Item: N,
+): SortReturn;
+export function arraySortNumericDescending<N extends number | number[]>(
+  numbersOrArrayItem1: N,
+  array2Item?: number,
+): N extends number ? SortReturn : number[] {
+  // @ts-ignore
+  return sortResult(numbersOrArrayItem1, array2Item, true);
+}
 
 export const array = {
+  arrayTouch,
+  arrayEachTruthyComparedToLast,
+  arrayUntouch,
+  arrayValuesAreDecreasing,
+  arrayValuesAreIncreasing,
+  arraySortNumeric,
+  arraySortNumericDescending,
   eachTruthyComparedToLast,
   selfOrFirstItem,
   valuesAreDecreasing,

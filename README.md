@@ -173,18 +173,18 @@ removeEmptyDirsSync('.'); // Remove all empty directories (recursively)
 
 ```ts
 import {
-  resolveInMillis,
-  resolveInSeconds,
-  resolveInNextTick,
+  waitForMillis,
+  waitForSeconds,
+  waitForTick,
 } from '@bscotch/utility';
 
 async myAsynFunction(){
   // Wait for 1 second
-  await resolveInMillis(1000);
+  await waitForMillis(1000);
   // Wait for 1 second
-  await resolveInSeconds(1);
+  await waitForSeconds(1);
   // Wait until next tick
-  await resolveInNextTick();
+  await waitForTick();
 }
 ```
 
@@ -260,17 +260,24 @@ const sourceAsBuffer = decrypt(encrypted,key);
 
 ```ts
 import {
-  isValidDate,
+  dateSort,
+  dateSortDescending,
+  dateDifferenceMillis,
+  dateDifferenceSeconds,
+  dateDifferenceMinutes,
+  dateDifferenceHours,
+  dateDifferenceDays,
+  dateIsGreaterThan,
+  dateIsInTheFuture,
+  dateIsInThePast,
+  dateIsLessThan,
+  dateIsOlderThanMillisAgo,
   dateIsOlderThanSecondsAgo,
   dateIsOlderThanMinutesAgo,
   dateIsOlderThanHoursAgo,
   dateIsOlderThanDaysAgo,
-  dateIsInTheFuture,
-  dateIsInThePast,
-  dateIsGreaterThan,
-  dateIsLessThan,
-  chronologySortReverse,
-  chronologySort
+  dateIsValid,
+  dateAssertIsValid,
 } from '@bscotch/utility';
 ```
 
@@ -278,19 +285,22 @@ import {
 
 ```ts
 import {
-  wrapIfNotArray,
-  valuesAreIncreasing,
-  valuesAreDecreasing,
-  selfOrFirstItem,
+  arrayTouch,
+  arrayUntouch,
+  arrayEachTruthyComparedToLast,
+  arrayValuesAreDecreasing,
+  arrayValuesAreIncreasing,
+  arraySortNumeric,
+  arraySortNumericDescending,
 } from '@bscotch/utility';
 
-wrapIfNotArray( "hello" ); // => ["hello"]
-wrapIfNotArray(["hello"]); // => ["hello"]
-wrapIfNotArray( undefined ); // => []
+arrayTouch( "hello" ); // => ["hello"]
+arrayTouch(["hello"]); // => ["hello"]
+arrayTouch( undefined ); // => []
 
-valuesAreIncreasing([-10,99,1111]); // => true
+arrayValuesAreIncreasing([-10,99,1111]); // => true
 
-selfOrFirstItem( "hello" );           // => "hello"
-selfOrFirstItem(["hello"]);           // => "hello"
-selfOrFirstItem(["hello","goodbye"]); // => "hello"
-```git 
+arrayUntouch( "hello" );           // => "hello"
+arrayUntouch(["hello"]);           // => "hello"
+arrayUntouch(["hello","goodbye"]); // => "hello"
+```

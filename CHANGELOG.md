@@ -1,3 +1,12 @@
+# [1.0.0](https://github.com/bscotch/node-util/compare/v0.16.0...v1.0.0) (2021-04-08)
+
+
+### Features
+
+* Update all depenencies. ([0cdbee3](https://github.com/bscotch/node-util/commit/0cdbee352d45c5f93a429ad2f00137d6e7ddfc29))
+
+
+
 # [0.16.0](https://github.com/bscotch/node-util/compare/v0.15.0...v0.16.0) (2021-04-08)
 
 

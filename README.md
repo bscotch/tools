@@ -34,6 +34,7 @@ const {method} = require('@bscotch/utility');
 
 ```ts
 import {
+  HttpMethod,
   EmptyArray,
   PartialBy,
   RequiredBy,
@@ -43,6 +44,10 @@ import {
   NotNullish,
   NotNull,
   Defined,
+  ExtractKeysByValue,
+  ExcludeKeysByValue,
+  PickByValue,
+  OmitByValue,
 } from '@bscotch/utility';
 
 const nothingHere: EmptyArray = ["hello"];

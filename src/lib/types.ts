@@ -10,3 +10,32 @@ export type Nullish = null | undefined;
 export type NotNullish<T> = Exclude<T, Nullish>;
 export type NotNull<T> = Exclude<T, null>;
 export type Defined<T> = Exclude<T, undefined>;
+export type ExtractKeysByValue<Container, ValueTypeFilter> = {
+  [Key in keyof Container]-?: Container[Key] extends ValueTypeFilter
+    ? Key
+    : never;
+}[keyof Container];
+
+export type ExcludeKeysByValue<Container, ValueTypeFilter> = {
+  [Key in keyof Container]-?: Container[Key] extends ValueTypeFilter
+    ? never
+    : Key;
+}[keyof Container];
+
+export type PickByValue<Container, ValueTypeFilter> = Pick<
+  Container,
+  ExtractKeysByValue<Container, ValueTypeFilter>
+>;
+
+export type OmitByValue<Container, ValueTypeFilter> = Pick<
+  Container,
+  ExcludeKeysByValue<Container, ValueTypeFilter>
+>;
+export type HttpMethod =
+  | 'GET'
+  | 'POST'
+  | 'PATCH'
+  | 'PUT'
+  | 'DELETE'
+  | 'HEAD'
+  | 'OPTIONS';

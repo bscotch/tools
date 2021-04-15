@@ -1,3 +1,12 @@
+# [1.1.0](https://github.com/bscotch/node-util/compare/v1.0.0...v1.1.0) (2021-04-15)
+
+
+### Features
+
+* Add utility types for picking/omitting and excluding/extracting objects and their keys based on value types for those keys. ([87ddda0](https://github.com/bscotch/node-util/commit/87ddda0b7d822969c3e73131dcd7b14b721723d4))
+
+
+
 # [1.0.0](https://github.com/bscotch/node-util/compare/v0.16.0...v1.0.0) (2021-04-08)
 
 

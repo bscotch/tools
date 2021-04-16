@@ -1,3 +1,12 @@
+## [1.1.1](https://github.com/bscotch/node-util/compare/v1.1.0...v1.1.1) (2021-04-16)
+
+
+### Bug Fixes
+
+* Update ExtractKeysByValue and related utility types to treat function-type filters differently. Type narrowing with functions in Typescript is weird and not very useful, this way is more likely to do what the user expects. ([573d862](https://github.com/bscotch/node-util/commit/573d8620eae4fd1b9c00e1d093098f64857188db))
+
+
+
 # [1.1.0](https://github.com/bscotch/node-util/compare/v1.0.0...v1.1.0) (2021-04-15)
 
 

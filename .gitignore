@@ -5,3 +5,4 @@ sample.json
 build
 debug.log
 tmp.ts
+package-lock.json

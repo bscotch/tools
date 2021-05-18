@@ -1,3 +1,13 @@
+## [1.1.2](https://github.com/bscotch/node-util/compare/v1.1.1...v1.1.2) (2021-05-18)
+
+
+### Features
+
+* Add package lock file to gitignore, since it is not useful for NPM packages. ([82ae36f](https://github.com/bscotch/node-util/commit/82ae36fd39421dc63f8bb7fcf2217669931cdda4))
+* Update all deps. ([cc2def3](https://github.com/bscotch/node-util/commit/cc2def33d33f3618154a7f3fdcefdb8d994dfe0f))
+
+
+
 ## [1.1.1](https://github.com/bscotch/node-util/compare/v1.1.0...v1.1.1) (2021-04-16)
 
 

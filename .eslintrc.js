@@ -14,6 +14,7 @@ module.exports = {
   rules: {
     'tsdoc/syntax': 'warn',
     '@typescript-eslint/ban-ts-ignore': 'off',
+    '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/type-annotation-spacing': 'off',
     '@typescript-eslint/member-delimiter-style': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',

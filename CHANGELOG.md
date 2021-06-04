@@ -1,3 +1,12 @@
+# [2.1.0](https://github.com/bscotch/node-util/compare/v2.0.0...v2.1.0) (2021-06-04)
+
+
+### Features
+
+* Update all deps. ([37622d7](https://github.com/bscotch/node-util/commit/37622d7ae6fccb865db8c8bd258622d08fea8710))
+
+
+
 # [2.0.0](https://github.com/bscotch/node-util/compare/v1.1.2...v2.0.0) (2021-06-04)
 
 

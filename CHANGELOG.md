@@ -1,3 +1,12 @@
+# [2.0.0](https://github.com/bscotch/node-util/compare/v1.1.2...v2.0.0) (2021-06-04)
+
+
+### Features
+
+* Change the 'undent' template function to handle interpolated values that have newlines inside them. There's no one-size-fits-all solution here, but having interped values inherit the indent level of the line they start on is a decent solution. BREAKING. ([bdfa7e7](https://github.com/bscotch/node-util/commit/bdfa7e76d6e8f847e7bf44adba684eb3957193fe))
+
+
+
 ## [1.1.2](https://github.com/bscotch/node-util/compare/v1.1.1...v1.1.2) (2021-05-18)
 
 

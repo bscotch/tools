@@ -1,11 +1,14 @@
 import { expect } from 'chai';
-import { waitForMillis, waitForSeconds, waitForTick } from '../lib/wait';
+import { waitForMillis, waitForSeconds } from '../lib/wait';
 import { dateIsInThePast, dateIsOlderThanMillisAgo } from '../lib/dates';
 
 describe('Waits', function () {
   it('can wait', async function () {
     let now = new Date();
-    const resetNow = () => (now = new Date());
+    const resetNow = () => {
+      now = new Date();
+      return now;
+    };
     const waitTimeMillis = 100;
     const expectInPast = () =>
       expect(dateIsOlderThanMillisAgo(now, waitTimeMillis)).to.be.true;
@@ -19,8 +22,6 @@ describe('Waits', function () {
     expectInPast();
 
     resetNow();
-    await waitForTick();
-    // (Will be faster than a ms, so should be at the "same time")
     expect(dateIsInThePast(now)).to.be.false;
   });
 });

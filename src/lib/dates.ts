@@ -1,13 +1,13 @@
 import { assert } from './errors';
 
-export function isValidDate(date: Date) {
-  return date instanceof Date && !isNaN(date?.getTime?.());
+export function isValidDate(date: any): date is Date {
+  return date instanceof Date && !isNaN(date.getTime());
 }
 
 /** @alias isValidDate */
 export const dateIsValid = isValidDate;
 
-export function assertValidDate(date: Date) {
+export function assertValidDate(date: any): asserts date is Date {
   assert(isValidDate(date), `${date} is not a date`);
 }
 

@@ -14,9 +14,13 @@
   "scripts": {
     "build": "rm -rf build && npx tsc",
     "test": "npm run build && mocha --inspect --require source-map-support/register --bail ./build/test/",
-    "preversion": "git checkout develop && npm test",
-    "version": "npx conventional-changelog -p angular -i CHANGELOG.md -s -r 0 && git add -A",
-    "postversion": "git push origin develop --follow-tags && npm publish",
+    "prepublishOnly": "npm run can-publish",
+    "preversion": "npm run can-publish",
+    "version": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0 && prettier src -w && git add -A",
+    "postversion": "git push origin develop --follow-tags",
+    "can-publish": "npm run _require-develop && npm run _require-ci",
+    "_require-develop": "[ \"$(git rev-parse --symbolic-full-name --abbrev-ref HEAD)\" = \"develop\" ] || exit 1",
+    "_require-ci": "[ \"${GITHUB_ACTIONS}\" = \"true\" ] || exit 1",
     "tsc-live": "npx tsc -w"
   },
   "repository": {

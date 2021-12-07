@@ -1,6 +1,8 @@
 import { assert } from './errors';
 
-export function isPlainObject(something: any) {
+export function isPlainObject(
+  something: any,
+): typeof something extends Record<string, any> ? true : false {
   return (
     something &&
     typeof something == 'object' &&
@@ -8,7 +10,9 @@ export function isPlainObject(something: any) {
   );
 }
 
-export function isPlainObjectOrArray(something: any) {
+export function isPlainObjectOrArray(
+  something: any,
+): something is Record<string, any> | Array<any> {
   return Array.isArray(something) || isPlainObject(something);
 }
 
@@ -125,9 +129,6 @@ type Transformer = (value: any) => any;
  * would capture paths `a.b.3.c` and `a.b.3.d`
  * and apply the transform to both values.
  * If a path does not exist, no action is taken.
- * @param {boolean} [addMissing] If true, fields matching the path that don't exist
- * will still be passed to the transformer, and the resulting value will be added
- * to the data structure.
  */
 export function transformValueByPath(
   object: { [key: string]: any } | any[],

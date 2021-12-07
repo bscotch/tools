@@ -94,9 +94,12 @@ export function listFilesByExtensionSync(
 /**
  * Find and delete all empty directories.
  */
-export function removeEmptyDirsSync(startDir:string,options?:{excludeRoot?:boolean}){
-  const folders = listFoldersSync(startDir,true);
-  if(!options?.excludeRoot){
+export function removeEmptyDirsSync(
+  startDir: string,
+  options?: { excludeRoot?: boolean },
+) {
+  const folders = listFoldersSync(startDir, true);
+  if (!options?.excludeRoot) {
     folders.unshift(startDir);
   }
   folders.reverse();

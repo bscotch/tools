@@ -11,7 +11,7 @@ describe('Waits', function () {
     };
     const waitTimeMillis = 100;
     const expectInPast = () =>
-      expect(dateIsOlderThanMillisAgo(now, waitTimeMillis)).to.be.true;
+      expect(dateIsOlderThanMillisAgo(now, waitTimeMillis * 0.95)).to.be.true;
 
     resetNow();
     await waitForMillis(waitTimeMillis);

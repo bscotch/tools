@@ -5,30 +5,11 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Tests (ts-mocha)",
-      "type": "node",
-      "request": "launch",
-      "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
-      "args": [
-        "-r",
-        "ts-node/register",
-        "-r",
-        "source-map-support/register",
-        "--timeout",
-        "999999",
-        "--colors",
-        "${workspaceFolder}/src/test/*.ts"
-      ],
-      "console": "internalConsole",
-      "internalConsoleOptions": "neverOpen",
-      "protocol": "inspector",
-      "sourceMaps": false
-    },
-    {
       "type": "node",
       "request": "launch",
       "name": "Tests",
       "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+      "preLaunchTask": "npm: build",
       "args": [
         "--require",
         "source-map-support/register",

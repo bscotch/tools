@@ -50,6 +50,34 @@ at it goooo ${interp2}
     expect(expected).to.equal(dedented);
   });
 
+  it('can undent string literals with multiline interps', function () {
+    const multineInterp = '{\n  ohNo: 10,\n  yay:"meh"\n}\n';
+    let dedented = undent`
+      Here is a:
+      ${multineInterp}
+        And another line.
+    `;
+    let expected = `Here is a:
+{
+  ohNo: 10,
+  yay:"meh"
+}
+
+  And another line.`;
+
+    expect(expected).to.equal(dedented);
+
+    dedented = undent`
+      Here is a: ${multineInterp} And another line.
+    `;
+    expected = `Here is a: {
+             ohNo: 10,
+             yay:"meh"
+           }
+            And another line.`;
+    expect(expected).to.equal(dedented);
+  });
+
   it('can oneline string literals', function () {
     const interp1 = 'hello';
     const interp2 = 'goodbye';

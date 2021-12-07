@@ -29,8 +29,6 @@ jobs:
         with:
           fetch-depth: 0
           lfs: true
-      - name: Get files from LFS
-        run: git lfs checkout
       - name: Install Node
         uses: actions/setup-node@v2
         with:

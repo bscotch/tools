@@ -1,3 +1,12 @@
+# [2.2.0](https://github.com/bscotch/node-util/compare/v2.1.1...v2.2.0) (2021-12-17)
+
+
+### Features
+
+* Add functions for converting data into ESM modules. ([28c8b9d](https://github.com/bscotch/node-util/commit/28c8b9dc69b6d7d06872938d4b02695390688d21))
+
+
+
 ## [2.1.1](https://github.com/bscotch/node-util/compare/v2.1.0...v2.1.1) (2021-12-07)
 
 

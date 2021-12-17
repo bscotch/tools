@@ -110,10 +110,56 @@ export function removeEmptyDirsSync(
   }
 }
 
+/**
+ * Convert JSON-stringifiable data into a JavaScript module in ESM format,
+ * as a string. (Use {@link asModuleString} instead to write
+ * directly to file.)
+ *
+ * @param type - The type, as a string that can be inserted.
+ * (Appended to the export, e.g. `export default {your:'stuff'} as type;`)
+ * @param preamble - Any content that should appear above the export
+ * (e.g. imports)
+ */
+export function asModuleString(data: any, type?: string, preamble?: string) {
+  return `${preamble ? `${preamble}\n\n` : ''}export default ${JSON.stringify(
+    data,
+  )}${type ? ` as ${type}` : ''};\n`;
+}
+
+/**
+ * Convert JSON-stringifiable data into an exported JavaScript type,
+ * exported as an EMS module, saved to file.
+ *
+ * @param type - The type, as a string that can be inserted.
+ * (Appended to the export, e.g. `export default {your:'stuff'} as type;`)
+ * @param preamble - Any content that should appear above the export
+ * (e.g. imports)
+ */
+export function writeAsModule(
+  data: any,
+  filePath: string,
+  type?: string,
+  preamble?: string,
+) {
+  const ext = path.extname(filePath);
+  if (!['.js', '.ts'].includes(ext)) {
+    throw new Error(`${filePath} must have a ts or js extension`);
+  }
+  const asString = asModuleString(
+    data,
+    ext == '.ts' ? type : undefined,
+    preamble,
+  );
+  fs.writeFileSync(filePath, asString);
+  return asString;
+}
+
 export const files = {
   listFilesByExtensionSync,
   listFilesSync,
   listFoldersSync,
   listPathsSync,
   removeEmptyDirsSync,
+  writeAsModule,
+  asModuleString,
 };

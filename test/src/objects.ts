@@ -6,7 +6,7 @@ import {
   transformValueByPath,
   objectPathsFromWildcardPath,
   setValueAtPath,
-} from '../lib/objects';
+} from '@bscotch/utility/app/lib/objects';
 
 describe('Objects', function () {
   const createTestObject = () => {

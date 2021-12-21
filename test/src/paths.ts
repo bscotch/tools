@@ -1,5 +1,9 @@
 import { expect } from 'chai';
-import { toPosixPath, sortedPaths, parentPaths } from '../lib/paths';
+import {
+  toPosixPath,
+  sortedPaths,
+  parentPaths,
+} from '@bscotch/utility/app/lib/paths';
 
 describe('Paths', function () {
   it('can sort paths by directory', function () {

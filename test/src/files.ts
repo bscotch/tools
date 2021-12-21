@@ -7,11 +7,11 @@ import {
   listFoldersSync,
   listPathsSync,
   removeEmptyDirsSync,
-} from '../lib/files';
+} from '@bscotch/utility/app/lib/files';
 import { resetSandbox, sandboxRoot } from './utility';
 
 describe('Files', function () {
-  const samplePathsRoot = path.join('src', 'test', 'sample-paths');
+  const samplePathsRoot = path.join('src', 'sample-paths');
 
   function fullSamplePaths(relativeSamplePaths: string[]) {
     return relativeSamplePaths.map((p) => path.join(samplePathsRoot, p));

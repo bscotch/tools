@@ -9,7 +9,7 @@ import {
   nodent,
   oneline,
   undent,
-} from '../lib/strings';
+} from '@bscotch/utility/app/lib/strings';
 
 describe('Strings', function () {
   it('can nodent string literals', function () {

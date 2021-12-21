@@ -1,0 +1,25 @@
+{
+  "name": "@bscotch/node-util-test",
+  "private": true,
+  "description": "Test suite for this monorepo.",
+  "scripts": {
+    "test": "mocha --inspect --require source-map-support/register --bail ./app"
+  },
+  "devDependencies": {
+    "@bscotch/utility": "*",
+    "@types/chai": "^4.2.22",
+    "@types/mocha": "^8.2.3",
+    "chai": "^4.3.4",
+    "mocha": "^9.1.3",
+    "pretty-error": "^4.0.0",
+    "source-map-support": "^0.5.21"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bscotch/node-util.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bscotch/node-util/issues"
+  },
+  "homepage": "https://github.com/bscotch/node-util#readme"
+}

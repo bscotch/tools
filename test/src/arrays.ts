@@ -6,7 +6,7 @@ import {
   arrayUntouch,
   arraySortNumeric,
   arraySortNumericDescending,
-} from '../lib/array';
+} from '@bscotch/utility/app/lib/array';
 
 describe('Arrays', () => {
   it('can tell if array values are increasing', () => {

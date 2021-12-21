@@ -5,11 +5,9 @@
   "engines": {
     "node": ">=14.0.0"
   },
-  "main": "./build/index.js",
+  "main": "./app/index.js",
   "files": [
-    "build/lib/**/*",
-    "build/index.*",
-    "build/types/**/*"
+    "app"
   ],
   "scripts": {
     "prepublishOnly": "npm run can-publish",

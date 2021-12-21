@@ -1,5 +1,8 @@
 {
   "name": "@bscotch/utility",
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "2.2.0",
   "description": "Bscotch Utilities: Methods for common Node.js needs.",
   "engines": {
@@ -21,7 +24,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/bscotch/node-util.git"
+    "url": "git+ssh://git@github.com/bscotch/utility.git"
   },
   "keywords": [
     "utility",
@@ -35,8 +38,8 @@
   ],
   "author": "Adam Coster (https://www.bscotch.net/about)",
   "license": "MIT",
-  "homepage": "https://github.com/bscotch/node-util",
+  "homepage": "https://github.com/bscotch/utility/utility#README.md",
   "bugs": {
-    "url": "https://github.com/bscotch/node-util/issues"
+    "url": "https://github.com/bscotch/utility/issues"
   }
 }

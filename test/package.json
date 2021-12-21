@@ -1,5 +1,5 @@
 {
-  "name": "@bscotch/node-util-test",
+  "name": "@bscotch/utility-test",
   "private": true,
   "description": "Test suite for this monorepo.",
   "scripts": {
@@ -16,10 +16,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bscotch/node-util.git"
+    "url": "git+https://github.com/bscotch/utility.git"
   },
   "bugs": {
-    "url": "https://github.com/bscotch/node-util/issues"
+    "url": "https://github.com/bscotch/utility/issues"
   },
-  "homepage": "https://github.com/bscotch/node-util#readme"
+  "homepage": "https://github.com/bscotch/utility#readme"
 }

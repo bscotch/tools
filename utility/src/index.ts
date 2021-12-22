@@ -5,5 +5,5 @@ export * from './lib/files';
 export * from './lib/objects';
 export * from './lib/paths';
 export * from './lib/strings';
-export * from './lib/types';
+export * from './types/utility';
 export * from './lib/wait';

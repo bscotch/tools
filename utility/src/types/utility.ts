@@ -1,4 +1,5 @@
-export type EmptyArray = [];
+export type EmptyArray = never[];
+export type EmptyObject = Record<string, never>;
 export type HttpMethod =
   | 'GET'
   | 'POST'
@@ -24,7 +25,7 @@ export type NotNull<T> = Exclude<T, null>;
 export type Defined<T> = Exclude<T, undefined>;
 
 export type ExtractKeysByValue<Container, ValueTypeFilter> = {
-  [Key in keyof Container]-?: Container[Key] extends Function
+  [Key in keyof Container]-?: Container[Key] extends AnyFunction
     ? ValueTypeFilter extends Container[Key]
       ? Key
       : never
@@ -47,3 +48,24 @@ export type OmitByValue<Container, ValueTypeFilter> = Omit<
   Container,
   ExtractKeysByValue<Container, ValueTypeFilter>
 >;
+
+/**
+ * Primitive type
+ * @see https://tools.ietf.org/html/draft-handrews-json-schema-validation-01#section-6.1.1
+ */
+export type JsonCompatible =
+  | string
+  | number
+  | boolean
+  | JsonCompatibleObject
+  | JsonCompatibleArray
+  | null;
+
+// Workaround for infinite type recursion
+export interface JsonCompatibleObject {
+  [key: string]: JsonCompatible;
+}
+
+// Workaround for infinite type recursion
+// https://github.com/Microsoft/TypeScript/issues/3496#issuecomment-128553540
+export type JsonCompatibleArray = Array<JsonCompatible>;

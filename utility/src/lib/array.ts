@@ -1,4 +1,4 @@
-import { EmptyArray } from './types';
+import { EmptyArray } from '../types/utility';
 
 /**
  * If the provided value is not an array,

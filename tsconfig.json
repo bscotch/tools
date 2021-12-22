@@ -11,5 +11,9 @@
     "esModuleInterop": true,
     "composite": true
   },
-  "references": [{ "path": "utility" }, { "path": "test" }]
+  "references": [
+    { "path": "utility" },
+    { "path": "informer" },
+    { "path": "test" }
+  ]
 }

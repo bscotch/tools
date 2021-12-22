@@ -7,6 +7,7 @@
   "scripts": {
     "clean": "rimraf ./*/app/**/* && rimraf **/node_modules/**/*",
     "build": "npx tsc -b",
+    "build.watch": "npx tsc -b -w",
     "test": "npm run build && npm run test -w test"
   },
   "devDependencies": {

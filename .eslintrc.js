@@ -15,7 +15,7 @@ module.exports = {
   },
   ignorePatterns: ['.eslintrc.js', 'prettier.config.js'],
   rules: {
-    '@typescript-eslint/ban-ts-ignore': 'off',
+    '@typescript-eslint/ban-ts-comment': 'warn',
     '@typescript-eslint/type-annotation-spacing': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
     'no-unused-vars': 'off',

@@ -6,4 +6,3 @@
 - Use Lerna or similar for publishing & versioning
 - Update GitHub workflows to use Lerna
 - Port `ts-transform-paths` and update it to also append file extensions
-

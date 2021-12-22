@@ -1,0 +1,29 @@
+{
+  "name": "@bscotch/informer",
+  "version": "0.0.1",
+  "description": "Robust release notes and changelog management",
+  "main": "app/index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bscotch/node-util.git"
+  },
+  "keywords": [
+    "release",
+    "release notes",
+    "change logs",
+    "patch notes",
+    "changelogs",
+    "patchnotes",
+    "monorepo"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bscotch/node-util/issues"
+  },
+  "homepage": "https://github.com/bscotch/node-util/inform#readme"
+}

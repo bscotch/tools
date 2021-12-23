@@ -10,13 +10,13 @@ type UnionToIntersection<U> = (U extends any ? (_: U) => void : never) extends (
 ) => void
   ? I
   : never;
-export type SomeJSONSchema = JSONSchemaType<Known, true>;
-type PartialSchema<T> = Partial<JSONSchemaType<T, true>>;
+// type SomeJsonSchema = JSONSchemaType<Known, true>;
+type PartialSchema<T> = Partial<JsonSchemaType<T, true>>;
 /**
  * Primitive type
  * @see https://tools.ietf.org/html/draft-handrews-json-schema-validation-01#section-6.1.1
  */
-export type JSONSchemaTypeName =
+export type JsonSchemaTypeName =
   | 'string' //
   | 'number'
   | 'integer'
@@ -25,8 +25,8 @@ export type JSONSchemaTypeName =
   | 'array'
   | 'null';
 
-type JSONType<
-  T extends JSONSchemaTypeName,
+type JsonType<
+  T extends JsonSchemaTypeName,
   IsPartial extends boolean,
 > = IsPartial extends true ? T | undefined : T;
 interface NumberKeywords {
@@ -44,23 +44,23 @@ interface StringKeywords {
   format?: string;
 }
 
-export type JSONSchemaType<T, IsPartial extends boolean = false> =
+export type JsonSchemaType<T, IsPartial extends boolean = false> =
   | true
   | ((
       | // these two unions allow arbitrary unions of types
       {
-          anyOf: readonly JSONSchemaType<T, IsPartial>[];
+          anyOf: readonly JsonSchemaType<T, IsPartial>[];
         }
       | {
-          oneOf: readonly JSONSchemaType<T, IsPartial>[];
+          oneOf: readonly JsonSchemaType<T, IsPartial>[];
         }
       | ({
           type: readonly (T extends number
-            ? JSONType<'number' | 'integer', IsPartial>
+            ? JsonType<'number' | 'integer', IsPartial>
             : T extends string
-            ? JSONType<'string', IsPartial>
+            ? JsonType<'string', IsPartial>
             : T extends boolean
-            ? JSONType<'boolean', IsPartial>
+            ? JsonType<'boolean', IsPartial>
             : never)[];
         } & UnionToIntersection<
           T extends number
@@ -73,21 +73,21 @@ export type JSONSchemaType<T, IsPartial extends boolean = false> =
         >)
       | ((T extends number
           ? {
-              type: JSONType<'number' | 'integer', IsPartial>;
+              type: JsonType<'number' | 'integer', IsPartial>;
             } & NumberKeywords
           : T extends string
           ? {
-              type: JSONType<'string', IsPartial>;
+              type: JsonType<'string', IsPartial>;
             } & StringKeywords
           : T extends boolean
           ? {
-              type: JSONType<'boolean', IsPartial>;
+              type: JsonType<'boolean', IsPartial>;
             }
           : T extends readonly [any, ...any[]]
           ? {
-              type: JSONType<'array', IsPartial>;
+              type: JsonType<'array', IsPartial>;
               items: {
-                readonly [K in keyof T]-?: JSONSchemaType<T[K], false> &
+                readonly [K in keyof T]-?: JsonSchemaType<T[K], false> &
                   Nullable<T[K]>;
               } & {
                 length: T['length'];
@@ -103,8 +103,8 @@ export type JSONSchemaType<T, IsPartial extends boolean = false> =
             )
           : T extends readonly any[]
           ? {
-              type: JSONType<'array', IsPartial>;
-              items: JSONSchemaType<T[0], false>;
+              type: JsonType<'array', IsPartial>;
+              items: JsonSchemaType<T[0], false>;
               contains?: PartialSchema<T[0]>;
               minItems?: number;
               maxItems?: number;
@@ -115,19 +115,19 @@ export type JSONSchemaType<T, IsPartial extends boolean = false> =
             }
           : T extends Record<string, any>
           ? {
-              type: JSONType<'object', IsPartial>;
-              additionalProperties?: boolean | JSONSchemaType<T[string], false>;
+              type: JsonType<'object', IsPartial>;
+              additionalProperties?: boolean | JsonSchemaType<T[string], false>;
               unevaluatedProperties?:
                 | boolean
-                | JSONSchemaType<T[string], false>;
+                | JsonSchemaType<T[string], false>;
               properties?: IsPartial extends true
                 ? Partial<PropertiesSchema<T>>
                 : PropertiesSchema<T>;
               patternProperties?: Record<
                 string,
-                JSONSchemaType<T[string], false>
+                JsonSchemaType<T[string], false>
               >;
-              propertyNames?: Omit<JSONSchemaType<string, false>, 'type'> & {
+              propertyNames?: Omit<JsonSchemaType<string, false>, 'type'> & {
                 type?: 'string';
               };
               dependencies?: {
@@ -154,7 +154,7 @@ export type JSONSchemaType<T, IsPartial extends boolean = false> =
                 })
           : T extends null
           ? {
-              type: JSONType<'null', IsPartial>;
+              type: JsonType<'null', IsPartial>;
               nullable: true;
             }
           : never) & {
@@ -172,7 +172,7 @@ export type JSONSchemaType<T, IsPartial extends boolean = false> =
       $ref?: string;
       title?: string;
       description?: string;
-      definitions?: Record<string, JSONSchemaType<Known, true>>;
+      definitions?: Record<string, JsonSchemaType<Known, true>>;
     });
 
 type Known =
@@ -188,7 +188,7 @@ type Known =
 
 export type PropertiesSchema<T> = {
   [K in keyof T]-?:
-    | (JSONSchemaType<T[K], false> & Nullable<T[K]>)
+    | (JsonSchemaType<T[K], false> & Nullable<T[K]>)
     | {
         $ref: string;
       };

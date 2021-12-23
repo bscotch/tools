@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "description": "Robust release notes and changelog management",
   "main": "app/index.js",
-  "dependencies": {},
-  "devDependencies": {},
+  "dependencies": {
+    "@bscotch/utility": "^2.2.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bscotch/tools.git"

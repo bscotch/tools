@@ -3,13 +3,11 @@
   "version": "0.0.1",
   "description": "Robust release notes and changelog management",
   "main": "app/index.js",
+  "dependencies": {},
   "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bscotch/node-util.git"
+    "url": "git+https://github.com/bscotch/tools.git"
   },
   "keywords": [
     "release",
@@ -23,7 +21,7 @@
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/bscotch/node-util/issues"
+    "url": "https://github.com/bscotch/tools/issues"
   },
-  "homepage": "https://github.com/bscotch/node-util/inform#readme"
+  "homepage": "https://github.com/bscotch/tools/inform#readme"
 }

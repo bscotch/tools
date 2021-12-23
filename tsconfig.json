@@ -12,8 +12,8 @@
     "composite": true
   },
   "references": [
-    { "path": "utility" },
-    { "path": "informer" },
-    { "path": "test" }
+    { "path": "packages/utility" },
+    { "path": "packages/informer" },
+    { "path": "packages/test" }
   ]
 }

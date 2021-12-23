@@ -1,0 +1,5 @@
+{
+  // Serves as a bridge for extension of the root tsconfig.json file
+  "include": [],
+  "extends": "../tsconfig.json"
+}

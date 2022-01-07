@@ -7,8 +7,11 @@
   "scripts": {
     "clean": "rimraf packages/*/app/**/* && rimraf **/node_modules/**/*",
     "build": "npx tsc -b",
-    "build.watch": "npx tsc -b -w",
-    "test": "npm run build && lerna run test "
+    "watch": "npx tsc -b -w",
+    "test": "npm run build && lerna run test",
+    "i:utility": "npx lerna add --scope=@bscotch/utility",
+    "i:informer": "npx lerna add --scope=@bscotch/informer",
+    "i:test": "npx lerna add --scope=@bscotch/tools-test"
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.13",
@@ -48,8 +51,6 @@
     "node": "16.13.1"
   },
   "workspaces": [
-    "packages/utility",
-    "packages/informer",
-    "packages/test"
+    "packages/*"
   ]
 }

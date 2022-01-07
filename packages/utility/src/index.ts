@@ -1,5 +1,6 @@
 export * from './lib/array.js';
 export * from './lib/crypto.js';
+export * from './lib/errors.js';
 export * from './lib/dates.js';
 export * from './lib/files.js';
 export * from './lib/objects.js';

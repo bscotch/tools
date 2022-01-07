@@ -2,7 +2,31 @@
 
 The purpose of changelogs and release notes is to inform people of changes that are relevant to them. However, any given change may not be relevant to all users.
 
-`Informer` is a utility that simplifies the process of creating, maintaining, and distributing changelogs and release notes.
+`Informer` is a utility that simplifies the process of creating, maintaining, and distributing changelogs and release notes. 
+
+
+## Use Cases
+
+- A developer 
+
+
+
+## Core Concepts
+
+- **Project**: A collection of files and associated remote resources that changes over time.
+- **Snapshot**: A snapshot of a Project at a specific point in time. A Project snapshot should be *stable* -- it represents a defined, constant state of the Project.
+- **Version**: A unique identifier associated with a Snapshot, often used synonymously with that Snapshot.
+- **Semver**: A Version identifier following the "Semantic Versioning" spec.
+- **Release**: A snapshot of a Project that is intended to be used by downstream customers.
+- **Git commit**: A collection of changes making up a specific snapshot.
+- **Git commit message**: A summary attached to a git commit, describing what was changed since the prior commit. Git commit messages are important for developers to be able to triangulate specific snapshots of a Project, in particular for debugging and release management. Git messages are stored in the Git history of the project.
+- **Changelog**: A detailed list of changes made to a project, presented in a user-friendly manner. Informer uses "changelog" more or less synonymously with "git history". The target audience of a changelog consists of project maintainers. 
+- **Release notes**: A summary of all changes made to a project since a prior release, written for a particular target audience.
+- **Branch-Applicable Version**: A semver string satisfying branch-specific rules. For example, a `develop` branch might specify that only semver strings matching the pattern `^(\d+)(\.\d+){2}-rc\.0$` are applicable.
+- **Package**: A project within a git repository that is versioned and needs changelogs/release notes.
+- **Monorepo**: A git repository that contains multiple packages, each with its own distinct version, release, and changelog management.
+- **Bump**: The act of incrementing a semver version string. As a prompt, a request for *which* part of the string should be versioned.
+
 
 ## TODO
 
@@ -11,15 +35,6 @@ The purpose of changelogs and release notes is to inform people of changes that 
 - Create a Change class that can parse data from Inquirer or a changes file
 - Create an Informer class that can serve up the prompts, create/update files, and create commits.
 
-## Terms & Concepts
-
-- **Git commit message**: A summary attached to a git commit, describing what was changed since the prior commit.
-- **Changelog**: A detailed list of changes made to a project. Informer uses "changelog" more or less synonymously with "git history". The target audience of a changelog consists of project maintainers. 
-- **Release notes**: A summary of all changes made to a project since a prior release, written for a particular target audience.
-- **Branch-Applicable Version**: A semver string satisfying branch-specific rules. For example, a `develop` branch might specify that only semver strings matching the pattern `^(\d+)(\.\d+){2}-rc\.0$` are applicable.
-- **Package**: A project within a git repository that is versioned and needs changelogs/release notes.
-- **Monorepo**: A git repository that contains multiple packages, each with its own distinct version, release, and changelog management.
-- **Bump**: The act of incrementing a semver version string. As a prompt, a request for *which* part of the string should be versioned.
 
 ## Prior Art
 

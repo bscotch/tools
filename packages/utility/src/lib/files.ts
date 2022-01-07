@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { AnyFunction } from '../types/utility.js';
 import path from 'path';
 import { sortedPaths } from './paths';
 
@@ -154,6 +155,21 @@ export function writeAsModule(
   return asString;
 }
 
+export function readJsonFileSync<Contents = unknown>(
+  filePath: string,
+): Contents {
+  return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+}
+
+export function writeJsonFileSync(
+  filePath: string,
+  data: any,
+  spaces = 2,
+  replacer?: AnyFunction,
+) {
+  fs.writeFileSync(filePath, JSON.stringify(data, replacer, spaces));
+}
+
 export const files = {
   listFilesByExtensionSync,
   listFilesSync,
@@ -162,4 +178,6 @@ export const files = {
   removeEmptyDirsSync,
   writeAsModule,
   asModuleString,
+  readJsonFileSync,
+  writeJsonFileSync,
 };

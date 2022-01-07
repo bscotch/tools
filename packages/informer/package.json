@@ -4,7 +4,12 @@
   "description": "Robust release notes and changelog management",
   "main": "app/index.js",
   "dependencies": {
-    "@bscotch/utility": "^2.2.0"
+    "@bscotch/utility": "^2.2.0",
+    "conventional-changelog-core": "^4.2.4",
+    "cosmiconfig": "^7.0.1",
+    "fast-glob": "^3.2.7",
+    "git-parse": "^2.1.0",
+    "simple-git": "^2.48.0"
   },
   "repository": {
     "type": "git",
@@ -24,5 +29,9 @@
   "bugs": {
     "url": "https://github.com/bscotch/tools/issues"
   },
-  "homepage": "https://github.com/bscotch/tools/inform#readme"
+  "homepage": "https://github.com/bscotch/tools/inform#readme",
+  "devDependencies": {
+    "@types/conventional-changelog-core": "^4.2.1",
+    "@types/git-parse": "^1.0.1"
+  }
 }

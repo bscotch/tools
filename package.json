@@ -10,7 +10,7 @@
     "watch": "npx tsc -b -w",
     "test": "npm run build && lerna run test",
     "i:utility": "npx lerna add --scope=@bscotch/utility",
-    "i:informer": "npx lerna add --scope=@bscotch/informer",
+    "i:versioner": "npx lerna add --scope=@bscotch/versioner",
     "i:test": "npx lerna add --scope=@bscotch/tools-test"
   },
   "devDependencies": {

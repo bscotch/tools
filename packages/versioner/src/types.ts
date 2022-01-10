@@ -10,7 +10,7 @@ export interface LernaConfig {
 /**
  * Configuration information for the project. Values
  * can be provided via the {@link Project} constructor
- * or `informer` cosmiconfig settings.
+ * or `versioner` cosmiconfig settings.
  */
 export interface ProjectConfig {
   /**
@@ -22,7 +22,7 @@ export interface ProjectConfig {
 export interface ProjectOptions extends ProjectConfig {
   /**
    * Project root directory. It should contain a `.git` folder,
-   * a `package.json` file, and an optional `informer` config
+   * a `package.json` file, and an optional `versioner` config
    * following Cosmic Config's rules.
    *
    * Defaults to the current working directory.

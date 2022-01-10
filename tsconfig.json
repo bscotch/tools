@@ -13,7 +13,7 @@
   },
   "references": [
     { "path": "packages/utility" },
-    { "path": "packages/informer" },
+    { "path": "packages/versioner" },
     { "path": "packages/test" }
   ]
 }

@@ -4,7 +4,7 @@
  * Given a Git repo, `Informer` should be able to:
  *
  * - Open the root `package.json` and check for `workspaces`
- * - Open `informer` configs (via Cosmic Config)
+ * - Open `versioner` configs (via Cosmic Config)
  * - Locate all packages and discern their relationships
  * - Read the Git history and, for each commit,
  *   determine in which package that commit's changes were made.

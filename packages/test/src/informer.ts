@@ -1,4 +1,4 @@
-import { Project } from '@bscotch/informer';
+import { Project } from '@bscotch/versioner';
 
 describe('Informer', function () {
   it('can load an Informer project', function () {

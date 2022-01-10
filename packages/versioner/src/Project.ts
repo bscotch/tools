@@ -29,7 +29,7 @@ export class Project {
     assert(this.git.checkIsRepo(), `${this.dir} is not a Git repo`);
 
     // Load the config options
-    const loadedOptions = cosmiconfigSync('informer', {
+    const loadedOptions = cosmiconfigSync('versioner', {
       stopDir: this.dir,
     }).search(this.dir);
     this._config = {

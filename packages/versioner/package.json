@@ -1,29 +1,27 @@
 {
-  "name": "@bscotch/informer",
+  "name": "@bscotch/versioner",
+  "private": true,
   "version": "0.0.1",
-  "description": "Robust release notes and changelog management",
+  "description": "Robust version management.",
   "main": "app/index.js",
   "dependencies": {
     "@bscotch/utility": "^2.2.0",
+    "@sinclair/typebox": "^0.23.2",
+    "@types/semver": "^7.3.9",
+    "ajv": "^8.8.2",
+    "ajv-formats": "^2.1.1",
     "conventional-changelog-core": "^4.2.4",
     "cosmiconfig": "^7.0.1",
     "fast-glob": "^3.2.7",
     "git-parse": "^2.1.0",
+    "semver": "^7.3.5",
     "simple-git": "^2.48.0"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bscotch/tools.git"
   },
-  "keywords": [
-    "release",
-    "release notes",
-    "change logs",
-    "patch notes",
-    "changelogs",
-    "patchnotes",
-    "monorepo"
-  ],
+  "keywords": [],
   "author": "",
   "license": "MIT",
   "bugs": {

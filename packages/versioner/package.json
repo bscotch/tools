@@ -5,10 +5,11 @@
   "description": "Robust version management.",
   "main": "app/index.js",
   "scripts": {
-    "build": "node app/cli/bsv.js write-schema assets/config-schema.json"
+    "build": "node --enable-source-maps app/cli/bsv.js write-schema assets/config-schema.json"
   },
   "dependencies": {
     "@bscotch/utility": "^2.2.0",
+    "@sinclair/typebox": "^0.23.2",
     "ajv": "^8.8.2",
     "ajv-formats": "^2.1.1",
     "commander": "^8.3.0",

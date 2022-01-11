@@ -1,8 +1,10 @@
-import Ajv from 'ajv';
+import Ajv from 'ajv/dist/2019';
 import addFormats from 'ajv-formats';
 import { Config, configSchema } from './project.js';
 
-const ajv = addFormats(new Ajv({}), [
+const ajv = new Ajv().addKeyword('kind').addKeyword('modifier');
+
+addFormats(ajv, [
   'date-time',
   'time',
   'date',
@@ -17,9 +19,7 @@ const ajv = addFormats(new Ajv({}), [
   'json-pointer',
   'relative-json-pointer',
   'regex',
-])
-  .addKeyword('kind')
-  .addKeyword('modifier');
+]);
 
 const configValidator = ajv.compile(configSchema);
 

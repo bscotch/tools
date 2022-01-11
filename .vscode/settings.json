@@ -14,5 +14,9 @@
     "remoteRoot": null
   },
   "debug.javascript.autoAttachFilter": "smart",
-  "debug.javascript.codelens.npmScripts": "top"
+  "debug.javascript.codelens.npmScripts": "top",
+  "javascript.preferences.importModuleSpecifierEnding": "js",
+  "typescript.preferences.importModuleSpecifierEnding": "js",
+  "javascript.preferences.importModuleSpecifier": "project-relative",
+  "typescript.preferences.importModuleSpecifier": "project-relative"
 }

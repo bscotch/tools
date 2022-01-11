@@ -41,6 +41,8 @@
   },
   "homepage": "https://github.com/bscotch/tools#readme",
   "prettier": {
+    "$id": "prettier",
+    "$schema": "http://json.schemastore.org/prettierrc",
     "trailingComma": "all",
     "bracketSpacing": true,
     "tabWidth": 2,

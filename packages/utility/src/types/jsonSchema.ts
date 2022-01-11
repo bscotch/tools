@@ -3,7 +3,7 @@
  * reduce complexity, and add other functionality as needed.
  */
 
-import { EmptyObject } from './utility.js';
+import { Defined, EmptyObject } from './utility.js';
 
 type UnionToIntersection<U> = (U extends any ? (_: U) => void : never) extends (
   _: infer I,
@@ -46,6 +46,7 @@ interface StringKeywords {
 
 export type JsonSchemaType<T, IsPartial extends boolean = false> =
   | true
+  | { $ref: string }
   | ((
       | // these two unions allow arbitrary unions of types
       {
@@ -53,6 +54,12 @@ export type JsonSchemaType<T, IsPartial extends boolean = false> =
         }
       | {
           oneOf: readonly JsonSchemaType<T, IsPartial>[];
+        }
+      | {
+          enum: readonly T[];
+        }
+      | {
+          const: T;
         }
       | ({
           type: readonly (T extends number
@@ -87,8 +94,7 @@ export type JsonSchemaType<T, IsPartial extends boolean = false> =
           ? {
               type: JsonType<'array', IsPartial>;
               items: {
-                readonly [K in keyof T]-?: JsonSchemaType<T[K], false> &
-                  Nullable<T[K]>;
+                readonly [K in keyof T]-?: Defined<JsonSchemaType<T[K], false>>; //& Nullable<T[K]>;
               } & {
                 length: T['length'];
               };
@@ -155,7 +161,7 @@ export type JsonSchemaType<T, IsPartial extends boolean = false> =
           : T extends null
           ? {
               type: JsonType<'null', IsPartial>;
-              nullable: true;
+              // nullable: true;
             }
           : never) & {
           allOf?: Readonly<PartialSchema<T>[]>;
@@ -172,7 +178,9 @@ export type JsonSchemaType<T, IsPartial extends boolean = false> =
       $ref?: string;
       title?: string;
       description?: string;
-      definitions?: Record<string, JsonSchemaType<Known, true>>;
+      definitions?: Record<string, any>;
+      // definitions?: Record<string, JsonSchemaType<Known, true>>;
+      default?: T;
     });
 
 type Known =
@@ -188,7 +196,7 @@ type Known =
 
 export type PropertiesSchema<T> = {
   [K in keyof T]-?:
-    | (JsonSchemaType<T[K], false> & Nullable<T[K]>)
+    | JsonSchemaType<Defined<T[K]>, false> // & Nullable<T[K]>)
     | {
         $ref: string;
       };
@@ -198,15 +206,17 @@ export type RequiredMembers<T> = {
   [K in keyof T]-?: undefined extends T[K] ? never : K;
 }[keyof T];
 
-type Nullable<T> = undefined extends T
-  ? {
-      nullable: true;
-      const?: null;
-      enum?: Readonly<(T | null)[]>;
-      default?: T | null;
-    }
-  : {
-      const?: T;
-      enum?: Readonly<T[]>;
-      default?: T;
-    };
+// type Nullable<T> = T;
+
+// type Nullable<T> = undefined extends T
+//   ? {
+//       nullable: true;
+//       const?: null;
+//       enum?: Readonly<(T | null)[]>;
+//       default?: T | null;
+//     }
+//   : {
+//       const?: T;
+//       enum?: Readonly<T[]>;
+//       default?: T;
+//     };

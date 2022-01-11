@@ -4,13 +4,14 @@
   "version": "0.0.1",
   "description": "Robust version management.",
   "main": "app/index.js",
+  "scripts": {
+    "build": "node app/cli/bsv.js write-schema assets/config-schema.json"
+  },
   "dependencies": {
     "@bscotch/utility": "^2.2.0",
-    "@sinclair/typebox": "^0.23.2",
-    "@types/semver": "^7.3.9",
     "ajv": "^8.8.2",
     "ajv-formats": "^2.1.1",
-    "conventional-changelog-core": "^4.2.4",
+    "commander": "^8.3.0",
     "cosmiconfig": "^7.0.1",
     "fast-glob": "^3.2.7",
     "git-parse": "^2.1.0",
@@ -29,7 +30,7 @@
   },
   "homepage": "https://github.com/bscotch/tools/inform#readme",
   "devDependencies": {
-    "@types/conventional-changelog-core": "^4.2.1",
-    "@types/git-parse": "^1.0.1"
+    "@types/git-parse": "^1.0.1",
+    "@types/semver": "^7.3.9"
   }
 }

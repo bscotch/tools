@@ -13,8 +13,7 @@
  * *Ideally this would also handle version bumps...*
  */
 
-export * from './Project.js';
-export * from './types.js';
+export * from './Projects.js';
 
 /**
  * # TODO

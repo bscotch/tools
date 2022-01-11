@@ -1,13 +1,17 @@
 import { assert, readJsonFileSync } from '@bscotch/utility';
 import { existsSync } from 'fs';
 import path from 'path';
-import { PackageDotJson } from './types.js';
-import { Project } from './Project';
+import { Projects } from './Projects';
+
+interface PackageDotJson {
+  version: string;
+  name: string;
+}
 
 export class Package {
   private packageDotJson: PackageDotJson;
 
-  constructor(readonly project: Project, readonly workspace: string) {
+  constructor(readonly project: Projects, readonly workspace: string) {
     assert(
       existsSync(this.packageDotJsonFullPath),
       `${this.workspace} is not a package`,

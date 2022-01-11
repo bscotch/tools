@@ -11,8 +11,6 @@ export const semverRegex =
 export const prereleaseRegex =
   /(?<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)/;
 
-export const semverPattern = semverRegex.source;
-export const prereleasePattern = prereleaseRegex.source;
 export const versionBumpLevels = [
   'major',
   'minor',
@@ -22,4 +20,3 @@ export const versionBumpLevels = [
   'prepatch',
   'prerelease',
 ] as const;
-export type VersionBumpLevel = typeof versionBumpLevels[number];

@@ -1,101 +1,46 @@
-import { JsonSchemaType, oneline } from '@bscotch/utility';
+import { oneline } from '@bscotch/utility';
+// import type { Static } from '@sinclair/typebox';
 import {
-  prereleasePattern,
   versionBumpLevels,
-  VersionBumpLevel,
-  semverPattern,
+  prereleaseRegex,
+  semverRegex,
 } from '../constants.js';
-import { createRefObject } from './helpers.js';
+import { Type } from './helpers.js';
+import { versionStoreSchema } from './versionStore.js';
 
-type VersionBumpAllowed = {
-  levels: VersionBumpLevel[];
-  prereleaseId?: string;
-};
+// type VersionBumpLevel = Static<typeof versionBumpLevelSchema>;
+// type VersionPreleaseId = Static<typeof versionPreleaseIdSchema>;
+// type VersionBumpRule = Static<typeof versionBumpRuleSchema>;
+// type Version = Static<typeof versionSchema>;
 
-interface VersionRules {
-  branch?: string;
-  bump?: VersionBumpAllowed[] | VersionBumpAllowed;
-}
+const versionBumpLevelSchema = Type.ConstUnion([...versionBumpLevels], {
+  title: 'Semver Bump Level',
+});
 
-type VersionPreleaseId = string;
+const versionPreleaseIdSchema = Type.RegEx(prereleaseRegex, {
+  title: 'Prerelease ID',
+  description: oneline`
+    The string used as the "prerelease" identifier.
+    For example, version "1.0.0-alpha.1" has prerelease
+    ID "alpha".
+  `,
+  type: 'string',
+});
 
-export type Version = {
-  current: string;
-  rules?: VersionRules[] | VersionRules;
-};
+const semverStringSchema = Type.RegEx(semverRegex, {
+  title: 'Semver String',
+});
 
-export const definitionSchemas: {
-  versionBumpLevel: JsonSchemaType<VersionBumpLevel>;
-  versionPreleaseId: JsonSchemaType<VersionPreleaseId>;
-  versionBumpAllowed: JsonSchemaType<VersionBumpAllowed>;
-  versionRules: JsonSchemaType<VersionRules>;
-  version: JsonSchemaType<Version>;
-} = {
-  version: {
-    title: 'Version',
-    type: 'object',
-    required: ['current'],
-    additionalProperties: false,
-    properties: {
-      current: {
-        type: 'string',
-        pattern: semverPattern,
-      },
-      rules: {
-        oneOf: [
-          { type: 'array', items: createRefObject('versionRules') },
-          createRefObject('versionRules'),
-        ],
-      },
-    },
-  },
-  versionBumpLevel: {
-    enum: versionBumpLevels,
-  },
-  versionPreleaseId: {
-    title: 'Prerelease ID',
-    description: oneline`
-      The string used as the "prerelease" identifier.
-      For example, version "1.0.0-alpha.1" has prerelease
-      ID "alpha".
-    `,
-    type: 'string',
-    pattern: prereleasePattern,
-  },
-  versionBumpAllowed: {
-    title: 'Allowed Version Bumps',
-    description: oneline`
-      Limits on what types of versioning bumps are allowed.
-    `,
-    required: ['levels'],
-    type: 'object',
-    additionalProperties: false,
-    properties: {
-      levels: {
-        type: 'array',
-        items: createRefObject('versionBumpLevel'),
-      },
-      prereleaseId: {
-        title: 'Prerelease ID',
-        description: oneline`
-          The string used as the "prerelease" identifier.
-          For example, version "1.0.0-alpha.1" has prerelease
-          ID "alpha".
-        `,
-        type: 'string',
-        pattern: prereleasePattern,
-      },
-    },
-  },
-  versionRules: {
-    title: 'Version Rules',
-    description: oneline`
-      Rules for managing this version string.
-    `,
-    type: 'object',
-    additionalProperties: false,
-    properties: {
-      branch: {
+const versionLeafSchemas = Type.StoreDefinitions({
+  semver: semverStringSchema,
+  bumpLevel: versionBumpLevelSchema,
+  prereleaseId: versionPreleaseIdSchema,
+});
+
+const versionBumpRuleSchema = Type.Partial(
+  Type.Object(
+    {
+      branch: Type.String({
         type: 'string',
         title: 'Git Branch Pattern',
         description: oneline`
@@ -106,16 +51,38 @@ export const definitionSchemas: {
           branch names when attempting to bump the version.
         `,
         format: 'regex',
-      },
-      bump: {
-        oneOf: [
-          {
-            type: 'array',
-            items: createRefObject('versionBumpAllowed'),
-          },
-          createRefObject('versionBumpAllowed'),
-        ],
-      },
+      }),
+      levels: Type.Array(Type.Ref(versionLeafSchemas, 'bumpLevel'), {
+        default: versionBumpLevels,
+      }),
+      prereleaseIds: Type.Array(Type.Ref(versionLeafSchemas, 'prereleaseId'), {
+        description: oneline`
+          Allowed prerelease IDs, when using bumps like
+          'prerelease' or 'preminor'.
+        `,
+      }),
     },
-  },
-};
+    {
+      title: 'Allowed Version Bumps',
+      additionalProperties: false,
+    },
+  ),
+);
+
+export const versionSchema = Type.Object({
+  current: Type.Ref(versionLeafSchemas, 'semver'),
+  rules: Type.Optional(
+    Type.Array(versionBumpRuleSchema, {
+      description: oneline`
+        Restrict how versions get bumped, by bump level and/or
+        branch pattern.
+      `,
+    }),
+  ),
+  stores: Type.Optional(
+    Type.Array(versionStoreSchema, {
+      description:
+        'File locations where bumped version strings should be stored.',
+    }),
+  ),
+});

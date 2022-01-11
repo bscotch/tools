@@ -1,8 +1,8 @@
 import { oneline } from '@bscotch/utility';
 import { Command } from 'commander';
 import { writeJsonFileSync } from '@bscotch/utility';
-import { configSchema } from '../config/project.js';
-import '../config/validation.js';
+import { projectConfigSchema } from '../config/project.js';
+import { Type } from '../config/helpers.js';
 
 const program = new Command('Bscotch Versioner');
 
@@ -17,8 +17,7 @@ program
   )
   .action((filename = 'bsv-config-schema.json') => {
     filename = filename.endsWith('.json') ? filename : `${filename}.json`;
-
-    writeJsonFileSync(filename, configSchema);
+    writeJsonFileSync(filename, Type.Jsonify(projectConfigSchema));
   });
 
 program.parse();

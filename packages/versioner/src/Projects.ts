@@ -4,12 +4,12 @@ import { gitToJs } from 'git-parse';
 import path from 'path';
 import git, { SimpleGit } from 'simple-git';
 import { cosmiconfigSync } from 'cosmiconfig';
-import { Config } from './config/project.js';
+import { ProjectConfig } from './config/project.js';
 
 export class Projects {
   readonly git: SimpleGit;
   readonly dir: string;
-  private _config: Config;
+  private _config: ProjectConfig;
 
   constructor(options?: { dir?: string }) {
     this.dir = options?.dir || process.cwd();

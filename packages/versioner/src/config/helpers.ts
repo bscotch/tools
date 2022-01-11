@@ -13,10 +13,6 @@ import {
   UnionKind,
 } from '@sinclair/typebox';
 
-export function createRefObject<Name extends string>(forName: Name) {
-  return { $ref: `#/definitions/${forName}` as const };
-}
-
 type ConstUnion<T> = {
   [K in keyof T]: T[K] extends TValue ? TLiteral<T[K]> : never;
 };
@@ -38,18 +34,26 @@ class TypeBuilderExt extends TypeBuilder {
     return this.Store({ ...options, kind: UnionKind, enum: items });
   }
 
+  public StoreDefinitions<T extends TDefinitions>($defs: T): TNamespace<T> {
+    const id = '';
+    if (this.schemas.get(id)) {
+      $defs = { ...this.schemas.get(id)?.$defs, ...$defs };
+    }
+    this.schemas.set(id, { kind: BoxKind, $defs } as any);
+    return this.schemas.get(id) as any;
+  }
+
   /**
-   * Allow *updating* an existing $defs object
+   * For this project I want to use the more understandable
+   * {@see StoreDefinitions} method.
+   *
+   * @deprecated
    */
   public Namespace<T extends TDefinitions>(
     $defs: T,
     options: CustomOptions = {},
-  ): TNamespace<T> {
-    const id = options?.$id || '';
-    if (id === '' && this.schemas.get('')) {
-      $defs = { ...this.schemas.get('')?.$defs, ...$defs };
-    }
-    return this.Store({ ...options, kind: BoxKind, $defs }, true);
+  ): never {
+    throw new Error('Type.Namespace: Use StoreDefinitions instead');
   }
 
   /**
@@ -89,21 +93,21 @@ class TypeBuilderExt extends TypeBuilder {
     }
   }
 
-  /**
-   * Allow an empty-string $id key, to make incremental building of
-   * complex schemas more manageable.
-   *
-   * @param store - Force stor
-   */
-  protected Store<
-    T extends TSchema | TNamespace<TDefinitions>,
-    S = Omit<T, '$static'>,
-  >(schema: S, forceStore = false): T {
-    const $schema: any = schema;
-    if (typeof $schema['$id'] != 'string' && !forceStore) return $schema;
-    this.schemas.set($schema['$id'] || '', $schema);
-    return $schema;
-  }
+  // /**
+  //  * Allow an empty-string $id key, to make incremental building of
+  //  * complex schemas more manageable.
+  //  *
+  //  * @param store - Force stor
+  //  */
+  // protected Store<
+  //   T extends TSchema | TNamespace<TDefinitions>,
+  //   S = Omit<T, '$static'>,
+  // >(schema: S, forceStore = false): T {
+  //   const $schema: any = schema;
+  //   if (typeof $schema['$id'] != 'string' && !forceStore) return $schema;
+  //   this.schemas.set($schema['$id'] || '', $schema);
+  //   return $schema;
+  // }
 
   /**
    * Return a Schema as JSON, including any $defs that are

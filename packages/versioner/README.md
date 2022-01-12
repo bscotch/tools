@@ -27,6 +27,6 @@ A BSV-managed project's configuration includes:
 
 All of these are managed on a per-project basis via a root configuration (or CLI options), allowing usage in both monorepo (multiple projects in one Git repo) and single-project contexts.
 
-To use the versioner, you must create a configuration file (use `bsv init` to create a default one) and keep it up to date based on your project structure. Configuration uses [cosmiconfig](https://github.com/davidtheclark/cosmiconfig), so the config information can be provided in a number of ways (use the module name `bscotch-versioner`).
+To use the versioner, you must create a configuration file (use `bsv init` to create a default one) and keep it up to date based on your project structure. Configuration uses [cosmiconfig](https://github.com/davidtheclark/cosmiconfig), so the config information can be provided in a number of ways (use the module name `bsv`).
 
 

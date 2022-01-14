@@ -8,3 +8,4 @@ tmp.ts
 package-lock.json
 tsconfig.tsbuildinfo
 app
+lerna-debug.log

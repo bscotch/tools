@@ -1,0 +1,52 @@
+{
+  "name": "@bscotch/schemata",
+  "version": "0.0.1-dev.0",
+  "description": "Tools for creating and managing JSON Schemas.",
+  "keywords": [
+    "typebox",
+    "types",
+    "typings",
+    "typescript",
+    "schema",
+    "json-schema",
+    "jsonschema",
+    "json",
+    "static-types",
+    "runtime-typechecking"
+  ],
+  "homepage": "https://github.com/bscotch/tools/tree/main/packages/schemata#readme",
+  "license": "MIT",
+  "main": "app/index.js",
+  "files": [
+    "app"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bscotch/tools.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/bscotch/tools/issues"
+  },
+  "dependencies": {
+    "@bscotch/utility": "^2.2.0",
+    "@sinclair/typebox": "^0.23.2",
+    "ajv": "^8.8.2",
+    "ajv-formats": "^2.1.1",
+    "commander": "^8.3.0",
+    "cosmiconfig": "^7.0.1",
+    "fast-glob": "^3.2.7",
+    "git-parse": "^2.1.0",
+    "semver": "^7.3.5",
+    "simple-git": "^2.48.0"
+  },
+  "devDependencies": {
+    "@types/git-parse": "^1.0.1",
+    "@types/semver": "^7.3.9"
+  }
+}

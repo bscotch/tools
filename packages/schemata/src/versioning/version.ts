@@ -4,7 +4,7 @@ import {
   versionBumpLevels,
   prereleaseRegex,
   semverRegex,
-} from '../constants.js';
+} from './constants.js';
 import { Type } from './helpers.js';
 import { versionStoreSchema } from './versionStore.js';
 

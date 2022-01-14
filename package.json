@@ -10,8 +10,8 @@
     "watch": "npx tsc -b -w",
     "test": "npm run build && lerna run test",
     "i:utility": "npx lerna add --scope=@bscotch/utility",
-    "i:versioner": "npx lerna add --scope=@bscotch/versioner",
-    "i:test": "npx lerna add --scope=__test"
+    "i:schemata": "npx lerna add --scope=@bscotch/schemata",
+    "i:test": "npx lerna add --scope=@local/test"
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.13",

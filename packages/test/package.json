@@ -1,13 +1,13 @@
 {
-  "name": "__test",
+  "name": "@local/test",
   "private": true,
   "description": "Test suite for this monorepo.",
   "scripts": {
     "test": "mocha --inspect --require source-map-support/register --bail ./app"
   },
   "dependencies": {
-    "@bscotch/versioner": "^0.0.1",
-    "@bscotch/utility": "^2.2.0"
+    "@bscotch/schemata": "*",
+    "@bscotch/utility": "*"
   },
   "devDependencies": {
     "@types/chai": "^4.2.22",

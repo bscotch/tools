@@ -4,7 +4,7 @@ import { gitToJs } from 'git-parse';
 import path from 'path';
 import git, { SimpleGit } from 'simple-git';
 import { cosmiconfigSync } from 'cosmiconfig';
-import { ProjectConfig } from './config/project.js';
+import { ProjectConfig } from './versioning/project.js';
 
 export class Projects {
   readonly git: SimpleGit;

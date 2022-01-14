@@ -1,5 +1,6 @@
 {
   "include": [],
+  "typeAcquisition": { "enable": false },
   "compilerOptions": {
     "lib": ["es2019.object", "es2019.array"],
     "target": "esnext",
@@ -9,11 +10,12 @@
     "sourceMap": true,
     "strict": true,
     "esModuleInterop": true,
-    "composite": true
+    "composite": true,
+    "skipLibCheck": true
   },
   "references": [
     { "path": "packages/utility" },
-    { "path": "packages/versioner" },
+    { "path": "packages/schemata" },
     { "path": "packages/test" }
   ]
 }

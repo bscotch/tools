@@ -26,7 +26,40 @@ module.exports = {
       },
     ],
     '@typescript-eslint/adjacent-overload-signatures': 'error',
-    '@typescript-eslint/ban-types': 'error',
+    '@typescript-eslint/ban-types': [
+      'error',
+      {
+        String: {
+          message: 'Use string instead',
+          fixWith: 'string',
+        },
+        Boolean: {
+          message: 'Use boolean instead',
+          fixWith: 'boolean',
+        },
+        Number: {
+          message: 'Use number instead',
+          fixWith: 'number',
+        },
+        Symbol: {
+          message: 'Use symbol instead',
+          fixWith: 'symbol',
+        },
+
+        Function: {
+          message: 'The `Function` type accepts any function-like value.',
+        },
+
+        // object typing
+        Object: {
+          message: [
+            'The `Object` type actually means "any non-nullish value", so it is marginally better than `unknown`.',
+            '- If you want a type meaning "any object", you probably want `Record<string, unknown>` instead.',
+            '- If you want a type meaning "any value", you probably want `unknown` instead.',
+          ].join('\n'),
+        },
+      },
+    ],
     '@typescript-eslint/no-empty-interface': 'warn',
     camelcase: 'off',
     '@typescript-eslint/consistent-type-assertions': 'error',

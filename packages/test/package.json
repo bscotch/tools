@@ -6,7 +6,7 @@
     "test": "mocha --inspect --require source-map-support/register --bail ./app"
   },
   "dependencies": {
-    "@bscotch/schemata": "*",
+    "@bscotch/schema-builder": "*",
     "@bscotch/utility": "*"
   },
   "devDependencies": {

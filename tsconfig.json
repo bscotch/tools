@@ -15,7 +15,7 @@
   },
   "references": [
     { "path": "packages/utility" },
-    { "path": "packages/schemata" },
+    { "path": "packages/schema-builder" },
     { "path": "packages/test" }
   ]
 }

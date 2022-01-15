@@ -12,12 +12,7 @@ import {
   TRef,
   TSchema,
 } from '@sinclair/typebox';
-import {
-  ArrayOrScalar,
-  assert,
-  Spread,
-  wrapIfNotArray,
-} from '@bscotch/utility';
+import { assert, Spread } from '@bscotch/utility';
 
 type BuilderDefs = Record<string, TSchema>;
 
@@ -78,6 +73,27 @@ export class SchemaBuilder<Defs extends BuilderDefs = {}> extends TypeBuilder {
     if ($defs) {
       this.addDefinitions($defs);
     }
+  }
+
+  /**
+   * Create a `$ref` reference to a schema definition that
+   * this `SchemaBuilder` knows about
+   * (e.g. it was provided via `addDefinition`).
+   */
+  public DefRef<N extends keyof Defs>(name: N): TRef<Defs[N]> {
+    this.assertDefExists(name as string);
+    return { kind: RefKind, $ref: `#/$defs/${name}` } as any;
+  }
+
+  /**
+   * Create an enum schema from an array of literals,
+   * resulting in a union type of those values.
+   */
+  public LiteralUnion<T extends TValue[]>(
+    items: [...T],
+    options: CustomOptions = {},
+  ): TLiteralUnion<T> {
+    return this.Store({ ...options, kind: UnionKind, enum: items });
   }
 
   private findDef<N extends string>(
@@ -163,28 +179,13 @@ export class SchemaBuilder<Defs extends BuilderDefs = {}> extends TypeBuilder {
     return func.bind(this)();
   }
 
-  public injectDefs<T extends TSchema>(schema: T): T & { $defs: Defs } {
-    return { ...schema, $defs: this.$defs };
-  }
-
   /**
-   * Create a `$ref` reference to a schema definition that
-   * this `SchemaBuilder` knows about
-   * (e.g. it was provided via `addDefinition`).
+   * Add definitions
    */
-  public DefRef<N extends keyof Defs>(name: N): TRef<Defs[N]> {
-    this.assertDefExists(name as string);
-    return { kind: RefKind, $ref: `#/$defs/${name}` } as any;
-  }
-
-  /**
-   * Create an enum schema from an array of literals,
-   * resulting in a union type of those values.
-   */
-  public LiteralUnion<T extends TValue[]>(
-    items: [...T],
-    options: CustomOptions = {},
-  ): TLiteralUnion<T> {
-    return this.Store({ ...options, kind: UnionKind, enum: items });
+  public withDefs<
+    T extends TSchema,
+    N extends '$defs' | 'definitions' = '$defs',
+  >(schema: T, fieldName?: N): T & Record<N, Defs> {
+    return { ...schema, [fieldName || '$defs']: this.$defs } as any;
   }
 }

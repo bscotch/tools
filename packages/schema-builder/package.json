@@ -1,5 +1,5 @@
 {
-  "name": "@bscotch/schemata",
+  "name": "@bscotch/schema-builder",
   "version": "0.0.1-dev.0",
   "description": "Tools for creating and managing JSON Schemas.",
   "keywords": [
@@ -14,7 +14,7 @@
     "static-types",
     "runtime-typechecking"
   ],
-  "homepage": "https://github.com/bscotch/tools/tree/main/packages/schemata#readme",
+  "homepage": "https://github.com/bscotch/tools/tree/main/packages/schema-builder#readme",
   "license": "MIT",
   "main": "app/index.js",
   "files": [

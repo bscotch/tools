@@ -1,0 +1,33 @@
+{
+  "name": "@bscotch/schema-lib",
+  "version": "0.0.1-dev.0",
+  "private": true,
+  "description": "Library of @bscotch/schema-builder schemas for modularity.",
+  "keywords": [
+    "schema",
+    "jsonschema",
+    "json-schema",
+    "library",
+    "schema-builder",
+    "typebox",
+    "types",
+    "typings"
+  ],
+  "homepage": "https://github.com/bscotch/tools/tree/main/packages/schema-lib#readme",
+  "license": "MIT",
+  "main": "app/index.js",
+  "files": [
+    "app"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bscotch/tools.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bscotch/tools/issues"
+  },
+  "peerDependencies": {
+    "@bscotch/utility": ">=2.2.0 <=3",
+    "@bscotch/schema-builder": ">=0 <=1"
+  }
+}

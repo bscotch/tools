@@ -1,7 +1,6 @@
 import { oneline } from '@bscotch/utility';
 import { versionSchema } from './version.js';
-import { Type } from './helpers.js';
-import { Static } from '@sinclair/typebox';
+import { Static } from '@bscotch/schema-builder';
 
 const packageSchema = Type.Object(
   {

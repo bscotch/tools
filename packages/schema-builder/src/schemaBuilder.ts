@@ -4,22 +4,18 @@
  */
 
 import {
-  CustomOptions,
+  TRef,
   TValue,
+  RefKind,
+  TSchema,
   UnionKind,
   TypeBuilder,
-  RefKind,
-  TRef,
-  TSchema,
+  CustomOptions,
 } from '@sinclair/typebox';
 import { assert, Spread } from '@bscotch/utility';
+export * from '@sinclair/typebox';
 
 type BuilderDefs = Record<string, TSchema>;
-
-type BuilderWithDefs<
-  OldDefs extends BuilderDefs,
-  NewDefs extends BuilderDefs,
-> = SchemaBuilder<OldDefs & NewDefs>;
 
 type BuilderDefGenerator<OldDefs extends BuilderDefs, T extends TSchema> = (
   this: SchemaBuilder<OldDefs>,
@@ -29,12 +25,6 @@ type BuilderDefsGenerator<
   OldDefs extends BuilderDefs,
   NewDefs extends BuilderDefs,
 > = (this: SchemaBuilder<OldDefs>) => NewDefs;
-
-type LibsFromBuilders<Builders extends SchemaBuilder<any>[]> = {
-  [B in keyof Builders]: Builders[B] extends SchemaBuilder<any>
-    ? Builders[B]['$defs']
-    : never;
-};
 
 /**
  * Additional type for `enum` schemas, created by
@@ -158,21 +148,23 @@ export class SchemaBuilder<Defs extends BuilderDefs = {}> extends TypeBuilder {
    * you don't have a variable name to reference.
    *
    * @example
+   *
    * ```ts
    * const lib = new SchemaBuilder().addDefinition('aString', function () {
    *   return this.String();
    * });
    *
-   * const mySchema = new SchemaBuilder(lib).use(function () {
-   *   return this.addDefinition('nums', this.LiteralUnion([1, 2, 3]))
-   *     .addDefinition('moreNums', this.Array(this.Number()))
-   *     .addDefinition('deeper', function () {
-   *       return this.Object({
-   *         deepArray: this.Array(this.DefRef('nums')),
-   *         libRef: this.Array(this.DefRef('aString')),
+   * const mySchema = new SchemaBuilder(lib)
+   *   .use(function () {
+   *     return this.addDefinition('nums', this.LiteralUnion([1, 2, 3]))
+   *       .addDefinition('moreNums', this.Array(this.Number()))
+   *       .addDefinition('deeper', function () {
+   *         return this.Object({
+   *           deepArray: this.Array(this.DefRef('nums')),
+   *           libRef: this.Array(this.DefRef('aString')),
+   *         });
    *       });
-   *     });
-   * });
+   *    });
    * ```
    */
   public use<Out>(func: (this: SchemaBuilder<Defs>) => Out): Out {

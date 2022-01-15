@@ -35,15 +35,11 @@
   },
   "dependencies": {
     "@bscotch/utility": "^2.2.0",
-    "@sinclair/typebox": "^0.23.2",
     "ajv": "^8.8.2",
-    "ajv-formats": "^2.1.1",
-    "commander": "^8.3.0",
-    "cosmiconfig": "^7.0.1",
-    "fast-glob": "^3.2.7",
-    "git-parse": "^2.1.0",
-    "semver": "^7.3.5",
-    "simple-git": "^2.48.0"
+    "ajv-formats": "^2.1.1"
+  },
+  "peerDependencies": {
+    "@sinclair/typebox": "^0.23.2"
   },
   "devDependencies": {
     "@types/git-parse": "^1.0.1",

@@ -1,4 +1,4 @@
-import { EmptyArray } from '../types/utility';
+import type { EmptyArray, ArrayOrScalar } from '../types/utility';
 
 /**
  * If the provided value is not an array,
@@ -6,8 +6,8 @@ import { EmptyArray } from '../types/utility';
  * will return an empty array.
  */
 export function wrapIfNotArray<Item>(
-  item: Item,
-): Item extends any[] ? Item : Item extends undefined ? [] : [Item] {
+  item: ArrayOrScalar<Item>,
+): Item extends undefined ? EmptyArray : Item[] {
   if (Array.isArray(item)) {
     // @ts-expect-error Help! Does work, but Typescript doesn't like it.
     return item;

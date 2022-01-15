@@ -23,6 +23,8 @@ export type Nullish = null | undefined;
 export type NotNullish<T> = Exclude<T, Nullish>;
 export type NotNull<T> = Exclude<T, null>;
 export type Defined<T> = Exclude<T, undefined>;
+export type ArrayOrScalar<T> = T | T[];
+export type UnwrappedArrayOrScalar<T> = T extends Array<infer U> ? U : T;
 
 export type ExtractKeysByValue<Container, ValueTypeFilter> = {
   [Key in keyof Container]-?: Container[Key] extends AnyFunction

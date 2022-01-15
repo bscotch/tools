@@ -3,9 +3,21 @@
  * and specific use-cases.
  */
 
-import { ArrayOrScalar, assert, wrapIfNotArray } from '@bscotch/utility';
-import { RefKind, TRef, TSchema } from '@sinclair/typebox';
-import { TypeBuilderExtended } from './typeboxExtended.js';
+import {
+  CustomOptions,
+  TValue,
+  UnionKind,
+  TypeBuilder,
+  RefKind,
+  TRef,
+  TSchema,
+} from '@sinclair/typebox';
+import {
+  ArrayOrScalar,
+  assert,
+  Spread,
+  wrapIfNotArray,
+} from '@bscotch/utility';
 
 type BuilderDefs = Record<string, TSchema>;
 
@@ -14,15 +26,40 @@ type BuilderWithDefs<
   NewDefs extends BuilderDefs,
 > = SchemaBuilder<OldDefs & NewDefs>;
 
-type SchemaBuilderDefGenerator<
-  OldDefs extends BuilderDefs,
-  T extends TSchema,
-> = (this: SchemaBuilder<OldDefs>) => T;
+type BuilderDefGenerator<OldDefs extends BuilderDefs, T extends TSchema> = (
+  this: SchemaBuilder<OldDefs>,
+) => T;
 
-type SchemaBuilderDefsGenerator<
+type BuilderDefsGenerator<
   OldDefs extends BuilderDefs,
   NewDefs extends BuilderDefs,
 > = (this: SchemaBuilder<OldDefs>) => NewDefs;
+
+type LibsFromBuilders<Builders extends SchemaBuilder<any>[]> = {
+  [B in keyof Builders]: Builders[B] extends SchemaBuilder<any>
+    ? Builders[B]['$defs']
+    : never;
+};
+
+/**
+ * Additional type for `enum` schemas, created by
+ * providing an array of literals (TypeBox does not
+ * have this built-in).
+ */
+type StaticLiteralUnion<T extends readonly TValue[]> = {
+  [K in keyof T]: T[K] extends TValue ? T[K] : never;
+};
+
+/**
+ * Additional type for `enum` schemas, created by
+ * providing an array of literals (TypeBox does not
+ * have this built-in).
+ */
+interface TLiteralUnion<T extends TValue[]> extends TSchema, CustomOptions {
+  $static: StaticLiteralUnion<T>;
+  kind: typeof UnionKind;
+  enum: T;
+}
 
 /**
  * A `SchemaBuilder` instance provides storage for schema
@@ -33,19 +70,15 @@ type SchemaBuilderDefsGenerator<
  *
  * (Powered by TypeBox)
  */
-export class SchemaBuilder<Defs extends BuilderDefs> {
-  protected readonly $defs: Defs = {} as Defs;
+export class SchemaBuilder<Defs extends BuilderDefs = {}> extends TypeBuilder {
+  readonly $defs: Defs = {} as Defs;
 
-  constructor($defs?: ArrayOrScalar<Defs>) {
+  constructor($defs?: Defs | SchemaBuilder<Defs>) {
+    super();
     if ($defs) {
       this.addDefinitions($defs);
     }
   }
-
-  /**
-   * An extended TypeBox `TypeBuilder` instance for creating schemas.
-   */
-  readonly Type = new TypeBuilderExtended<Defs>();
 
   private findDef<N extends string>(
     name: N,
@@ -67,8 +100,8 @@ export class SchemaBuilder<Defs extends BuilderDefs> {
    */
   public addDefinition<N extends string, T extends TSchema>(
     name: N,
-    schema: T | SchemaBuilderDefGenerator<Defs, T>,
-  ): SchemaBuilder<Defs & Record<N, T>> {
+    schema: T | BuilderDefGenerator<Defs, T>,
+  ): SchemaBuilder<Spread<[Defs, Record<N, T>]>> {
     this.assertDefExists(name);
     // @ts-expect-error The `[name]` index does not exist on `this.$defs`
     // until the newly-typed `this` is returned
@@ -82,64 +115,76 @@ export class SchemaBuilder<Defs extends BuilderDefs> {
    * in local references for a final schema.
    */
   public addDefinitions<NewDefs extends BuilderDefs>(
-    lib: ArrayOrScalar<NewDefs>,
-  ): BuilderWithDefs<Defs, NewDefs>;
-  public addDefinitions<NewDefs extends BuilderDefs>(
-    newDefs: NewDefs | SchemaBuilderDefsGenerator<Defs, NewDefs>,
-  ): BuilderWithDefs<Defs, NewDefs>;
-  public addDefinitions<NewDefs extends BuilderDefs>(
-    newDefs: ArrayOrScalar<NewDefs> | SchemaBuilderDefsGenerator<Defs, NewDefs>,
-  ): BuilderWithDefs<Defs, NewDefs> {
-    const libs = typeof newDefs === 'function' ? newDefs.bind(this)() : newDefs;
-    for (const lib of wrapIfNotArray(libs)) {
-      for (const [name, schema] of Object.entries(lib)) {
-        this.addDefinition(name, schema);
-      }
+    newDefs:
+      | NewDefs
+      | BuilderDefsGenerator<Defs, NewDefs>
+      | SchemaBuilder<NewDefs>,
+  ): SchemaBuilder<Spread<[Defs, NewDefs]>> {
+    const lib =
+      typeof newDefs === 'function'
+        ? newDefs.bind(this)()
+        : newDefs instanceof SchemaBuilder
+        ? newDefs.$defs
+        : newDefs;
+    for (const [name, schema] of Object.entries(lib)) {
+      this.addDefinition(name, schema);
     }
     return this as any;
   }
 
+  /**
+   * Like JavaScript's `Function.prototype.call()`, except that
+   * `this` is already provided as this `SchemaBuilder` instance.
+   *
+   * This is useful when you want to reference a schema definition
+   * created earlier in the chain that Typescript doesn't know about,
+   * or when you want to create Schemas within the build-chain when
+   * you don't have a variable name to reference.
+   *
+   * @example
+   * ```ts
+   * const lib = new SchemaBuilder().addDefinition('aString', function () {
+   *   return this.String();
+   * });
+   *
+   * const mySchema = new SchemaBuilder(lib).use(function () {
+   *   return this.addDefinition('nums', this.LiteralUnion([1, 2, 3]))
+   *     .addDefinition('moreNums', this.Array(this.Number()))
+   *     .addDefinition('deeper', function () {
+   *       return this.Object({
+   *         deepArray: this.Array(this.DefRef('nums')),
+   *         libRef: this.Array(this.DefRef('aString')),
+   *       });
+   *     });
+   * });
+   * ```
+   */
+  public use<Out>(func: (this: SchemaBuilder<Defs>) => Out): Out {
+    return func.bind(this)();
+  }
+
+  public injectDefs<T extends TSchema>(schema: T): T & { $defs: Defs } {
+    return { ...schema, $defs: this.$defs };
+  }
+
+  /**
+   * Create a `$ref` reference to a schema definition that
+   * this `SchemaBuilder` knows about
+   * (e.g. it was provided via `addDefinition`).
+   */
   public DefRef<N extends keyof Defs>(name: N): TRef<Defs[N]> {
     this.assertDefExists(name as string);
     return { kind: RefKind, $ref: `#/$defs/${name}` } as any;
   }
 
-  static create<
-    Defs extends BuilderDefs,
-    OldDefs extends BuilderDefs,
-    Libs extends SchemaBuilder<OldDefs>[],
-  >(
-    libs: Libs,
-    generator?: (this: SchemaBuilder<OldDefs>) => SchemaBuilder<Defs>,
-  ): BuilderWithDefs<OldDefs, Defs>;
-  static create<Defs extends BuilderDefs>(
-    generator: (this: SchemaBuilder<{}>) => SchemaBuilder<Defs>,
-  ): SchemaBuilder<Defs>;
-  static create<
-    Defs extends BuilderDefs,
-    OldDefs extends BuilderDefs,
-    Libs extends SchemaBuilder<OldDefs>[],
-  >(
-    libsOrGenerator: Libs | ((this: SchemaBuilder<{}>) => SchemaBuilder<Defs>),
-    generator?: (this: SchemaBuilder<{}>) => SchemaBuilder<Defs>,
-  ): any {
-    const builder = new SchemaBuilder();
-    const libs = Array.isArray(libsOrGenerator) ? libsOrGenerator : [];
-    generator =
-      typeof libsOrGenerator == 'function' ? libsOrGenerator : generator;
-    for (const lib of libs) {
-      builder.addDefinitions(lib.$defs);
-    }
-    return generator?.bind(builder)() || builder;
+  /**
+   * Create an enum schema from an array of literals,
+   * resulting in a union type of those values.
+   */
+  public LiteralUnion<T extends TValue[]>(
+    items: [...T],
+    options: CustomOptions = {},
+  ): TLiteralUnion<T> {
+    return this.Store({ ...options, kind: UnionKind, enum: items });
   }
 }
-
-const meh = SchemaBuilder.create(function () {
-  return this.addDefinition('nums', this.Type.LiteralUnion([1, 2, 3]))
-    .addDefinition('moreNums', this.Type.Array(this.Type.Number()))
-    .addDefinition('deeper', function () {
-      return this.Type.Object({
-        deepArray: this.Type.Array(this.DefRef('moreNums')),
-      });
-    });
-});

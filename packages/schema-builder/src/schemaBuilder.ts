@@ -13,7 +13,7 @@ import {
   CustomOptions,
   Static,
 } from '@sinclair/typebox';
-import { assert, Spread } from '@bscotch/utility';
+import { assert } from '@bscotch/utility';
 import Ajv, { Options as AjvOptions, JSONSchemaType } from 'ajv/dist/2019';
 import addFormats from 'ajv-formats';
 import fs, { promises as fsPromises } from 'fs';
@@ -27,16 +27,21 @@ export type StaticDefs<T extends SchemaBuilder<any>> = T extends SchemaBuilder<
   ? { [K in keyof U]: U[K] extends TSchema ? Static<U[K]> : never }
   : never;
 
+type BuilderRoot = TSchema | undefined;
+
 type BuilderDefs = Record<string, TSchema>;
 
-type BuilderDefGenerator<OldDefs extends BuilderDefs, T extends TSchema> = (
-  this: SchemaBuilder<OldDefs>,
-) => T;
+type BuilderDefGenerator<
+  OldDefs extends BuilderDefs,
+  T extends TSchema,
+  Root extends BuilderRoot = undefined,
+> = (this: SchemaBuilder<OldDefs, Root>) => T;
 
 type BuilderDefsGenerator<
   OldDefs extends BuilderDefs,
   NewDefs extends BuilderDefs,
-> = (this: SchemaBuilder<OldDefs>) => NewDefs;
+  Root extends BuilderRoot = undefined,
+> = (this: SchemaBuilder<OldDefs, Root>) => NewDefs;
 
 /**
  * Additional type for `enum` schemas, created by
@@ -72,7 +77,7 @@ type SchemaOrDefsKey<Defs extends BuilderDefs> = TSchema | keyof Defs;
 type SchemaFromBuilder<
   Defs extends BuilderDefs,
   T extends SchemaOrDefsKey<Defs>,
-> = T extends TSchema ? T : T extends keyof Defs ? Defs[T] : never;
+> = T extends TSchema ? T : T extends keyof Defs ? TRef<Defs[T]> : never;
 
 export type SchemaFromBuilderWithDefs<
   Defs extends BuilderDefs,
@@ -89,8 +94,12 @@ export type SchemaFromBuilderWithDefs<
  *
  * (Powered by TypeBox)
  */
-export class SchemaBuilder<Defs extends BuilderDefs = {}> extends TypeBuilder {
+export class SchemaBuilder<
+  Defs extends BuilderDefs = {},
+  Root extends TSchema | undefined = undefined,
+> extends TypeBuilder {
   readonly $defs: Defs = {} as Defs;
+  protected readonly root = undefined as Root;
 
   constructor($defs?: Defs | SchemaBuilder<Defs>) {
     super();
@@ -98,6 +107,43 @@ export class SchemaBuilder<Defs extends BuilderDefs = {}> extends TypeBuilder {
     if ($defs) {
       this.addDefinitions($defs);
     }
+  }
+
+  /**
+   * Normalize an incoming schema or definition name
+   * to a schema.
+   */
+  private _asSchema<T extends SchemaOrDefsKey<Defs>>(
+    schemaOrDefsKey: T,
+  ): SchemaFromBuilder<Defs, T> {
+    const defName = typeof schemaOrDefsKey === 'string' && schemaOrDefsKey;
+    const schema = defName
+      ? this.DefRef(defName)
+      : (schemaOrDefsKey as TSchema);
+    return schema as any;
+  }
+
+  /**
+   *
+   * TODO: FINISH THIS API
+   *
+   * Get the current Root schema (or undefined, if not set).
+   * Provide a root schema or definition name as the argument
+   * to set the root.
+   */
+  public Root(): Root;
+  /**
+   * Set the root schema, for use in default behaviors.
+   * This is particularly useful
+   */
+  public Root<T extends SchemaOrDefsKey<Defs>>(
+    schemaOrDefsKey: T,
+  ): SchemaFromBuilder<Defs, T>;
+  public Root<T extends SchemaOrDefsKey<Defs>>(schemaOrDefsKey?: T) {
+    if (!schemaOrDefsKey) {
+      return this.root;
+    }
+    return this._asSchema(schemaOrDefsKey);
   }
 
   /**
@@ -141,8 +187,8 @@ export class SchemaBuilder<Defs extends BuilderDefs = {}> extends TypeBuilder {
    */
   public addDefinition<N extends string, T extends TSchema>(
     name: N,
-    schema: T | BuilderDefGenerator<Defs, T>,
-  ): SchemaBuilder<Spread<[Defs, Record<N, T>]>> {
+    schema: T | BuilderDefGenerator<Defs, T, Root>,
+  ): SchemaBuilder<Defs & Record<N, T>, Root> {
     // @ts-expect-error The `[name]` index does not exist on `this.$defs`
     // until the newly-typed `this` is returned
     this.$defs[name] =
@@ -157,9 +203,9 @@ export class SchemaBuilder<Defs extends BuilderDefs = {}> extends TypeBuilder {
   public addDefinitions<NewDefs extends BuilderDefs>(
     newDefs:
       | NewDefs
-      | BuilderDefsGenerator<Defs, NewDefs>
+      | BuilderDefsGenerator<Defs, NewDefs, Root>
       | SchemaBuilder<NewDefs>,
-  ): SchemaBuilder<Spread<[Defs, NewDefs]>> {
+  ): SchemaBuilder<Defs & NewDefs, Root> {
     const lib =
       typeof newDefs === 'function'
         ? newDefs.bind(this)()
@@ -201,23 +247,23 @@ export class SchemaBuilder<Defs extends BuilderDefs = {}> extends TypeBuilder {
    *    });
    * ```
    */
-  public use<Out>(func: (this: SchemaBuilder<Defs>) => Out): Out {
+  public use<Out>(func: (this: SchemaBuilder<Defs, Root>) => Out): Out {
     return func.bind(this)();
   }
 
   /**
    * Add definitions from this SchemaBuilder instance to a Schema
    */
-  public injectDefs<
+  public WithDefs<
     T extends SchemaOrDefsKey<Defs>,
     N extends SchemaDefsField = '$defs',
   >(schemaOrDefsKey: T, fieldName?: N): SchemaFromBuilderWithDefs<Defs, T, N> {
-    const schema =
-      typeof schemaOrDefsKey === 'string'
-        ? this.assertDefExists(schemaOrDefsKey)
-        : schemaOrDefsKey;
+    const defName = typeof schemaOrDefsKey === 'string' && schemaOrDefsKey;
+    const schema = defName
+      ? this.DefRef(defName)
+      : (schemaOrDefsKey as TSchema);
     return {
-      ...(schema as TSchema),
+      ...schema,
       [fieldName || '$defs']: this.$defs,
     } as any;
   }
@@ -229,7 +275,7 @@ export class SchemaBuilder<Defs extends BuilderDefs = {}> extends TypeBuilder {
   ): Sync extends true ? void : Promise<void> {
     return (sync ? fs.writeFileSync : fsPromises.writeFile)(
       outPath,
-      JSON.stringify(this.injectDefs(schema), null, 2),
+      JSON.stringify(this.WithDefs(schema), null, 2),
     ) as any;
   }
 
@@ -245,14 +291,14 @@ export class SchemaBuilder<Defs extends BuilderDefs = {}> extends TypeBuilder {
     addFormats(ajv);
 
     return ajv.compile(
-      this.injectDefs(schema) as unknown as JSONSchemaType<Static<T>>,
+      this.WithDefs(schema) as unknown as JSONSchemaType<Static<T>>,
     );
   }
 
   public async write<T extends TSchema>(
     schema: T,
     outPath: string,
-  ): Promise<SchemaBuilder<Defs>> {
+  ): Promise<SchemaBuilder<Defs, Root>> {
     await this._write(false, schema, outPath);
     return this;
   }
@@ -260,7 +306,7 @@ export class SchemaBuilder<Defs extends BuilderDefs = {}> extends TypeBuilder {
   public writeSync<T extends TSchema>(
     schema: T,
     outPath: string,
-  ): SchemaBuilder<Defs> {
+  ): SchemaBuilder<Defs, Root> {
     this._write(true, schema, outPath);
     return this;
   }

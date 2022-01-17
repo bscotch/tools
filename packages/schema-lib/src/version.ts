@@ -10,10 +10,10 @@ export type SemverDefs = StaticDefs<typeof semverDefs>;
 
 export const semverDefs = new SchemaBuilder().use(function () {
   return this.addDefinitions({
-    bumpLevel: this.LiteralUnion([...versionBumpLevels], {
+    semverBumpLevel: this.LiteralUnion([...versionBumpLevels], {
       title: 'Semver Bump Level',
     }),
-    prereleaseId: this.RegEx(prereleaseRegex, {
+    semverPrereleaseId: this.RegEx(prereleaseRegex, {
       title: 'Prerelease ID',
       description: oneline`
         The string used as the "prerelease" identifier.

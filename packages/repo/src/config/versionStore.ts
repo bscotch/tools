@@ -3,7 +3,7 @@ import { SchemaBuilder } from '@bscotch/schema-builder';
 
 export const versionStoreDefs = new SchemaBuilder().use(function () {
   return this.addDefinition(
-    'versionStoreFile',
+    '_versionStoreFile',
     this.Object({
       path: this.String({
         title: 'Version Store file path',
@@ -50,7 +50,7 @@ export const versionStoreDefs = new SchemaBuilder().use(function () {
     }),
   )
     .addDefinition(
-      'versionStoreJs',
+      '_versionStoreJs',
       this.Object({
         path: this.String({
           title: 'JavaScript Version Store Path',
@@ -90,7 +90,7 @@ export const versionStoreDefs = new SchemaBuilder().use(function () {
       }),
     )
     .addDefinition(
-      'versionStoreJson',
+      '_versionStoreJson',
       this.Object({
         path: this.String({
           title: 'JSON Version Store Path',
@@ -119,9 +119,9 @@ export const versionStoreDefs = new SchemaBuilder().use(function () {
     .addDefinition('versionStore', function () {
       return this.Union(
         [
-          this.DefRef('versionStoreJson'),
-          this.DefRef('versionStoreJs'),
-          this.DefRef('versionStoreFile'),
+          this.DefRef('_versionStoreJson'),
+          this.DefRef('_versionStoreJs'),
+          this.DefRef('_versionStoreFile'),
         ],
         {
           title: 'Version Store',

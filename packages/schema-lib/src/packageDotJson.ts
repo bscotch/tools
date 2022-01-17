@@ -8,7 +8,7 @@ import { semverDefs } from './version.js';
 export const packageDotJsonDefs = new SchemaBuilder(semverDefs).use(
   function () {
     return this.addDefinition(
-      'npmPackageName',
+      '_npmPackageName',
       this.String({
         description: 'The name of the package.',
         type: 'string',
@@ -16,16 +16,16 @@ export const packageDotJsonDefs = new SchemaBuilder(semverDefs).use(
         minLength: 1,
         pattern: '^(?:@[a-z0-9-*~][a-z0-9-*._~]*/)?[a-z0-9-~][a-z0-9-._~]*$',
       }),
-    ).addDefinition(
-      'npmPackageFileContent',
-      this.Object(
+    ).addDefinition('npmPackageFileContent', function () {
+      return this.Object(
         {
+          name: this.DefRef('_npmPackageName'),
           version: this.DefRef('semver'),
         },
         {
           title: 'Bscotch Project Configuration',
         },
-      ),
-    );
+      );
+    });
   },
 );

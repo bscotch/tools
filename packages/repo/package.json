@@ -1,0 +1,32 @@
+{
+  "name": "@bscotch/repo",
+  "version": "0.0.1-dev.0",
+  "description": "Tools for managing git repositories",
+  "keywords": [
+    "monorepo",
+    "git",
+    "repo",
+    "repository"
+  ],
+  "files": [
+    "app"
+  ],
+  "homepage": "https://github.com/bscotch/tools/tree/main/packages/repo#readme",
+  "license": "MIT",
+  "main": "app/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bscotch/tools.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/bscotch/tools/issues"
+  },
+  "dependencies": {
+    "@bscotch/schema-builder": "^0.0.1-dev.0",
+    "@bscotch/schema-lib": "^0.0.1-dev.0",
+    "@bscotch/utility": "^2.2.0"
+  }
+}

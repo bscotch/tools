@@ -16,6 +16,8 @@
   "references": [
     { "path": "packages/utility" },
     { "path": "packages/schema-builder" },
+    { "path": "packages/schema-lib" },
+    { "path": "packages/repo" },
     { "path": "packages/test" }
   ]
 }

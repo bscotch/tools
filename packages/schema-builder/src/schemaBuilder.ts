@@ -11,9 +11,21 @@ import {
   UnionKind,
   TypeBuilder,
   CustomOptions,
+  Static,
 } from '@sinclair/typebox';
 import { assert, Spread } from '@bscotch/utility';
+import Ajv, { Options as AjvOptions, JSONSchemaType } from 'ajv/dist/2019';
+import addFormats from 'ajv-formats';
+import fs, { promises as fsPromises } from 'fs';
+
+export { JSONSchemaType } from 'ajv/dist/2019';
 export * from '@sinclair/typebox';
+
+export type StaticDefs<T extends SchemaBuilder<any>> = T extends SchemaBuilder<
+  infer U
+>
+  ? { [K in keyof U]: U[K] extends TSchema ? Static<U[K]> : never }
+  : never;
 
 type BuilderDefs = Record<string, TSchema>;
 
@@ -40,11 +52,33 @@ type StaticLiteralUnion<T extends readonly TValue[]> = {
  * providing an array of literals (TypeBox does not
  * have this built-in).
  */
-interface TLiteralUnion<T extends TValue[]> extends TSchema, CustomOptions {
+export interface TLiteralUnion<T extends TValue[]>
+  extends TSchema,
+    CustomOptions {
   $static: StaticLiteralUnion<T>;
   kind: typeof UnionKind;
   enum: T;
 }
+
+export type SchemaDefsField = '$defs' | 'definitions';
+
+type SchemaOrDefsKey<Defs extends BuilderDefs> = TSchema | keyof Defs;
+
+/**
+ * A new Schema (that may use the definitions from a
+ * SchemaBuilder) or an existing Schema (given its
+ * definition name).
+ */
+type SchemaFromBuilder<
+  Defs extends BuilderDefs,
+  T extends SchemaOrDefsKey<Defs>,
+> = T extends TSchema ? T : T extends keyof Defs ? Defs[T] : never;
+
+export type SchemaFromBuilderWithDefs<
+  Defs extends BuilderDefs,
+  S extends SchemaOrDefsKey<Defs>,
+  N extends SchemaDefsField = '$defs',
+> = SchemaFromBuilder<Defs, S> & Record<N, Defs>;
 
 /**
  * A `SchemaBuilder` instance provides storage for schema
@@ -60,6 +94,7 @@ export class SchemaBuilder<Defs extends BuilderDefs = {}> extends TypeBuilder {
 
   constructor($defs?: Defs | SchemaBuilder<Defs>) {
     super();
+
     if ($defs) {
       this.addDefinitions($defs);
     }
@@ -86,7 +121,7 @@ export class SchemaBuilder<Defs extends BuilderDefs = {}> extends TypeBuilder {
     return this.Store({ ...options, kind: UnionKind, enum: items });
   }
 
-  private findDef<N extends string>(
+  public findDef<N extends string>(
     name: N,
   ): N extends keyof Defs ? Defs[N] : undefined {
     return this.$defs[name] as any;
@@ -108,7 +143,6 @@ export class SchemaBuilder<Defs extends BuilderDefs = {}> extends TypeBuilder {
     name: N,
     schema: T | BuilderDefGenerator<Defs, T>,
   ): SchemaBuilder<Spread<[Defs, Record<N, T>]>> {
-    this.assertDefExists(name);
     // @ts-expect-error The `[name]` index does not exist on `this.$defs`
     // until the newly-typed `this` is returned
     this.$defs[name] =
@@ -172,12 +206,62 @@ export class SchemaBuilder<Defs extends BuilderDefs = {}> extends TypeBuilder {
   }
 
   /**
-   * Add definitions
+   * Add definitions from this SchemaBuilder instance to a Schema
    */
-  public withDefs<
-    T extends TSchema,
-    N extends '$defs' | 'definitions' = '$defs',
-  >(schema: T, fieldName?: N): T & Record<N, Defs> {
-    return { ...schema, [fieldName || '$defs']: this.$defs } as any;
+  public injectDefs<
+    T extends SchemaOrDefsKey<Defs>,
+    N extends SchemaDefsField = '$defs',
+  >(schemaOrDefsKey: T, fieldName?: N): SchemaFromBuilderWithDefs<Defs, T, N> {
+    const schema =
+      typeof schemaOrDefsKey === 'string'
+        ? this.assertDefExists(schemaOrDefsKey)
+        : schemaOrDefsKey;
+    return {
+      ...(schema as TSchema),
+      [fieldName || '$defs']: this.$defs,
+    } as any;
+  }
+
+  private _write<T extends TSchema, Sync extends boolean>(
+    sync: Sync,
+    schema: T,
+    outPath: string,
+  ): Sync extends true ? void : Promise<void> {
+    return (sync ? fs.writeFileSync : fsPromises.writeFile)(
+      outPath,
+      JSON.stringify(this.injectDefs(schema), null, 2),
+    ) as any;
+  }
+
+  /**
+   * Create an AJV validator for a schema, which will
+   * included any defs on this SchemaBuilder and all of
+   * the `ajv-formats`. Additional formats, keywords,
+   * and other AJV options can be provided via the optional
+   * `options` and `extensions` arguments.
+   */
+  public compileValidator<T extends TSchema>(schema: T, options?: AjvOptions) {
+    const ajv = new Ajv(options).addKeyword('kind').addKeyword('modifier');
+    addFormats(ajv);
+
+    return ajv.compile(
+      this.injectDefs(schema) as unknown as JSONSchemaType<Static<T>>,
+    );
+  }
+
+  public async write<T extends TSchema>(
+    schema: T,
+    outPath: string,
+  ): Promise<SchemaBuilder<Defs>> {
+    await this._write(false, schema, outPath);
+    return this;
+  }
+
+  public writeSync<T extends TSchema>(
+    schema: T,
+    outPath: string,
+  ): SchemaBuilder<Defs> {
+    this._write(true, schema, outPath);
+    return this;
   }
 }

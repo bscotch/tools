@@ -1,11 +1,4 @@
 # `@bscotch/schema-lib`
 
-> TODO: description
+Library of JSON Schemas, in both JSON Schema and Typescript forms, for re-use in other projects.
 
-## Usage
-
-```
-const schemaLib = require('@bscotch/schema-lib');
-
-// TODO: DEMONSTRATE API
-```

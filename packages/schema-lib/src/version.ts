@@ -1,4 +1,4 @@
-import { SchemaBuilder } from '@bscotch/schema-builder';
+import { SchemaBuilder, StaticDefs } from '@bscotch/schema-builder';
 import {
   versionBumpLevels,
   prereleaseRegex,
@@ -6,13 +6,10 @@ import {
   oneline,
 } from '@bscotch/utility';
 
-// type VersionBumpLevel = Static<typeof versionBumpLevelSchema>;
-// type VersionPreleaseId = Static<typeof versionPreleaseIdSchema>;
-// type VersionBumpRule = Static<typeof versionBumpRuleSchema>;
-// type Version = Static<typeof versionSchema>;
+export type SemverDefs = StaticDefs<typeof semverDefs>;
 
-export const semver = new SchemaBuilder().use(function () {
-  this.addDefinitions({
+export const semverDefs = new SchemaBuilder().use(function () {
+  return this.addDefinitions({
     bumpLevel: this.LiteralUnion([...versionBumpLevels], {
       title: 'Semver Bump Level',
     }),

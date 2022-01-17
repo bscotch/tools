@@ -20,9 +20,6 @@
   "files": [
     "app"
   ],
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bscotch/tools.git"
@@ -34,12 +31,12 @@
     "url": "https://github.com/bscotch/tools/issues"
   },
   "dependencies": {
-    "@bscotch/utility": "^2.2.0",
-    "ajv": "^8.8.2",
-    "ajv-formats": "^2.1.1"
+    "@bscotch/utility": "^2.2.0"
   },
   "peerDependencies": {
-    "@sinclair/typebox": "^0.23.2"
+    "@sinclair/typebox": "^0.23.2",
+    "ajv": ">=8",
+    "ajv-formats": ">=2"
   },
   "devDependencies": {
     "@types/git-parse": "^1.0.1",

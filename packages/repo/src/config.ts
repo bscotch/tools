@@ -13,10 +13,12 @@ export const configSchema = new SchemaBuilder({ lib: versionStoreBuilder })
   .addDefinition('bscotchVersioning', function () {
     return this.Object(
       {
-        stores: this.Union([
-          versionStoreBuilder.root,
-          this.Array(versionStoreBuilder.root),
-        ]),
+        stores: this.Optional(
+          this.Union([
+            versionStoreBuilder.root,
+            this.Array(versionStoreBuilder.root),
+          ]),
+        ),
       },
       {
         description: oneline`
@@ -31,24 +33,24 @@ export const configSchema = new SchemaBuilder({ lib: versionStoreBuilder })
   .addDefinition('bscotchConfig', function () {
     return this.Intersect([
       packageDotJsonSchema.root,
-      this.Optional(
-        this.Object({
-          bscotch: this.Object(
+      this.Object({
+        bscotch: this.Optional(
+          this.Object(
             {
               versioning: this.Optional(this.DefRef('bscotchVersioning')),
             },
             {
               title: 'Bscotch Repo Configuration',
               description: oneline`
-              Configuration options for use by @bscotch/repo
-              and related tools & utilities. These options
-              should be set in a \`package.json\` file's
-              \`"bscotch"\` field. Note that adding custom subfields
-              may lead to conflicts with future Bscotch tools.`,
+                Configuration options for use by @bscotch/repo
+                and related tools & utilities. These options
+                should be set in a \`package.json\` file's
+                \`"bscotch"\` field. Note that adding custom subfields
+                may lead to conflicts with future Bscotch tools.`,
             },
           ),
-        }),
-      ),
+        ),
+      }),
     ]);
   })
   .setRoot('bscotchConfig');

@@ -1,18 +1,16 @@
 import { configSchema, Config } from '@bscotch/repo';
+import { expect } from 'chai';
 
 describe('@bscotch/schema-builder', function () {
   it('can build a functional schema', function () {
-    const validator = configSchema.compileValidator();
     const expectIsValid = (config: any) => {
-      if (!validator(config)) {
-        console.error(validator.errors);
-        throw new Error(`Config is invalid: ${validator.errors?.join('\n')}`);
-      }
+      configSchema.assertIsValid(config);
     };
     const expectIsInvalid = (config: any) => {
-      if (validator(config)) {
-        throw new Error(`Config should not be valid`);
-      }
+      expect(
+        configSchema.isValid(config),
+        `Config should not be valid: ${JSON.stringify(config)}`,
+      ).to.be.false;
     };
     expectIsInvalid({});
     expectIsInvalid({ bscotch: {} });

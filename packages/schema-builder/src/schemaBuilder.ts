@@ -14,23 +14,38 @@ import {
   Static,
 } from '@sinclair/typebox';
 import { assert, Defined } from '@bscotch/utility';
-import { Options as AjvOptions, ValidateFunction } from 'ajv/dist/2019';
+import {
+  Options as AjvOptions,
+  ErrorObject as AjvErrorObject,
+  ValidateFunction,
+  JSONSchemaType,
+} from 'ajv/dist/2019';
 import fs, { promises as fsPromises } from 'fs';
 import { createAjvInstance } from './validation.js';
 export * from '@sinclair/typebox';
 
-export type StaticRoot<T extends SchemaBuilder<any, any>> =
-  T extends SchemaBuilder<any, infer Root>
-    ? Root extends undefined
-      ? never
-      : Static<Defined<Root>>
-    : never;
+export type StaticRoot<
+  T extends SchemaBuilder<any, any> | TSchema | undefined,
+> = T extends undefined
+  ? never
+  : T extends SchemaBuilder<any, infer Root>
+  ? Root extends undefined
+    ? never
+    : StaticDefined<Root>
+  : T extends TSchema
+  ? Static<T>
+  : never;
+
+export type StaticDefined<T extends TSchema | undefined> = Static<Defined<T>>;
 
 export type StaticDefs<T extends SchemaBuilder<any>> = T extends SchemaBuilder<
   infer U
 >
   ? { [K in keyof U]: U[K] extends TSchema ? Static<U[K]> : never }
   : never;
+
+export type SchemaValidator<Root extends TSchema | undefined> =
+  Root extends undefined ? undefined : ValidateFunction<Static<Defined<Root>>>;
 
 type BuilderDefs = Record<string, TSchema>;
 
@@ -108,6 +123,11 @@ export class SchemaBuilder<
   readonly $defs: Defs = {} as Defs;
   protected _root = undefined as Root;
 
+  /**
+   * AJV Validator cache
+   */
+  protected _validator?: SchemaValidator<Root>;
+
   constructor(options?: SchemaBuilderOptions<Defs>) {
     super();
     if (options?.lib) {
@@ -120,6 +140,63 @@ export class SchemaBuilder<
   }
 
   /**
+   * Get the validator cached from the last call
+   * to {@link SchemaBuilder.compileValidator}.
+   *
+   * If no validator has been cached, one will be
+   * automatically created and cached with default options.
+   */
+  public get validate(): Root extends undefined
+    ? never
+    : SchemaValidator<Root> {
+    return this._validator || (this.compileValidator() as any);
+  }
+
+  /**
+   * Create an AJV validator for the root schema, which will
+   * include any defs on this SchemaBuilder and all of
+   * the `ajv-formats`. Additional formats, keywords,
+   * and other AJV options can be provided via the optional
+   * `options` and `extensions` arguments.
+   */
+  public compileValidator(
+    options?: AjvOptions,
+  ): Root extends undefined ? never : SchemaValidator<Root> {
+    this._validator = createAjvInstance(options).compile(
+      this.WithDefs(),
+    ) as any;
+    return this._validator as any;
+  }
+
+  /**
+   * Test data against the root schema, returning
+   * an array of errors or `undefined` if the data is valid.
+   */
+  public hasErrors<T extends any>(
+    data: T,
+  ): T extends StaticRoot<Root> ? undefined : AjvErrorObject[] {
+    const isValid = this.isValid(data);
+    return isValid ? undefined : (this.validate.errors as any);
+  }
+
+  public assertIsValid(data: any): asserts data is StaticRoot<Root> {
+    const errors = this.hasErrors(data);
+    if (!errors) {
+      return;
+    }
+    console.error(errors.join('\n'));
+  }
+
+  /**
+   * Test data against the root schema, returning `true`
+   * if it is valid, and `false` if it is not.
+   */
+  public isValid(data: any): data is StaticRoot<Root> {
+    assert(this.root, 'No root schema defined');
+    return this.validate(data);
+  }
+
+  /**
    * Set one of this SchemaBuilder's definitions as the
    * "root" definition, which will cause a `$ref` schema
    * pointing to it to be used as the default output schema.
@@ -127,6 +204,7 @@ export class SchemaBuilder<
   public setRoot<N extends keyof Defs>(
     defName: N,
   ): SchemaBuilder<Defs, TRef<Defs[N]>> {
+    this._validator = undefined;
     this._root = this.DefRef(defName) as any;
     return this as any;
   }
@@ -187,6 +265,7 @@ export class SchemaBuilder<
     name: N,
     schema: T | ((this: SchemaBuilder<Defs, Root>) => T),
   ): SchemaBuilder<Defs & Record<N, T>, Root> {
+    this._validator = undefined;
     // @ts-expect-error The `[name]` index does not exist on `this.$defs`
     // until the newly-typed `this` is returned
     this.$defs[name] =
@@ -285,37 +364,21 @@ export class SchemaBuilder<
       $defs: this.$defs,
     } as any;
   }
+
   /**
-   * Create an AJV validator for a schema, which will
-   * included any defs on this SchemaBuilder and all of
-   * the `ajv-formats`. Additional formats, keywords,
-   * and other AJV options can be provided via the optional
-   * `options` and `extensions` arguments.
+   * Load data from file, ensuring that it is valid according
+   * to the schema. Default fields are filled and coerce-able fields
+   * are coerced as part of this process.
    */
-  public compileValidator(): Root extends undefined
-    ? never
-    : ValidateFunction<Static<Defined<Root>>>;
-  public compileValidator(
-    options?: AjvOptions,
-  ): Root extends undefined ? never : ValidateFunction<Static<Defined<Root>>>;
-  public compileValidator<T extends TSchema>(
-    schema: T,
-    options?: AjvOptions,
-  ): ValidateFunction<Static<T>>;
-  public compileValidator(
-    schemaOrOptions?: AjvOptions | TSchema,
-    options?: AjvOptions,
-  ): any {
-    const noArgs = !schemaOrOptions && !options;
-    const schemaOrOptionsIsSchema =
-      noArgs || (schemaOrOptions && 'kind' in schemaOrOptions) || undefined;
-    options =
-      options || schemaOrOptionsIsSchema ? {} : (schemaOrOptions as AjvOptions);
-    const schema = this.WithDefs(
-      schemaOrOptionsIsSchema && (schemaOrOptions as TSchema | undefined),
-    );
-    const ajv = createAjvInstance(options);
-    return ajv.compile(this.WithDefs(schema));
+
+  public async write<T extends TSchema>(outPath: string, schema?: T) {
+    await this._write(false, outPath, schema);
+    return this;
+  }
+
+  public writeSync<T extends TSchema>(outPath: string, schema?: T) {
+    this._write(true, outPath, schema);
+    return this;
   }
 
   private _write<T extends TSchema, Sync extends boolean>(
@@ -327,15 +390,5 @@ export class SchemaBuilder<
       outPath,
       JSON.stringify(this.WithDefs(schema), null, 2),
     ) as any;
-  }
-
-  public async write<T extends TSchema>(outPath: string, schema?: T) {
-    await this._write(false, outPath, schema);
-    return this;
-  }
-
-  public writeSync<T extends TSchema>(outPath: string, schema?: T) {
-    this._write(true, outPath, schema);
-    return this;
   }
 }

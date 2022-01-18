@@ -68,7 +68,6 @@ export const versionStoreBuilder = new SchemaBuilder()
         Unless the extension is ".cjs" or the config specifies
         'commonjs', the module style is assumed to be ESM (')
       `,
-              default: 'esm',
             }),
           ),
           exportName: this.Optional(
@@ -85,7 +84,6 @@ export const versionStoreBuilder = new SchemaBuilder()
           \`export const version = '1.0.0'\` or
           \`module.version = '1.0.0').`,
               pattern: '^[a-zA-Z_$][a-zA-Z0-9_$]*$',
-              default: 'default',
             }),
           ),
         }),
@@ -112,7 +110,6 @@ export const versionStoreBuilder = new SchemaBuilder()
           a root object with a field by that name), a 
           JSON Pointer (e.g. '/version'), or a JSONPath
           query (e.g. '$.version').`,
-              default: 'version',
             }),
           ),
         }),

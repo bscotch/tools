@@ -2,6 +2,7 @@ import Ajv, { Options as AjvOptions } from 'ajv/dist/2019';
 import addFormats from 'ajv-formats';
 
 export function createAjvInstance(options?: AjvOptions) {
+  options = { useDefaults: true, coerceTypes: 'array', ...options };
   const ajv = new Ajv(options)
     .addKeyword('kind')
     .addKeyword('modifier')

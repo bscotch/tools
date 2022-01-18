@@ -14,11 +14,9 @@ import {
   Static,
 } from '@sinclair/typebox';
 import { assert, Defined } from '@bscotch/utility';
-import Ajv, { Options as AjvOptions, JSONSchemaType } from 'ajv/dist/2019';
-import addFormats from 'ajv-formats';
+import { Options as AjvOptions, ValidateFunction } from 'ajv/dist/2019';
 import fs, { promises as fsPromises } from 'fs';
-
-export { JSONSchemaType } from 'ajv/dist/2019';
+import { createAjvInstance } from './validation.js';
 export * from '@sinclair/typebox';
 
 export type StaticRoot<T extends SchemaBuilder<any, any>> =
@@ -43,7 +41,7 @@ type BuilderDefs = Record<string, TSchema>;
  */
 type StaticLiteralUnion<T extends readonly TValue[]> = {
   [K in keyof T]: T[K] extends TValue ? T[K] : never;
-};
+}[number];
 
 /**
  * Additional type for `enum` schemas, created by
@@ -294,13 +292,30 @@ export class SchemaBuilder<
    * and other AJV options can be provided via the optional
    * `options` and `extensions` arguments.
    */
-  public compileValidator<T extends TSchema>(schema: T, options?: AjvOptions) {
-    const ajv = new Ajv(options).addKeyword('kind').addKeyword('modifier');
-    addFormats(ajv);
-
-    return ajv.compile(
-      this.WithDefs(schema) as unknown as JSONSchemaType<Static<T>>,
+  public compileValidator(): Root extends undefined
+    ? never
+    : ValidateFunction<Static<Defined<Root>>>;
+  public compileValidator(
+    options?: AjvOptions,
+  ): Root extends undefined ? never : ValidateFunction<Static<Defined<Root>>>;
+  public compileValidator<T extends TSchema>(
+    schema: T,
+    options?: AjvOptions,
+  ): ValidateFunction<Static<T>>;
+  public compileValidator(
+    schemaOrOptions?: AjvOptions | TSchema,
+    options?: AjvOptions,
+  ): any {
+    const noArgs = !schemaOrOptions && !options;
+    const schemaOrOptionsIsSchema =
+      noArgs || (schemaOrOptions && 'kind' in schemaOrOptions) || undefined;
+    options =
+      options || schemaOrOptionsIsSchema ? {} : (schemaOrOptions as AjvOptions);
+    const schema = this.WithDefs(
+      schemaOrOptionsIsSchema && (schemaOrOptions as TSchema | undefined),
     );
+    const ajv = createAjvInstance(options);
+    return ajv.compile(this.WithDefs(schema));
   }
 
   private _write<T extends TSchema, Sync extends boolean>(

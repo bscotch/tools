@@ -6,9 +6,9 @@ import {
   oneline,
 } from '@bscotch/utility';
 
-export type SemverDefs = StaticDefs<typeof semverDefs>;
+export type SemverDefs = StaticDefs<typeof semverSchema>;
 
-export const semverDefs = new SchemaBuilder().use(function () {
+export const semverSchema = new SchemaBuilder().use(function () {
   return this.addDefinitions({
     semverBumpLevel: this.LiteralUnion([...versionBumpLevels], {
       title: 'Semver Bump Level',

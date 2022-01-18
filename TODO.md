@@ -1,8 +1,9 @@
 # TODO
 
-- ~~Convert to monorepo structure with Typescript project references working~~
-- ~~Update tests and other scripts to run from the root~~
-- ~~Update package.json files listing~~
-- Use Lerna or similar for publishing & versioning
-- Update GitHub workflows to use Lerna
-- Port `ts-transform-paths` and update it to also append file extensions
+- Write tests for the Schema-Builder, using the @bscotch/repo config as the test case.
+- Write config loader for @bscotch/repo
+- Write version-store logic for @bscotch/repo
+- Add CLI command like `@bscotch/repo store-version`
+- Add configuration to this project
+- Attempt to version + publish all packages
+

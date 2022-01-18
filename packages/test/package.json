@@ -6,6 +6,7 @@
     "test": "mocha --inspect --node-option=\"enable-source-maps\" --bail ./app"
   },
   "dependencies": {
+    "@bscotch/repo": "*",
     "@bscotch/schema-builder": "*",
     "@bscotch/utility": "*"
   },

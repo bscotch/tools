@@ -1,11 +1,11 @@
 import { SchemaBuilder } from '@bscotch/schema-builder';
-import { semverDefs } from './version.js';
+import { semverSchema } from './version.js';
 
 /**
  * Definitions for use by a package.json file.
  * {@link https://github.com/SchemaStore/schemastore/blob/master/src/schemas/json/package.json}
  */
-export const packageDotJsonBuilder = new SchemaBuilder({ lib: semverDefs })
+export const packageDotJsonSchema = new SchemaBuilder({ lib: semverSchema })
   .use(function () {
     return this.addDefinition(
       '_npmPackageName',

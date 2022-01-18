@@ -13,13 +13,20 @@ import {
   CustomOptions,
   Static,
 } from '@sinclair/typebox';
-import { assert } from '@bscotch/utility';
+import { assert, Defined } from '@bscotch/utility';
 import Ajv, { Options as AjvOptions, JSONSchemaType } from 'ajv/dist/2019';
 import addFormats from 'ajv-formats';
 import fs, { promises as fsPromises } from 'fs';
 
 export { JSONSchemaType } from 'ajv/dist/2019';
 export * from '@sinclair/typebox';
+
+export type StaticRoot<T extends SchemaBuilder<any, any>> =
+  T extends SchemaBuilder<any, infer Root>
+    ? Root extends undefined
+      ? never
+      : Static<Defined<Root>>
+    : never;
 
 export type StaticDefs<T extends SchemaBuilder<any>> = T extends SchemaBuilder<
   infer U
@@ -51,8 +58,6 @@ export interface TLiteralUnion<T extends TValue[]>
   enum: T;
 }
 
-export type SchemaDefsField = '$defs' | 'definitions';
-
 export type SchemaDefRef<Defs extends BuilderDefs> = TRef<Defs[keyof Defs]>;
 
 type SchemaOrDefsKey<Defs extends BuilderDefs> = TSchema | keyof Defs;
@@ -67,33 +72,16 @@ type SchemaFromBuilder<
   T extends SchemaOrDefsKey<Defs>,
 > = T extends TSchema ? T : T extends keyof Defs ? TRef<Defs[T]> : never;
 
-export type SchemaWithDefs<
-  T extends TSchema,
-  Defs extends BuilderDefs,
-  DefsField extends SchemaDefsField,
-> = T & Record<DefsField, Defs>;
+export type SchemaWithDefs<T extends TSchema, Defs extends BuilderDefs> = T & {
+  $defs: Defs;
+};
 
 export type SchemaFromBuilderWithDefs<
   Defs extends BuilderDefs,
   S extends SchemaOrDefsKey<Defs>,
-  N extends SchemaDefsField = '$defs',
-> = SchemaFromBuilder<Defs, S> & Record<N, Defs>;
+> = SchemaFromBuilder<Defs, S> & { $defs: Defs };
 
-export interface SchemaBuilderOptions<
-  Defs extends BuilderDefs,
-  DefsField extends SchemaDefsField,
-> {
-  /**
-   * The "definitions" field in the root of a schema
-   * can be called `$defs` or `definitions`, depending
-   * on JSON Schema version. Many tools work with both,
-   * some work with only one, and so you can specify
-   * the type you need here.
-   *
-   * Defaults to `$defs`.
-   */
-  defsFieldName?: DefsField;
-
+export interface SchemaBuilderOptions<Defs extends BuilderDefs> {
   /**
    * Optionally initialize the SchemaBuilder using
    * an already-existing collection of schemas,
@@ -118,18 +106,15 @@ export interface SchemaBuilderOptions<
 export class SchemaBuilder<
   Defs extends BuilderDefs = {},
   Root extends SchemaDefRef<Defs> | undefined = undefined,
-  DefsField extends SchemaDefsField = '$defs',
 > extends TypeBuilder {
   readonly $defs: Defs = {} as Defs;
-  readonly defsFieldName: SchemaDefsField;
   protected _root = undefined as Root;
 
-  constructor(options?: SchemaBuilderOptions<Defs, DefsField>) {
+  constructor(options?: SchemaBuilderOptions<Defs>) {
     super();
     if (options?.lib) {
       this.addDefinitions(options.lib);
     }
-    this.defsFieldName = options?.defsFieldName || '$defs';
   }
 
   get root(): Root {
@@ -143,7 +128,7 @@ export class SchemaBuilder<
    */
   public setRoot<N extends keyof Defs>(
     defName: N,
-  ): SchemaBuilder<Defs, TRef<Defs[N]>, DefsField> {
+  ): SchemaBuilder<Defs, TRef<Defs[N]>> {
     this._root = this.DefRef(defName) as any;
     return this as any;
   }
@@ -202,8 +187,8 @@ export class SchemaBuilder<
    */
   public addDefinition<N extends string, T extends TSchema>(
     name: N,
-    schema: T | ((this: SchemaBuilder<Defs, Root, DefsField>) => T),
-  ): SchemaBuilder<Defs & Record<N, T>, Root, DefsField> {
+    schema: T | ((this: SchemaBuilder<Defs, Root>) => T),
+  ): SchemaBuilder<Defs & Record<N, T>, Root> {
     // @ts-expect-error The `[name]` index does not exist on `this.$defs`
     // until the newly-typed `this` is returned
     this.$defs[name] =
@@ -218,9 +203,9 @@ export class SchemaBuilder<
   public addDefinitions<NewDefs extends BuilderDefs>(
     newDefs:
       | NewDefs
-      | ((this: SchemaBuilder<Defs, Root, DefsField>) => NewDefs)
+      | ((this: SchemaBuilder<Defs, Root>) => NewDefs)
       | SchemaBuilder<NewDefs, any>,
-  ): SchemaBuilder<Defs & NewDefs, Root, DefsField> {
+  ): SchemaBuilder<Defs & NewDefs, Root> {
     const lib =
       typeof newDefs === 'function'
         ? newDefs.bind(this)()
@@ -262,9 +247,7 @@ export class SchemaBuilder<
    *    });
    * ```
    */
-  public use<Out>(
-    func: (this: SchemaBuilder<Defs, Root, DefsField>) => Out,
-  ): Out {
+  public use<Out>(func: (this: SchemaBuilder<Defs, Root>) => Out): Out {
     return func.bind(this)();
   }
 
@@ -288,22 +271,20 @@ export class SchemaBuilder<
    * validator, if you are not otherwise using convenience functionality
    * provided by {@link SchemaBuilder}.
    */
-  public WithDefs(): Root extends undefined
-    ? never
-    : Root & Record<DefsField, Defs>;
+  public WithDefs(): Root extends undefined ? never : Root & { $defs: Defs };
   public WithDefs<T extends TSchema | undefined>(
     schema?: T,
   ): T extends undefined
     ? Root extends undefined
       ? never
-      : Root & Record<DefsField, Defs>
-    : T & Record<DefsField, Defs>;
+      : Root & { $defs: Defs }
+    : T & { $defs: Defs };
   public WithDefs(schema?: any) {
     schema = schema || this.root;
     assert(schema, 'No root schema set');
     return {
       ...schema,
-      [this.defsFieldName]: this.$defs,
+      $defs: this.$defs,
     } as any;
   }
   /**

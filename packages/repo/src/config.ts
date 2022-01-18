@@ -4,12 +4,12 @@
  */
 
 import { oneline } from '@bscotch/utility';
-import { SchemaBuilder } from '@bscotch/schema-builder';
+import { SchemaBuilder, StaticRoot } from '@bscotch/schema-builder';
 import { versionStoreBuilder } from './config/versionStore.js';
-import { packageDotJsonBuilder } from '@bscotch/schema-lib';
+import { packageDotJsonSchema } from '@bscotch/schema-lib';
 
-export const configBuilder = new SchemaBuilder({ lib: versionStoreBuilder })
-  .addDefinitions(packageDotJsonBuilder)
+export const configSchema = new SchemaBuilder({ lib: versionStoreBuilder })
+  .addDefinitions(packageDotJsonSchema)
   .addDefinition('bscotchVersioning', function () {
     return this.Object(
       {
@@ -30,7 +30,7 @@ export const configBuilder = new SchemaBuilder({ lib: versionStoreBuilder })
   })
   .addDefinition('bscotchConfig', function () {
     return this.Intersect([
-      packageDotJsonBuilder.root,
+      packageDotJsonSchema.root,
       this.Optional(
         this.Object({
           bscotch: this.Object(
@@ -52,3 +52,5 @@ export const configBuilder = new SchemaBuilder({ lib: versionStoreBuilder })
     ]);
   })
   .setRoot('bscotchConfig');
+
+export type Config = StaticRoot<typeof configSchema>;

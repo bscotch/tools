@@ -1,5 +1,5 @@
 {
-  "name": "@bscotch/tools",
+  "name": "@local/tools",
   "private": true,
   "type": "commonjs",
   "version": "2.2.0",

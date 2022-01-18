@@ -5,17 +5,17 @@
 
 import { oneline } from '@bscotch/utility';
 import { SchemaBuilder } from '@bscotch/schema-builder';
-import { versionStoreDefs } from './config/versionStore.js';
-import { packageDotJsonDefs } from '@bscotch/schema-lib';
+import { versionStoreBuilder } from './config/versionStore.js';
+import { packageDotJsonBuilder } from '@bscotch/schema-lib';
 
-export const configBuilder = new SchemaBuilder(versionStoreDefs)
-  .addDefinitions(packageDotJsonDefs)
+export const configBuilder = new SchemaBuilder({ lib: versionStoreBuilder })
+  .addDefinitions(packageDotJsonBuilder)
   .addDefinition('bscotchVersioning', function () {
     return this.Object(
       {
         stores: this.Union([
-          this.DefRef('versionStore'),
-          this.Array(this.DefRef('versionStore')),
+          versionStoreBuilder.root,
+          this.Array(versionStoreBuilder.root),
         ]),
       },
       {
@@ -30,7 +30,7 @@ export const configBuilder = new SchemaBuilder(versionStoreDefs)
   })
   .addDefinition('bscotchConfig', function () {
     return this.Intersect([
-      this.DefRef('npmPackageFileContent'),
+      packageDotJsonBuilder.root,
       this.Optional(
         this.Object({
           bscotch: this.Object(
@@ -50,6 +50,5 @@ export const configBuilder = new SchemaBuilder(versionStoreDefs)
         }),
       ),
     ]);
-  });
-
-const configSchema = configBuilder.WithDefs('bscotchConfig');
+  })
+  .setRoot('bscotchConfig');

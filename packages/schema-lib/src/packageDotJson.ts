@@ -5,8 +5,8 @@ import { semverDefs } from './version.js';
  * Definitions for use by a package.json file.
  * {@link https://github.com/SchemaStore/schemastore/blob/master/src/schemas/json/package.json}
  */
-export const packageDotJsonDefs = new SchemaBuilder(semverDefs).use(
-  function () {
+export const packageDotJsonBuilder = new SchemaBuilder({ lib: semverDefs })
+  .use(function () {
     return this.addDefinition(
       '_npmPackageName',
       this.String({
@@ -27,5 +27,5 @@ export const packageDotJsonDefs = new SchemaBuilder(semverDefs).use(
         },
       );
     });
-  },
-);
+  })
+  .setRoot('npmPackageFileContent');

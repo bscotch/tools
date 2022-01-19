@@ -1,34 +1,34 @@
 import { expect } from 'chai';
 import {
-  valuesAreDecreasing,
-  valuesAreIncreasing,
-  arrayTouch,
-  arrayUntouch,
+  arrayIsDecreasing,
+  arrayIsIncreasing,
+  arrayWrapped,
+  arrayUnwrapped,
   arraySortNumeric,
   arraySortNumericDescending,
 } from '@bscotch/utility/app/lib/array';
 
 describe('Arrays', () => {
   it('can tell if array values are increasing', () => {
-    expect(valuesAreIncreasing([1, 2, 3, 4, 100, 99999])).to.be.true;
-    expect(valuesAreIncreasing([-100, 9, 9.99])).to.be.true;
-    expect(valuesAreIncreasing([1, 2, 3, 2, 6])).to.be.false;
+    expect(arrayIsIncreasing([1, 2, 3, 4, 100, 99999])).to.be.true;
+    expect(arrayIsIncreasing([-100, 9, 9.99])).to.be.true;
+    expect(arrayIsIncreasing([1, 2, 3, 2, 6])).to.be.false;
   });
   it('can tell if array values are decreasing', () => {
-    expect(valuesAreDecreasing([1, 2, 3, 4, 100, 99999])).to.be.false;
-    expect(valuesAreDecreasing([1, 2, 3, 4, 100, 99999].reverse())).to.be.true;
+    expect(arrayIsDecreasing([1, 2, 3, 4, 100, 99999])).to.be.false;
+    expect(arrayIsDecreasing([1, 2, 3, 4, 100, 99999].reverse())).to.be.true;
   });
   it('can ensure a value is wrapped in an array', () => {
-    expect(arrayTouch(undefined)).to.eql([]);
-    expect(arrayTouch(['hello'])).to.eql(['hello']);
-    expect(arrayTouch('hello')).to.eql(['hello']);
+    expect(arrayWrapped(undefined)).to.eql([]);
+    expect(arrayWrapped(['hello'])).to.eql(['hello']);
+    expect(arrayWrapped('hello')).to.eql(['hello']);
   });
   it('can untouch an item (get first item if array, else return the value)', function () {
-    expect(arrayUntouch(undefined)).to.be.undefined;
-    expect(arrayUntouch([undefined])).to.be.undefined;
-    expect(arrayUntouch([])).to.be.undefined;
-    expect(arrayUntouch('hello')).to.eql('hello');
-    expect(arrayUntouch(['hello', 'world'])).to.eql('hello');
+    expect(arrayUnwrapped(undefined)).to.be.undefined;
+    expect(arrayUnwrapped([undefined])).to.be.undefined;
+    expect(arrayUnwrapped([])).to.be.undefined;
+    expect(arrayUnwrapped('hello')).to.eql('hello');
+    expect(arrayUnwrapped(['hello', 'world'])).to.eql('hello');
   });
   it('can numerically sort arrays', function () {
     expect(arraySortNumeric([-100, 9.99, 9])).to.eql([-100, 9, 9.99]);

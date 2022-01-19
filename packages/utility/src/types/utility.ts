@@ -9,22 +9,53 @@ export type HttpMethod =
   | 'HEAD'
   | 'OPTIONS';
 
+export type Primitive =
+  | string
+  | number
+  | boolean
+  | bigint
+  | symbol
+  | null
+  | undefined;
+
 export type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
 export type RequiredBy<T, K extends keyof T> = Omit<T, K> &
   Required<Pick<T, K>>;
 
-export type UnwrappedPromise<T> = T extends PromiseLike<infer U>
-  ? UnwrappedPromise<U>
+export type PromiseUnwrapped<T> = T extends PromiseLike<infer U>
+  ? PromiseUnwrapped<U>
   : T;
+
+export type ExtractArrays<U> = Extract<U, Array<any>>;
+export type ExcludeArrays<U> = Exclude<U, Array<any>>;
+export type ExtractPrimitives<U> = Extract<U, Primitive>;
+export type ExcludePrimitives<U> = Exclude<U, Primitive>;
 
 export type AnyFunction = (...args: any[]) => any;
 export type Nullish = null | undefined;
 export type NotNullish<T> = Exclude<T, Nullish>;
 export type NotNull<T> = Exclude<T, null>;
 export type Defined<T> = Exclude<T, undefined>;
-export type ArrayOrScalar<T> = T | T[];
-export type UnwrappedArrayOrScalar<T> = T extends Array<infer U> ? U : T;
+
+/**
+ * Convert any array type into its content type, while
+ * preserving non-array types.
+ *
+ * @example
+ * ```ts
+ * type unwrapped = ArrayUnwrapped<string[]>; // string
+ * type unwrapped = ArrayUnwrapped<string | number>; // string | number
+ * type unwrapped = ArrayUnwrapped<string[] | number>; // string | number
+ * ```
+ */
+export type ArrayUnwrapped<T> = T extends Array<infer U> ? U : T;
+
+/**
+ * The inverse of {@link ArrayUnwrapped}: convert non-array types
+ * to arrays of same, while preserving array types.
+ */
+export type ArrayWrapped<T> = T extends any[] ? T : [T];
 
 export type ExtractKeysByValue<Container, ValueTypeFilter> = {
   [Key in keyof Container]-?: Container[Key] extends AnyFunction

@@ -1,13 +1,13 @@
-import type { EmptyArray, ArrayOrScalar } from '../types/utility';
+import type { EmptyArray, ArrayWrapped } from '../types/utility';
 
 /**
  * If the provided value is not an array,
  * wrap it in an array. If the value is undefined
  * will return an empty array.
  */
-export function wrapIfNotArray<Item>(
-  item: ArrayOrScalar<Item>,
-): Item extends undefined ? EmptyArray : Item[] {
+export function arrayWrapped<T>(
+  item: T,
+): T extends undefined ? EmptyArray : ArrayWrapped<T> {
   if (Array.isArray(item)) {
     // @ts-expect-error Help! Does work, but Typescript doesn't like it.
     return item;
@@ -16,16 +16,13 @@ export function wrapIfNotArray<Item>(
   return typeof item == 'undefined' ? [] : [item];
 }
 
-/** @alias wrapIfNotArray */
-export const arrayTouch = wrapIfNotArray;
-
 /**
  * Return `true` if the `comparison` function returns true
  * when applied to each adjacent pair of values. For example,
  * can be used to determine if an array of numbers is increasing
  * with `(current,last)=>current>last`.
  */
-export function eachTruthyComparedToLast<ArrayOfComparables extends any[]>(
+export function arrayEveryPair<ArrayOfComparables extends any[]>(
   arrayOfComparables: ArrayOfComparables,
   comparison: (
     currentValue: ArrayOfComparables[number],
@@ -41,36 +38,30 @@ export function eachTruthyComparedToLast<ArrayOfComparables extends any[]>(
     },
   );
 }
-/** @alias eachTruthyComparedToLast */
-export const arrayEachTruthyComparedToLast = eachTruthyComparedToLast;
 
 /**
  * Return true if each value is greater than the last
  */
-export function valuesAreIncreasing<ArrayOfValues extends any[]>(
+export function arrayIsIncreasing<ArrayOfValues extends any[]>(
   increasingArray: ArrayOfValues,
 ) {
-  return eachTruthyComparedToLast(
+  return arrayEveryPair(
     increasingArray,
     (curr: ArrayOfValues[number], last: ArrayOfValues[number]) => curr > last,
   );
 }
-/** @alias valuesAreIncreasing */
-export const arrayValuesAreIncreasing = valuesAreIncreasing;
 
 /**
  * Return true if each value is greater than the last
  */
-export function valuesAreDecreasing<ArrayOfValues extends any[]>(
+export function arrayIsDecreasing<ArrayOfValues extends any[]>(
   decreasingArray: ArrayOfValues,
 ) {
-  return eachTruthyComparedToLast(
+  return arrayEveryPair(
     decreasingArray,
     (curr: ArrayOfValues[number], last: ArrayOfValues[number]) => curr < last,
   );
 }
-/** @alias valuesAreDecreasing */
-export const arrayValuesAreDecreasing = valuesAreDecreasing;
 
 type FirstItemArray<Item> =
   | Item[]
@@ -81,7 +72,7 @@ type FirstItemArray<Item> =
 /**
  * If not an array, return self. Otherwise return 0th item.
  */
-export function selfOrFirstItem<Item extends any>(
+export function arrayUnwrapped<Item extends any>(
   items: FirstItemArray<Item> | Item,
 ): Item extends EmptyArray ? undefined : Item {
   if (items instanceof Array) {
@@ -92,8 +83,6 @@ export function selfOrFirstItem<Item extends any>(
   // @ts-expect-error (see prior comment)
   return items;
 }
-/** @alias selfOrFirstItem */
-export const arrayUntouch = selfOrFirstItem;
 
 type SortReturn = number;
 
@@ -175,17 +164,22 @@ export function arraySortNumericDescending<N extends number | number[]>(
   return sortResult(numbersOrArrayItem1, array2Item, true);
 }
 
+export function isArray(value: any): value is any[] {
+  return Array.isArray(value);
+}
+
+export function isEmptyArray(value: any): value is EmptyArray {
+  return Array.isArray(value) && value.length === 0;
+}
+
 export const array = {
-  arrayTouch,
-  arrayEachTruthyComparedToLast,
-  arrayUntouch,
-  arrayValuesAreDecreasing,
-  arrayValuesAreIncreasing,
+  arrayEveryPair,
+  arrayIsIncreasing,
+  arrayIsDecreasing,
   arraySortNumeric,
   arraySortNumericDescending,
-  eachTruthyComparedToLast,
-  selfOrFirstItem,
-  valuesAreDecreasing,
-  valuesAreIncreasing,
-  wrapIfNotArray,
+  arrayWrapped,
+  arrayUnwrapped,
+  isArray,
+  isEmptyArray,
 };

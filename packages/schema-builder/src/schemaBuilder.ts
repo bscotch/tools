@@ -18,7 +18,6 @@ import {
   Options as AjvOptions,
   ErrorObject as AjvErrorObject,
   ValidateFunction,
-  JSONSchemaType,
 } from 'ajv/dist/2019';
 import fs, { promises as fsPromises } from 'fs';
 import { createAjvInstance } from './validation.js';
@@ -179,12 +178,19 @@ export class SchemaBuilder<
     return isValid ? undefined : (this.validate.errors as any);
   }
 
-  public assertIsValid(data: any): asserts data is StaticRoot<Root> {
+  /**
+   * Test data against the root schema, throwing an error
+   * if the check fails. If the data is valid, it is returned.
+   */
+  public assertIsValid<T extends any>(
+    data: T,
+  ): T extends StaticRoot<Root> ? T : never {
     const errors = this.hasErrors(data);
     if (!errors) {
-      return;
+      return data as any;
     }
     console.error(errors.join('\n'));
+    throw new Error('Data does not match schema');
   }
 
   /**
@@ -379,6 +385,28 @@ export class SchemaBuilder<
   public writeSync<T extends TSchema>(outPath: string, schema?: T) {
     this._write(true, outPath, schema);
     return this;
+  }
+
+  public async readData(path: string): Promise<StaticRoot<Root>> {
+    return this.assertIsValid(await this._readDataFile(false, path));
+  }
+
+  public readDataSync(path: string): StaticRoot<Root> {
+    return this.assertIsValid(this._readDataFile(true, path));
+  }
+
+  private _readDataFile<Sync extends boolean>(
+    sync: Sync,
+    path: string,
+  ): Sync extends true ? StaticRoot<Root> : Promise<StaticRoot<Root>> {
+    assert(
+      this.root,
+      'Cannot read data file with validation unless root schema is defined.',
+    );
+    const reader: (path: string, encoding: 'utf8') => string | Promise<string> =
+      sync ? fs.readFileSync : fsPromises.readFile;
+    const data = reader(path, 'utf8');
+    return typeof data == 'string' ? JSON.parse(data) : data.then(JSON.parse);
   }
 
   private _write<T extends TSchema, Sync extends boolean>(

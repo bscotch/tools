@@ -1,6 +1,7 @@
 import { oneline } from '@bscotch/utility';
-import { SchemaBuilder } from '@bscotch/schema-builder';
+import { SchemaBuilder, StaticRoot } from '@bscotch/schema-builder';
 
+export type VersionStoreData = StaticRoot<typeof versionStoreBuilder>;
 export const versionStoreBuilder = new SchemaBuilder()
   .use(function () {
     return this.addDefinition(

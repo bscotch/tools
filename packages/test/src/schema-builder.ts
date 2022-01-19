@@ -1,4 +1,4 @@
-import { configSchema, Config } from '@bscotch/repo';
+import { configSchema, ConfigData } from '@bscotch/repo';
 import { expect } from 'chai';
 
 describe('@bscotch/schema-builder', function () {
@@ -31,7 +31,7 @@ describe('@bscotch/schema-builder', function () {
       extraField: 'extraValue',
     });
 
-    let config: Config = {
+    let config: ConfigData = {
       name: '@local/tools',
       version: '0.1.0-rc.1',
       bscotch: {

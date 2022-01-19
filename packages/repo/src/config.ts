@@ -1,58 +1,37 @@
-/**
- * @file Configuration for @bscotch/repo tooling.
- *
- */
+import { ConfigData, configSchema } from './index.js';
+import path from 'path';
+import fs from 'fs';
+import { assert } from './errors.js';
+import { isEmptyArray, arrayWrapped } from '@bscotch/utility';
+import { VersionStoreData } from './schemas/versionStore.js';
 
-import { oneline } from '@bscotch/utility';
-import { SchemaBuilder, StaticRoot } from '@bscotch/schema-builder';
-import { versionStoreBuilder } from './config/versionStore.js';
-import { packageDotJsonSchema } from '@bscotch/schema-lib';
+class VersionStore {
+  constructor(protected config: VersionStoreData) {
+    // TODO: Try to find the file
+    // TODO: Convert the various store formats to a common format
+    // TODO: Run the replacement
+    // TODO: Set up and run some tests
+  }
+}
 
-export const configSchema = new SchemaBuilder({ lib: versionStoreBuilder })
-  .addDefinitions(packageDotJsonSchema)
-  .addDefinition('bscotchVersioning', function () {
-    return this.Object(
-      {
-        stores: this.Optional(
-          this.Union([
-            versionStoreBuilder.root,
-            this.Array(versionStoreBuilder.root),
-          ]),
-        ),
-      },
-      {
-        description: oneline`
-          Versioning-related information, such as
-          what files need to be updated to have
-          the same version as the config file,
-          restrictions on versioning, etc.
-        `,
-      },
-    );
-  })
-  .addDefinition('bscotchConfig', function () {
-    return this.Intersect([
-      packageDotJsonSchema.root,
-      this.Object({
-        bscotch: this.Optional(
-          this.Object(
-            {
-              versioning: this.Optional(this.DefRef('bscotchVersioning')),
-            },
-            {
-              title: 'Bscotch Repo Configuration',
-              description: oneline`
-                Configuration options for use by @bscotch/repo
-                and related tools & utilities. These options
-                should be set in a \`package.json\` file's
-                \`"bscotch"\` field. Note that adding custom subfields
-                may lead to conflicts with future Bscotch tools.`,
-            },
-          ),
-        ),
-      }),
-    ]);
-  })
-  .setRoot('bscotchConfig');
+export class BscotchConfig {
+  private raw: ConfigData;
 
-export type Config = StaticRoot<typeof configSchema>;
+  constructor(configPath: string = process.cwd()) {
+    configPath = configPath.endsWith('.json')
+      ? configPath
+      : path.join(configPath, 'package.json');
+    assert(fs.existsSync(configPath), `Config file not found at ${configPath}`);
+    this.raw = configSchema.readDataSync(configPath);
+  }
+
+  get versionStores() {
+    const rawStores = this.raw.bscotch?.versioning?.stores;
+    if (!rawStores || isEmptyArray(rawStores)) return [];
+    const stores: VersionStore[] = [];
+    for (const storeData of arrayWrapped(rawStores)) {
+      stores.push(new VersionStore(storeData));
+    }
+    return stores;
+  }
+}

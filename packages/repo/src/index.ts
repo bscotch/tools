@@ -1,1 +1,2 @@
-export * from './config.js';
+export * from './config';
+export * from './schemas/config.js';

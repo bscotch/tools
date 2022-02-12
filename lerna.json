@@ -4,6 +4,7 @@
     "version": {
       "allowBranch": "develop",
       "conventionalCommits": true,
+      "message": "chore: version and publish",
       "noPrivate": true,
       "private": false
     }

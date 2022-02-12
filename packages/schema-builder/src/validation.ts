@@ -1,8 +1,8 @@
-import Ajv, { Options as AjvOptions } from 'ajv/dist/2019';
 import addFormats from 'ajv-formats';
+import Ajv, { Options as AjvOptions } from 'ajv/dist/2019';
 
 export function createAjvInstance(options?: AjvOptions) {
-  options = { useDefaults: true, coerceTypes: 'array', ...options };
+  options = { ...options };
   const ajv = new Ajv(options)
     .addKeyword('kind')
     .addKeyword('modifier')

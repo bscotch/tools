@@ -33,8 +33,11 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 16.x
-      - name: Bootstrap, build, and test
+      - name: Prep, build, and test
         run: |
+          git config user.email "${{github.event.pusher.email}}"
+          git config user.name "${{github.event.pusher.name}}"
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
           npx lerna bootstrap --no-ci
           npm run test
 
@@ -42,4 +45,6 @@ jobs:
       # then we should attempt to publish
       - name: Publish any versionable updates
         if: github.event_name == 'push'
-        run: npx lerna publish
+        run: |
+          npx lerna publish --yes
+          git push --follow-tags

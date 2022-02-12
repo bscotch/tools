@@ -43,7 +43,7 @@ jobs:
         run: npx lerna bootstrap --no-ci
       - name: Test
         run: |
-          eslint --quiet --ext ts .
+          npx eslint --quiet --ext ts .
           npm run test
 
       # If pushing on develop and we made it this far

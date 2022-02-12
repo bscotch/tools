@@ -1,62 +1,63 @@
 {
-  "name": "@bscotch/utility",
+  "name": "@local/tools",
+  "private": true,
+  "type": "commonjs",
   "version": "2.2.0",
-  "description": "Bscotch Utilities: Methods for common Node.js needs.",
-  "engines": {
-    "node": ">=14.0.0"
-  },
-  "main": "./build/index.js",
-  "files": [
-    "build/lib/**/*",
-    "build/index.*",
-    "build/types/**/*"
-  ],
+  "description": "A collection of node packages for common Typescript, Nodejs, and package deployment problems.",
   "scripts": {
-    "build": "rm -rf build && npx tsc",
-    "test": "npm run build && mocha --inspect --require source-map-support/register --bail ./build/test/",
-    "prepublishOnly": "npm run can-publish",
-    "preversion": "npm run can-publish",
-    "version": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0 && prettier src -w && git add -A",
-    "postversion": "git push origin develop --follow-tags",
-    "can-publish": "npm run _require-develop && npm run _require-ci",
-    "_require-develop": "[ \"$(git rev-parse --symbolic-full-name --abbrev-ref HEAD)\" = \"develop\" ] || exit 1",
-    "_require-ci": "[ \"${GITHUB_ACTIONS}\" = \"true\" ] || exit 1",
-    "tsc-live": "npx tsc -w"
+    "rebuild": "npm run clean:build && npm run build && lerna bootstrap",
+    "clean:build": "rimraf packages/*/app/**/* **/tsconfig.tsbuildinfo",
+    "clean:deps": "lerna clean",
+    "clean:all": "npm run clean:build && npm run clean:deps",
+    "build": "npx tsc -b",
+    "watch": "npx tsc -b -w",
+    "test": "npm run build && lerna run test",
+    "i:utility": "npx lerna add --scope=@bscotch/utility",
+    "i:schema-builder": "npx lerna add --scope=@bscotch/schema-builder",
+    "i:test": "npx lerna add --scope=@local/test",
+    "preversion": "npm run _require-c",
+    "_require-ci": "[ \"${GITHUB_ACTIONS}\" = \"true\" ] || exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com:bscotch/node-util.git"
-  },
-  "keywords": [
-    "utility",
-    "util",
-    "string",
-    "template",
-    "path",
-    "file",
-    "bscotch",
-    "butterscotch shenanigans"
-  ],
-  "author": "Adam Coster (https://www.bscotch.net/about)",
-  "license": "MIT",
-  "homepage": "https://github.com/bscotch/node-util",
   "devDependencies": {
-    "@types/chai": "^4.2.22",
     "@types/fs-extra": "^9.0.13",
-    "@types/mocha": "^8.2.3",
     "@types/node": "^15.14.9",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
-    "chai": "^4.3.4",
     "conventional-changelog-cli": "^2.1.1",
     "eslint": "^7.32.0",
     "eslint-plugin-prettier": "^3.4.1",
     "eslint-plugin-tsdoc": "^0.2.14",
     "fs-extra": "^10.0.0",
-    "mocha": "^9.1.3",
+    "lerna": "^4.0.0",
     "prettier": "^2.5.1",
+    "rimraf": "^3.0.2",
     "source-map-support": "^0.5.21",
-    "typedoc": "^0.20.37",
+    "typedoc": "^0.22.10",
     "typescript": "^4.5.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bscotch/tools.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bscotch/tools/issues"
+  },
+  "homepage": "https://github.com/bscotch/tools#readme",
+  "prettier": {
+    "$id": "prettier",
+    "$schema": "http://json.schemastore.org/prettierrc",
+    "trailingComma": "all",
+    "bracketSpacing": true,
+    "tabWidth": 2,
+    "semi": true,
+    "singleQuote": true
+  },
+  "volta": {
+    "node": "16.13.1"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
 }

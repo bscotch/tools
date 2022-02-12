@@ -1,0 +1,33 @@
+{
+  "author": "Adam Coster (https://www.bscotch.net/about)",
+  "description": "Bscotch Utilities: Methods for common Node.js needs.",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "files": [
+    "app"
+  ],
+  "homepage": "https://github.com/bscotch/utility/utility#README.md",
+  "keywords": [
+    "utility",
+    "util",
+    "string",
+    "template",
+    "crypto",
+    "path",
+    "file",
+    "bscotch",
+    "butterscotch shenanigans"
+  ],
+  "license": "MIT",
+  "main": "./app/index.js",
+  "name": "@bscotch/utility",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/bscotch/utility.git"
+  },
+  "version": "2.2.0"
+}

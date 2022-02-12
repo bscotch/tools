@@ -5,6 +5,17 @@
   },
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
-      "source.fixAll.eslint": true
-  }
+    "source.fixAll.eslint": true
+  },
+  "debug.javascript.autoExpandGetters": true,
+  "debug.javascript.terminalOptions": {
+    "skipFiles": ["<node_internals>/**"],
+    "sourceMaps": true
+  },
+  "debug.javascript.autoAttachFilter": "smart",
+  "debug.javascript.codelens.npmScripts": "top",
+  "javascript.preferences.importModuleSpecifierEnding": "js",
+  "typescript.preferences.importModuleSpecifierEnding": "js",
+  "javascript.preferences.importModuleSpecifier": "project-relative",
+  "typescript.preferences.importModuleSpecifier": "project-relative"
 }

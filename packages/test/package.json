@@ -1,0 +1,28 @@
+{
+  "name": "@local/test",
+  "private": true,
+  "description": "Test suite for this monorepo.",
+  "scripts": {
+    "test": "mocha --inspect --node-option=\"enable-source-maps\" --bail ./app"
+  },
+  "dependencies": {
+    "@bscotch/repo": "*",
+    "@bscotch/schema-builder": "*",
+    "@bscotch/utility": "*"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.2.22",
+    "@types/mocha": "^8.2.3",
+    "chai": "^4.3.4",
+    "mocha": "^9.1.3",
+    "pretty-error": "^4.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bscotch/tools.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bscotch/tools/issues"
+  },
+  "homepage": "https://github.com/bscotch/tools#readme"
+}

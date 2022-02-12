@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  # https://docs.github.com/en/actions/reference/events-that-trigger-workflows#push
+  push:
+    branches:
+      - develop
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - develop
+
+permissions:
+  pull-requests: read
+  contents: write
+
+jobs:
+  ci:
+    runs-on: ubuntu-20.04
+    env:
+      NPM_TOKEN: ${{secrets.NPM_AUTO_ADAM}}
+    defaults:
+      run:
+        shell: bash
+    
+    steps:
+      - name: Load source
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          lfs: true
+      - name: Install Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+      - name: Bootstrap, build, and test
+        run: |
+          npx lerna bootstrap --no-ci
+          npm run test
+
+      # If pushing on develop and we made it this far
+      # then we should attempt to publish
+      - name: Publish any versionable updates
+        if: github.event_name == 'push'
+        run: npx lerna publish

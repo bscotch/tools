@@ -1,0 +1,41 @@
+{
+  "dependencies": {
+    "@bscotch/utility": "^2.2.0",
+    "@sinclair/typebox": "^0.23.2",
+    "ajv": "^8.9.0",
+    "ajv-formats": "^2.1.1"
+  },
+  "description": "Tools for creating and managing JSON Schemas.",
+  "devDependencies": {
+    "@types/git-parse": "^1.0.1",
+    "@types/semver": "^7.3.9"
+  },
+  "files": [
+    "app",
+    "./global.d.ts"
+  ],
+  "homepage": "https://github.com/bscotch/tools/tree/main/packages/schema-builder#readme",
+  "keywords": [
+    "typebox",
+    "types",
+    "typings",
+    "typescript",
+    "schema",
+    "json-schema",
+    "jsonschema",
+    "json",
+    "static-types",
+    "runtime-typechecking"
+  ],
+  "license": "MIT",
+  "main": "app/index.js",
+  "name": "@bscotch/schema-builder",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bscotch/tools.git"
+  },
+  "version": "0.0.1-dev.0"
+}

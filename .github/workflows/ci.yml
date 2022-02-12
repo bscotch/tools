@@ -35,7 +35,7 @@ jobs:
           node-version: 16.x
       - name: Bootstrap, build, and test
         run: |
-          npx lerna bootstrap
+          npx lerna bootstrap --no-ci
           npm run test
 
       # If pushing on develop and we made it this far

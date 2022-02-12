@@ -1,15 +1,12 @@
 {
   "$schema": "https://json.schemastore.org/lerna.json",
   "command": {
-    "bootstrap": {
-      "noCi": true,
-      "npmClientArgs": ["--no-package-lock", "--no-audit", "--no-fund"]
-    },
     "version": {
       "allowBranch": "develop",
       "conventionalCommits": true
     }
   },
+  "npmClientArgs": ["--no-package-lock", "--no-audit", "--no-fund"],
   "useWorkspaces": true,
   "version": "independent"
 }

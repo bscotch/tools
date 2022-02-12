@@ -1,6 +1,9 @@
 {
   "$schema": "https://json.schemastore.org/lerna.json",
   "command": {
+    "publish": {
+      "verifyAccess": false
+    },
     "version": {
       "allowBranch": "develop",
       "conventionalCommits": true,

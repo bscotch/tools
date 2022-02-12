@@ -1,9 +1,8 @@
 # SchemaBuilder (`@bscotch/schema-builder`)
 
-SchemaBuilder is built on top of [TypeBox](https://github.com/sinclairzx81/typebox) to make it easier to build complex schemas and reusable schema libraries, with complete Typescript support along the way.
+SchemaBuilder is built on top of [TypeBox](https://github.com/sinclairzx81/typebox) to make it easier to build self-contained, complex schemas and reusable schema libraries, with complete Typescript support along the way.
 
 **⚠ In early development. Unstable, incomplete, and subject to dramatic change. ⚠**
-
 
 ## ⚡ Quick Start
 
@@ -14,8 +13,11 @@ Install: `npm install @bscotch/schema-builder`
 Then build your schema:
 
 ```ts
-import {SchemaBuilder} from '@bscotch/schema-builder';
-
+import {
+  SchemaBuilder,
+  StaticRoot,
+  StaticDefs
+} from '@bscotch/schema-builder';
 
 // SchemaBuilder makes heavy use of chaining, and of using callback
 // functions to provide Schemas, so that your `this` type stays
@@ -55,10 +57,32 @@ const mySchema = new SchemaBuilder({ lib })
 // be used for static validation and intellisense.
 type MySchema = StaticRoot<typeof mySchema>;
 // {
-//     deepArray: 1|2|3];
+//     deepArray: (1|2|3)[];
 //     libRef: string[];
 // }
 
+// Get the defs library as a Typescript interface
+type MySchemaDefs = StaticDefs<typeof mySchema>;
+// {
+//     aString: string;
+//     nums: 2 | 1 | 3;
+//     moreNums: StaticArray<TNumber>;
+//     deeper: {
+//         deepArray: StaticArray<TRef<TLiteralUnion<[1, 2, 3]>>>;
+//         libRef: StaticArray<...>;
+//     };
+// }
+
+// Validate data against the schema
+const data: MySchema = {
+  deepArray: [2, 3],
+  libRef: ['hello']
+};
+
+mySchema.assertIsValid(data);
+
+// Save the schema to disk
+mySchema.writeSchemaSync('mySchema.json');
 ```
 
 ## What is JSON Schema?

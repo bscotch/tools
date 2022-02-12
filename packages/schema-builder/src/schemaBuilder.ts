@@ -59,14 +59,13 @@ export type StaticRoot<
  * mySchema.addDefinition('myDefinition', mySchema.String());
  *
  * type MySchemaDefs = StaticDefs<typeof mySchema>;
- * //-> { myDefinition: string }
+ * // { myDefinition: string }
  * ```
  */
-export type StaticDefs<T extends SchemaBuilder<any>> = T extends SchemaBuilder<
-  infer U
->
-  ? { [K in keyof U]: U[K] extends TSchema ? Static<U[K]> : never }
-  : never;
+export type StaticDefs<T extends SchemaBuilder<any, any>> =
+  T extends SchemaBuilder<infer U, any>
+    ? { [K in keyof U]: U[K] extends TSchema ? Static<U[K]> : never }
+    : never;
 
 /**
  * An ajv validator function built from the root schema of
@@ -343,7 +342,7 @@ export class SchemaBuilder<
    *   return this.String();
    * });
    *
-   * const mySchema = new SchemaBuilder(lib)
+   * const mySchema = new SchemaBuilder({lib})
    *   .use(function () {
    *     return this.addDefinition('nums', this.LiteralUnion([1, 2, 3]))
    *       .addDefinition('moreNums', this.Array(this.Number()))

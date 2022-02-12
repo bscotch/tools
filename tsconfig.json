@@ -15,6 +15,7 @@
   },
   "references": [
     { "path": "packages/utility" },
+    { "path": "packages/debounce-watch" },
     { "path": "packages/schema-builder" },
     { "path": "packages/schema-lib" },
     { "path": "packages/repo" },

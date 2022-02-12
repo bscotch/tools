@@ -1,0 +1,55 @@
+{
+  "author": "Adam Coster (https://www.bscotch.net/about#adam-coster)",
+  "dependencies": {
+    "chokidar": "^3.5.1"
+  },
+  "description": "Monitor files for changes, debounce events, and finally trigger consequences.",
+  "devDependencies": {
+    "@bscotch/utility": "^2.2.0",
+    "@types/chai": "^4.2.22",
+    "@types/fs-extra": "^9.0.13",
+    "@types/mocha": "^8.2.3",
+    "@types/node": "^15.14.9",
+    "chai": "^4.3.4",
+    "fs-extra": "^10.0.0",
+    "mocha": "^9.1.3"
+  },
+  "engines": {
+    "node": ">=13.2.0"
+  },
+  "files": [
+    "app/lib/**/*",
+    "app/index.*",
+    "app/types/**/*"
+  ],
+  "homepage": "https://github.com/bscotch/tools/tree/main/packages/debounce-watch#readme",
+  "keywords": [
+    "autoload",
+    "debounce",
+    "development",
+    "file",
+    "fs",
+    "fsevents",
+    "monitor",
+    "reload",
+    "restart",
+    "terminal",
+    "watch",
+    "watch",
+    "watcher",
+    "watchFile",
+    "watching"
+  ],
+  "license": "MIT",
+  "main": "./build/index.js",
+  "name": "@bscotch/debounce-watch",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bscotch/tools.git"
+  },
+  "scripts": {
+    "test": "mocha --inspect --require source-map-support/register --bail ./app/test/"
+  },
+  "type": "commonjs",
+  "version": "0.3.0"
+}

@@ -13,7 +13,17 @@ module.exports = {
     sourceType: 'module',
     project: ['**/tsconfig.json'],
   },
-  ignorePatterns: ['.eslintrc.js', 'prettier.config.js'],
+  ignorePatterns: [
+    '**/app/**/*',
+    '**/assets/**/*',
+    'node_modules/**/*',
+    '*/node_modules/**/*',
+    '**/package-lock.json',
+    'src/tsconfig.json',
+    'vetur.config.*',
+    '.eslintrc.js',
+    'prettier.config.js',
+  ],
   rules: {
     '@typescript-eslint/ban-ts-comment': 'warn',
     '@typescript-eslint/type-annotation-spacing': 'off',
@@ -26,40 +36,6 @@ module.exports = {
       },
     ],
     '@typescript-eslint/adjacent-overload-signatures': 'error',
-    '@typescript-eslint/ban-types': [
-      'error',
-      {
-        String: {
-          message: 'Use string instead',
-          fixWith: 'string',
-        },
-        Boolean: {
-          message: 'Use boolean instead',
-          fixWith: 'boolean',
-        },
-        Number: {
-          message: 'Use number instead',
-          fixWith: 'number',
-        },
-        Symbol: {
-          message: 'Use symbol instead',
-          fixWith: 'symbol',
-        },
-
-        Function: {
-          message: 'The `Function` type accepts any function-like value.',
-        },
-
-        // object typing
-        Object: {
-          message: [
-            'The `Object` type actually means "any non-nullish value", so it is marginally better than `unknown`.',
-            '- If you want a type meaning "any object", you probably want `Record<string, unknown>` instead.',
-            '- If you want a type meaning "any value", you probably want `unknown` instead.',
-          ].join('\n'),
-        },
-      },
-    ],
     '@typescript-eslint/no-empty-interface': 'warn',
     camelcase: 'off',
     '@typescript-eslint/consistent-type-assertions': 'error',
@@ -85,6 +61,33 @@ module.exports = {
     'prefer-const': 'error',
     'prefer-rest-params': 'error',
     'prefer-spread': 'error',
+    '@typescript-eslint/ban-types': [
+      'warn',
+      {
+        types: {
+          String: {
+            message: 'Use string instead',
+            fixWith: 'string',
+          },
+          Boolean: {
+            message: 'Use boolean instead',
+            fixWith: 'boolean',
+          },
+          Number: {
+            message: 'Use number instead',
+            fixWith: 'number',
+          },
+          Symbol: {
+            message: 'Use symbol instead',
+            fixWith: 'symbol',
+          },
+          Object: {
+            message: "'Object' means 'any nullish value'.",
+            fixWith: '{}',
+          },
+        },
+      },
+    ],
   },
   overrides: [
     {

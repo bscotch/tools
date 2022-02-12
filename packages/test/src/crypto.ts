@@ -1,5 +1,11 @@
+import {
+  decrypt,
+  encrypt,
+  md5,
+  randomString,
+  sha256,
+} from '@bscotch/utility/app/lib/crypto';
 import { expect } from 'chai';
-import { decrypt, encrypt, md5, sha256 } from '@bscotch/utility/app/lib/crypto';
 
 describe('Crypto', function () {
   it('can create an md5 checksum', function () {
@@ -28,5 +34,22 @@ describe('Crypto', function () {
     const buffer = Buffer.from(string);
     expect(decrypt(encrypt(string, key), key).toString()).to.equal(string);
     expect(decrypt(encrypt(buffer, key), key).toString()).to.equal(string);
+  });
+  it('can create a random Base64 string', function () {
+    const str = randomString(20, 'base64');
+    expect(str.match(/^[a-zA-Z0-9+/]{20}$/)).to.not.be.null;
+  });
+  it('can create a random hex string', function () {
+    const str = randomString(20, 'hex');
+    expect(str.match(/^[a-f0-9]{20}$/)).to.not.be.null;
+  });
+  it('can create a random string with a custom charset', function () {
+    const chars = ['12', '3'];
+    const str = randomString(20, chars);
+    expect(str.match(/^[123]{20}$/)).to.not.be.null;
+    // Each character should appear at least once
+    for (const char of chars.join('')) {
+      expect(str.includes(char)).to.be.true;
+    }
   });
 });

@@ -1,7 +1,10 @@
-import { default as nodeCrypto, BinaryLike, Encoding } from 'crypto';
+import { BinaryLike, default as nodeCrypto, Encoding } from 'crypto';
 import { assert } from './errors';
 
-export function createHash(
+/**
+ * Hash a string or binary data.
+ */
+export function hash(
   algorithm: string,
   source: BinaryLike,
   encoding: Encoding = 'hex',
@@ -16,15 +19,15 @@ export function createHash(
 }
 
 export function sha1(source: BinaryLike, encoding: Encoding = 'hex') {
-  return createHash('sha1', source, encoding);
+  return hash('sha1', source, encoding);
 }
 
 export function sha256(source: BinaryLike, encoding: Encoding = 'hex') {
-  return createHash('sha256', source, encoding);
+  return hash('sha256', source, encoding);
 }
 
 export function md5(source: BinaryLike, encoding: Encoding = 'hex') {
-  return createHash('md5', source, encoding);
+  return hash('md5', source, encoding);
 }
 
 const ivLength = 16; // required for AES
@@ -58,11 +61,68 @@ export function decrypt(encryptionString: string, key: string) {
   return decrypted;
 }
 
-export const crypto = {
-  createHash,
-  decrypt,
-  encrypt,
-  md5,
-  sha1,
-  sha256,
-};
+export function randomBytes(bytes: number, encoding: Encoding): string;
+export function randomBytes(bytes: number): Buffer;
+export function randomBytes(
+  bytes: number,
+  encoding?: Encoding,
+): string | Buffer {
+  const buff = nodeCrypto.randomBytes(bytes);
+  return encoding ? buff.toString(encoding) : buff;
+}
+
+// Character sets for random strings
+
+const lowerAlpha = 'abcdefghijklmnopqrstuvwxyz';
+const upperAlpha = lowerAlpha.toUpperCase();
+const alpha = `${lowerAlpha}${upperAlpha}`;
+const numeric = '0123456789';
+const alphanumeric = `${numeric}${alpha}`;
+const special = '!@#$%^&*()_+-=[]{}|;:,./<>?';
+const space = '\t\n ';
+
+const lowerConsonants = `bcdfghjklmnpqrstvwxz`;
+const upperConsonants = lowerConsonants.toUpperCase();
+const consonants = `${lowerConsonants}${upperConsonants}`;
+
+/**
+ * Named collections of subsets of ASCII characters,
+ * such as lowercase letters, consanants, base64, etc.
+ */
+export const characterSets = {
+  lower: lowerAlpha,
+  upper: upperAlpha,
+  alpha,
+  numeric,
+  alphanumeric,
+  lowerAlphanumeric: `${numeric}${lowerAlpha}`,
+  upperAlphanumeric: `${numeric}${upperAlpha}`,
+  lowerConsonants,
+  upperConsonants,
+  consonants,
+  consonumeric: `${numeric}${consonants}`,
+  lowerConsonumeric: `${numeric}${lowerConsonants}`,
+  special,
+  space,
+  base64: `${alphanumeric}+/`,
+  base64Url: `${alphanumeric}-_`,
+  hex: `${numeric}abcdef`,
+} as const;
+Object.freeze(characterSets);
+export type CharacterSet = keyof typeof characterSets;
+
+export function randomString(
+  length: number,
+  characterSet: CharacterSet | string[],
+) {
+  const bytes = nodeCrypto.randomBytes(length);
+  const chars = Array.isArray(characterSet)
+    ? characterSet.join('')
+    : characterSets[characterSet];
+  const out = [];
+  for (let i = 0; i < bytes.length; i++) {
+    bytes[i] = bytes[i] % chars.length;
+    out.push(chars[bytes[i]]);
+  }
+  return out.join('');
+}

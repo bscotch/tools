@@ -14,7 +14,9 @@
     "test": "npm run build && lerna run test",
     "i:utility": "npx lerna add --scope=@bscotch/utility",
     "i:schema-builder": "npx lerna add --scope=@bscotch/schema-builder",
-    "i:test": "npx lerna add --scope=@local/test"
+    "i:test": "npx lerna add --scope=@local/test",
+    "preversion": "npm run _require-c",
+    "_require-ci": "[ \"${GITHUB_ACTIONS}\" = \"true\" ] || exit 1"
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.13",

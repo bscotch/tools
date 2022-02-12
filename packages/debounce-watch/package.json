@@ -22,7 +22,7 @@
     "app/index.*",
     "app/types/**/*"
   ],
-  "homepage": "https://github.com/bscotch/tools/tree/main/packages/debounce-watch#readme",
+  "homepage": "https://github.com/bscotch/tools/tree/develop/packages/debounce-watch#readme",
   "keywords": [
     "autoload",
     "debounce",

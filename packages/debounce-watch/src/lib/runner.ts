@@ -3,9 +3,10 @@
  * file-change events
  */
 
+import type { FSWatcher, WatchOptions } from 'chokidar';
 import chokidar from 'chokidar';
-import type { WatchOptions, FSWatcher } from 'chokidar';
 import type { Stats } from 'fs';
+import fs from 'fs';
 import path from 'path';
 import { assert, explode } from './utility.js';
 
@@ -122,7 +123,8 @@ export function debounceWatch(
     interval: pollInterval,
     binaryInterval: pollInterval,
     disableGlobbing: true,
-    ignored: (path: string, stat: Stats) => {
+    ignored: (path) => {
+      const stat = fs.statSync(path);
       if (stat) {
         if (stat.isDirectory()) {
           return false;

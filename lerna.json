@@ -1,10 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/lerna.json",
-  "useWorkspaces": true,
   "command": {
     "bootstrap": {
       "npmClientArgs": ["--no-package-lock"]
+    },
+    "version": {
+      "allowBranch": "develop"
     }
   },
+  "useWorkspaces": true,
   "version": "independent"
 }

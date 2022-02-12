@@ -3,26 +3,40 @@
  * and specific use-cases.
  */
 
-import {
-  TRef,
-  TValue,
-  RefKind,
-  TSchema,
-  UnionKind,
-  TypeBuilder,
-  CustomOptions,
-  Static,
-} from '@sinclair/typebox';
 import { assert, Defined } from '@bscotch/utility';
 import {
-  Options as AjvOptions,
+  CustomOptions,
+  RefKind,
+  Static,
+  TRef,
+  TSchema,
+  TValue,
+  TypeBuilder,
+  UnionKind,
+} from '@sinclair/typebox';
+import {
   ErrorObject as AjvErrorObject,
+  Options as AjvOptions,
   ValidateFunction,
 } from 'ajv/dist/2019';
 import fs, { promises as fsPromises } from 'fs';
 import { createAjvInstance } from './validation.js';
 export * from '@sinclair/typebox';
 
+/**
+ * The {@link SchemaBuilder}'s root schema (what defines the
+ * shape of the data it can validate), as a Typescript interface.
+ *
+ * @example
+ * ```ts
+ * const mySchema = new SchemaBuilder();
+ * mySchema.addDefinition('myDefinition', mySchema.String());
+ * mySchema.setRoot('myDefinition');
+ *
+ * type MySchema = StaticRoot<typeof mySchema>;
+ * //-> { myDefinition: string }
+ * ```
+ */
 export type StaticRoot<
   T extends SchemaBuilder<any, any> | TSchema | undefined,
 > = T extends undefined
@@ -30,37 +44,55 @@ export type StaticRoot<
   : T extends SchemaBuilder<any, infer Root>
   ? Root extends undefined
     ? never
-    : StaticDefined<Root>
+    : Static<Defined<Root>>
   : T extends TSchema
   ? Static<T>
   : never;
 
-export type StaticDefined<T extends TSchema | undefined> = Static<Defined<T>>;
-
+/**
+ * The {@link SchemaBuilder}'s definitions (re-usable,
+ * referenceable subschemas) as Typescript interfaces.
+ *
+ * @example
+ * ```ts
+ * const mySchema = new SchemaBuilder();
+ * mySchema.addDefinition('myDefinition', mySchema.String());
+ *
+ * type MySchemaDefs = StaticDefs<typeof mySchema>;
+ * //-> { myDefinition: string }
+ * ```
+ */
 export type StaticDefs<T extends SchemaBuilder<any>> = T extends SchemaBuilder<
   infer U
 >
   ? { [K in keyof U]: U[K] extends TSchema ? Static<U[K]> : never }
   : never;
 
+/**
+ * An ajv validator function built from the root schema of
+ * a {@link SchemaBuilder} instance.
+ */
 export type SchemaValidator<Root extends TSchema | undefined> =
   Root extends undefined ? undefined : ValidateFunction<Static<Defined<Root>>>;
 
-type BuilderDefs = Record<string, TSchema>;
+export type DefRecords = Record<string, TSchema>;
 
 /**
  * Additional type for `enum` schemas, created by
- * providing an array of literals (TypeBox does not
- * have this built-in).
+ * providing an array of literals.
+ *
+ * *Extension to TypeBox*
  */
 type StaticLiteralUnion<T extends readonly TValue[]> = {
   [K in keyof T]: T[K] extends TValue ? T[K] : never;
 }[number];
 
 /**
+ *
  * Additional type for `enum` schemas, created by
- * providing an array of literals (TypeBox does not
- * have this built-in).
+ * providing an array of literals.
+ *
+ * *Extension to TypeBox*
  */
 export interface TLiteralUnion<T extends TValue[]>
   extends TSchema,
@@ -70,38 +102,15 @@ export interface TLiteralUnion<T extends TValue[]>
   enum: T;
 }
 
-export type SchemaDefRef<Defs extends BuilderDefs> = TRef<Defs[keyof Defs]>;
-
-type SchemaOrDefsKey<Defs extends BuilderDefs> = TSchema | keyof Defs;
-
-/**
- * A new Schema (that may use the definitions from a
- * SchemaBuilder) or an existing Schema (given its
- * definition name).
- */
-type SchemaFromBuilder<
-  Defs extends BuilderDefs,
-  T extends SchemaOrDefsKey<Defs>,
-> = T extends TSchema ? T : T extends keyof Defs ? TRef<Defs[T]> : never;
-
-export type SchemaWithDefs<T extends TSchema, Defs extends BuilderDefs> = T & {
-  $defs: Defs;
-};
-
-export type SchemaFromBuilderWithDefs<
-  Defs extends BuilderDefs,
-  S extends SchemaOrDefsKey<Defs>,
-> = SchemaFromBuilder<Defs, S> & { $defs: Defs };
-
-export interface SchemaBuilderOptions<Defs extends BuilderDefs> {
+export interface SchemaBuilderOptions<Defs extends DefRecords> {
   /**
    * Optionally initialize the SchemaBuilder using
    * an already-existing collection of schemas,
    * either from another SchemaBuilder or from a
    * plain `{[defName]: schema}` object.
    *
-   * This is no different from calling
-   * {@link SchemaBuilder.addDefinitions} later.
+   * (This is no different from calling
+   * {@link SchemaBuilder.addDefinitions} later.)
    */
   lib?: Defs | SchemaBuilder<Defs, any>;
 }
@@ -116,8 +125,8 @@ export interface SchemaBuilderOptions<Defs extends BuilderDefs> {
  * (Powered by TypeBox)
  */
 export class SchemaBuilder<
-  Defs extends BuilderDefs = {},
-  Root extends SchemaDefRef<Defs> | undefined = undefined,
+  Defs extends DefRecords = {},
+  Root extends TRef<Defs[keyof Defs]> | undefined = undefined,
 > extends TypeBuilder {
   readonly $defs: Defs = {} as Defs;
   protected _root = undefined as Root;
@@ -134,6 +143,10 @@ export class SchemaBuilder<
     }
   }
 
+  /**
+   * The root Schema, used for validation, if set by
+   * {@link SchemaBuilder.setRoot}.
+   */
   get root(): Root {
     return this._root;
   }
@@ -234,7 +247,7 @@ export class SchemaBuilder<
       assert(this.root, 'No root schema set');
       return this.root as any;
     }
-    this.assertDefExists(name as string);
+    this.tryFindDef(name as string);
     return { kind: RefKind, $ref: `#/$defs/${name}` } as any;
   }
 
@@ -249,13 +262,26 @@ export class SchemaBuilder<
     return this.Store({ ...options, kind: UnionKind, enum: items });
   }
 
+  /**
+   * Find a definition schema by name. If no such
+   * definition found, returns `undefined`.
+   *
+   * To throw an error instead, use {@link tryFindDef}.
+   */
   public findDef<N extends string>(
     name: N,
   ): N extends keyof Defs ? Defs[N] : undefined {
     return this.$defs[name] as any;
   }
 
-  private assertDefExists<N extends string>(
+  /**
+   * Find a definition schema by name. If no such
+   * definition found, throw an error.
+   *
+   * To return `undefined` instead of throwing, use
+   * {@link findDef}.
+   */
+  private tryFindDef<N extends string>(
     name: N,
   ): N extends keyof Defs ? Defs[N] : never {
     const def = this.findDef(name);
@@ -283,7 +309,7 @@ export class SchemaBuilder<
    * Add a new schema to the stored definitions, for use
    * in local references for a final schema.
    */
-  public addDefinitions<NewDefs extends BuilderDefs>(
+  public addDefinitions<NewDefs extends DefRecords>(
     newDefs:
       | NewDefs
       | ((this: SchemaBuilder<Defs, Root>) => NewDefs)
@@ -339,7 +365,8 @@ export class SchemaBuilder<
    *
    * Any external functions that attempt to call `toJSON` on
    * objects during serialization (such as `JSON.stringify`)
-   * will end up with the serialized root schema.
+   * will end up with the serialized root schema, which will
+   * include all definitions in a `$defs` field.
    */
   public toJSON() {
     return this.WithDefs();
@@ -372,25 +399,34 @@ export class SchemaBuilder<
   }
 
   /**
-   * Load data from file, ensuring that it is valid according
-   * to the schema. Default fields are filled and coerce-able fields
-   * are coerced as part of this process.
+   * Write this SchemaBuilder's schemas to file as a valid
+   * JSON Schema document, with definitions listed in a `$defs`
+   * field alongside the root schema (if set).
    */
-
-  public async write<T extends TSchema>(outPath: string, schema?: T) {
+  public async writeSchema<T extends TSchema>(outPath: string, schema?: T) {
     await this._write(false, outPath, schema);
     return this;
   }
 
-  public writeSync<T extends TSchema>(outPath: string, schema?: T) {
+  /**
+   * Synchronous version of {@link writeSchema}.
+   */
+  public writeSchemaSync<T extends TSchema>(outPath: string, schema?: T) {
     this._write(true, outPath, schema);
     return this;
   }
 
+  /**
+   * Load data from file, ensuring that it is valid according
+   * to the root schema.
+   */
   public async readData(path: string): Promise<StaticRoot<Root>> {
     return this.assertIsValid(await this._readDataFile(false, path));
   }
 
+  /**
+   * Synchronous version of {@link readData}.
+   */
   public readDataSync(path: string): StaticRoot<Root> {
     return this.assertIsValid(this._readDataFile(true, path));
   }

@@ -2,10 +2,11 @@
   "$schema": "https://json.schemastore.org/lerna.json",
   "command": {
     "bootstrap": {
-      "npmClientArgs": ["--no-package-lock"]
+      "npmClientArgs": ["--no-package-lock", "--no-audit", "--no-fund"]
     },
     "version": {
-      "allowBranch": "develop"
+      "allowBranch": "develop",
+      "conventionalCommits": true
     }
   },
   "useWorkspaces": true,

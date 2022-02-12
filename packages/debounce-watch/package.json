@@ -5,7 +5,7 @@
   },
   "description": "Monitor files for changes, debounce events, and finally trigger consequences.",
   "devDependencies": {
-    "@bscotch/utility": "^2.2.0",
+    "@bscotch/utility": "^3.0.0",
     "@types/chai": "^4.2.22",
     "@types/fs-extra": "^9.0.13",
     "@types/mocha": "^8.2.3",
@@ -51,5 +51,5 @@
     "test": "mocha --inspect --require source-map-support/register --bail ./app/test/"
   },
   "type": "commonjs",
-  "version": "0.3.0"
+  "version": "0.4.0"
 }

@@ -1,3 +1,34 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+# 3.0.0 (2022-02-12)
+
+
+* feat!: Add random string generation and remove default export from crypto lib. ([758086a](https://github.com/bscotch/utility/commit/758086a882ec0009213515d9dc2753b0e1a62be5))
+
+
+### Features
+
+* Change JsonSchema type to be less fragile with optional fields and enums. ([39881ea](https://github.com/bscotch/utility/commit/39881eae3e6efa94d47f916fd662fce7c0103e7f))
+* Create separate SchemaBuilder class to cleanly separate TypeBox from these extended features. ([9238eb8](https://github.com/bscotch/utility/commit/9238eb8461b015c6b864d605008a9f5a6cc6eef1))
+* Draft Project and Package base classes for Informer. ([0b471ba](https://github.com/bscotch/utility/commit/0b471bac23cfd78f8b6fd58286009141e232f229))
+* Move the various schemas from the schema-builder package to a new schema-lib package. ([30accc3](https://github.com/bscotch/utility/commit/30accc30ac028537d8a0db09e52215c0734fae93))
+
+
+### BREAKING CHANGES
+
+* A 'crypto' object containing crypto functions is no
+longer exported. All functions are exported independently as named
+exports.
+* Crypto function 'createHash' renamed to 'hash' for
+easier discoverability.
+
+
+
+
+
 # [2.2.0](https://github.com/bscotch/node-util/compare/v2.1.1...v2.2.0) (2021-12-17)
 
 ### Features

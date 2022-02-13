@@ -3,10 +3,10 @@
  *
  */
 
-import { oneline } from '@bscotch/utility';
-import { SchemaBuilder, StaticRoot } from '@bscotch/schema-builder';
-import { versionStoreBuilder } from './versionStore.js';
+import { SchemaBuilder, Static } from '@bscotch/schema-builder';
 import { packageDotJsonSchema } from '@bscotch/schema-lib';
+import { oneline } from '@bscotch/utility';
+import { versionStoreBuilder } from './versionStore.js';
 
 export const configSchema = new SchemaBuilder({ lib: versionStoreBuilder })
   .addDefinitions(packageDotJsonSchema)
@@ -55,4 +55,4 @@ export const configSchema = new SchemaBuilder({ lib: versionStoreBuilder })
   })
   .setRoot('bscotchConfig');
 
-export type ConfigData = StaticRoot<typeof configSchema>;
+export type ConfigData = Static<typeof configSchema>;

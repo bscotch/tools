@@ -15,7 +15,7 @@ Then build your schema:
 ```ts
 import {
   SchemaBuilder,
-  StaticRoot,
+  Static,
   StaticDefs
 } from '@bscotch/schema-builder';
 
@@ -55,7 +55,7 @@ const mySchema = new SchemaBuilder({ lib })
 
 // Get the root schema as a Typescript interface, which can
 // be used for static validation and intellisense.
-type MySchema = StaticRoot<typeof mySchema>;
+type MySchema = Static<typeof mySchema>;
 // {
 //     deepArray: (1|2|3)[];
 //     libRef: string[];

@@ -7,7 +7,6 @@ import { assert, Defined } from '@bscotch/utility';
 import {
   CustomOptions,
   RefKind,
-  Static,
   TRef,
   TSchema,
   TValue,
@@ -33,21 +32,20 @@ export * from '@sinclair/typebox';
  * mySchema.addDefinition('myDefinition', mySchema.String());
  * mySchema.setRoot('myDefinition');
  *
- * type MySchema = StaticRoot<typeof mySchema>;
+ * type MySchema = Static<typeof mySchema>;
  * //-> { myDefinition: string }
  * ```
  */
-export type StaticRoot<
-  T extends SchemaBuilder<any, any> | TSchema | undefined,
-> = T extends undefined
-  ? never
-  : T extends SchemaBuilder<any, infer Root>
-  ? Root extends undefined
+export type Static<T extends SchemaBuilder<any, any> | TSchema | undefined> =
+  T extends undefined
     ? never
-    : Static<Defined<Root>>
-  : T extends TSchema
-  ? Static<T>
-  : never;
+    : T extends SchemaBuilder<any, infer Root>
+    ? Root extends undefined
+      ? never
+      : Defined<Root>['$static']
+    : T extends TSchema
+    ? T['$static']
+    : never;
 
 /**
  * The {@link SchemaBuilder}'s definitions (re-usable,
@@ -112,6 +110,10 @@ export interface SchemaBuilderOptions<Defs extends DefRecords> {
    * {@link SchemaBuilder.addDefinitions} later.)
    */
   lib?: Defs | SchemaBuilder<Defs, any>;
+  /**
+   * Optionally specify validator options for ajv.
+   */
+  validatorOptions?: AjvOptions;
 }
 
 /**
@@ -134,12 +136,14 @@ export class SchemaBuilder<
    * AJV Validator cache
    */
   protected _validator?: SchemaValidator<Root>;
+  public validatorOptions: AjvOptions;
 
   constructor(options?: SchemaBuilderOptions<Defs>) {
     super();
     if (options?.lib) {
       this.addDefinitions(options.lib);
     }
+    this.validatorOptions = options?.validatorOptions || {};
   }
 
   /**
@@ -173,9 +177,9 @@ export class SchemaBuilder<
   public compileValidator(
     options?: AjvOptions,
   ): Root extends undefined ? never : SchemaValidator<Root> {
-    this._validator = createAjvInstance(options).compile(
-      this.WithDefs(),
-    ) as any;
+    this._validator = createAjvInstance(
+      options || this.validatorOptions,
+    ).compile(this.WithDefs()) as any;
     return this._validator as any;
   }
 
@@ -183,9 +187,9 @@ export class SchemaBuilder<
    * Test data against the root schema, returning
    * an array of errors or `undefined` if the data is valid.
    */
-  public hasErrors<T extends any>(
+  public hasErrors<T>(
     data: T,
-  ): T extends StaticRoot<Root> ? undefined : AjvErrorObject[] {
+  ): T extends Static<Root> ? undefined : AjvErrorObject[] {
     const isValid = this.isValid(data);
     return isValid ? undefined : (this.validate.errors as any);
   }
@@ -194,9 +198,7 @@ export class SchemaBuilder<
    * Test data against the root schema, throwing an error
    * if the check fails. If the data is valid, it is returned.
    */
-  public assertIsValid<T extends any>(
-    data: T,
-  ): T extends StaticRoot<Root> ? T : never {
+  public assertIsValid<T>(data: T): T extends Static<Root> ? T : never {
     const errors = this.hasErrors(data);
     if (!errors) {
       return data as any;
@@ -209,7 +211,7 @@ export class SchemaBuilder<
    * Test data against the root schema, returning `true`
    * if it is valid, and `false` if it is not.
    */
-  public isValid(data: any): data is StaticRoot<Root> {
+  public isValid(data: any): data is Static<Root> {
     assert(this.root, 'No root schema defined');
     return this.validate(data);
   }
@@ -419,21 +421,21 @@ export class SchemaBuilder<
    * Load data from file, ensuring that it is valid according
    * to the root schema.
    */
-  public async readData(path: string): Promise<StaticRoot<Root>> {
+  public async readData(path: string): Promise<Static<Root>> {
     return this.assertIsValid(await this._readDataFile(false, path));
   }
 
   /**
    * Synchronous version of {@link readData}.
    */
-  public readDataSync(path: string): StaticRoot<Root> {
+  public readDataSync(path: string): Static<Root> {
     return this.assertIsValid(this._readDataFile(true, path));
   }
 
   private _readDataFile<Sync extends boolean>(
     sync: Sync,
     path: string,
-  ): Sync extends true ? StaticRoot<Root> : Promise<StaticRoot<Root>> {
+  ): Sync extends true ? Static<Root> : Promise<Static<Root>> {
     assert(
       this.root,
       'Cannot read data file with validation unless root schema is defined.',

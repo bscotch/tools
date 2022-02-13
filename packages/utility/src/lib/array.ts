@@ -1,4 +1,4 @@
-import type { EmptyArray, ArrayWrapped } from '../types/utility';
+import type { ArrayWrapped, EmptyArray } from '../types/utility';
 
 /**
  * If the provided value is not an array,
@@ -72,7 +72,7 @@ type FirstItemArray<Item> =
 /**
  * If not an array, return self. Otherwise return 0th item.
  */
-export function arrayUnwrapped<Item extends any>(
+export function arrayUnwrapped<Item>(
   items: FirstItemArray<Item> | Item,
 ): Item extends EmptyArray ? undefined : Item {
   if (items instanceof Array) {

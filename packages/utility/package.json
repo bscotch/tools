@@ -1,11 +1,16 @@
 {
   "author": "Adam Coster (https://www.bscotch.net/about)",
   "description": "Bscotch Utilities: Methods for common Node.js needs.",
+  "devDependencies": {
+    "fs-extra": "^10.0.0"
+  },
   "engines": {
     "node": ">=14.0.0"
   },
   "files": [
-    "app"
+    "app/lib",
+    "app/types",
+    "app/index.*"
   ],
   "homepage": "https://github.com/bscotch/tools/tree/develop/packages/utility#README.md",
   "keywords": [
@@ -28,6 +33,9 @@
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/bscotch/tools.git"
+  },
+  "scripts": {
+    "test": "mocha --inspect --node-option=enable-source-maps=true --bail app/test"
   },
   "version": "3.0.0"
 }

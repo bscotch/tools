@@ -1,9 +1,11 @@
 {
-  "include": ["src/**/*.ts"],
+  "include": [],
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "app",
-    "baseUrl": "./src"
-  }
+    "baseUrl": "./src",
+    "module": "CommonJS"
+  },
+  "references": [{ "path": "src" }, { "path": "src/test" }]
 }

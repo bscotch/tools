@@ -3,10 +3,10 @@ import {
   asObjectIfArray,
   flattenObjectPaths,
   getValueAtPath,
-  transformValueByPath,
   objectPathsFromWildcardPath,
   setValueAtPath,
-} from '@bscotch/utility/app/lib/objects';
+  transformValueByPath,
+} from '../lib/objects';
 
 describe('Objects', function () {
   const createTestObject = () => {

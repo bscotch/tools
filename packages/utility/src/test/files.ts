@@ -1,5 +1,5 @@
-import fs from 'fs-extra';
 import { expect } from 'chai';
+import fs from 'fs-extra';
 import path from 'path';
 import {
   listFilesByExtensionSync,
@@ -7,11 +7,11 @@ import {
   listFoldersSync,
   listPathsSync,
   removeEmptyDirsSync,
-} from '@bscotch/utility/app/lib/files';
+} from '../lib/files';
 import { resetSandbox, sandboxRoot } from './utility';
 
 describe('Files', function () {
-  const samplePathsRoot = path.join('src', 'sample-paths');
+  const samplePathsRoot = path.join('sample-paths');
 
   function fullSamplePaths(relativeSamplePaths: string[]) {
     return relativeSamplePaths.map((p) => path.join(samplePathsRoot, p));

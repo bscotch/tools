@@ -2,11 +2,11 @@ import { expect } from 'chai';
 import {
   arrayIsDecreasing,
   arrayIsIncreasing,
-  arrayWrapped,
-  arrayUnwrapped,
   arraySortNumeric,
   arraySortNumericDescending,
-} from '@bscotch/utility/app/lib/array';
+  arrayUnwrapped,
+  arrayWrapped,
+} from '../lib/array';
 
 describe('Arrays', () => {
   it('can tell if array values are increasing', () => {

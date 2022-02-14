@@ -24,5 +24,6 @@
     "type": "git",
     "url": "git+https://github.com/bscotch/tools.git"
   },
+  "type": "module",
   "version": "0.0.1-dev.0"
 }

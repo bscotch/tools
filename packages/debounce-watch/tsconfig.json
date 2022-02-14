@@ -4,6 +4,7 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "app",
-    "baseUrl": "./src"
+    "baseUrl": "./src",
+    "module": "CommonJS"
   }
 }

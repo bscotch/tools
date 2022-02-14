@@ -1,8 +1,18 @@
 {
-  "name": "@bscotch/schema-lib",
-  "version": "0.0.1-dev.0",
-  "private": true,
+  "bugs": {
+    "url": "https://github.com/bscotch/tools/issues"
+  },
+  "dependencies": {
+    "@bscotch/schema-builder": "^0.1.0-dev.0",
+    "json-schema-to-typescript": "^10.1.5",
+    "node-fetch": "^3.2.0",
+    "typescript-json-schema": "^0.53.0"
+  },
   "description": "Library of @bscotch/schema-builder schemas for modularity.",
+  "files": [
+    "app"
+  ],
+  "homepage": "https://github.com/bscotch/tools/tree/main/packages/schema-lib#readme",
   "keywords": [
     "schema-builder",
     "json-schema",
@@ -13,23 +23,20 @@
     "schema",
     "types"
   ],
-  "homepage": "https://github.com/bscotch/tools/tree/main/packages/schema-lib#readme",
   "license": "MIT",
   "main": "app/index.js",
-  "files": [
-    "app"
-  ],
+  "name": "@bscotch/schema-lib",
+  "peerDependencies": {
+    "@bscotch/utility": "^3"
+  },
+  "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bscotch/tools.git"
   },
-  "bugs": {
-    "url": "https://github.com/bscotch/tools/issues"
+  "scripts": {
+    "build": "node app/compile.js"
   },
-  "dependencies": {
-    "@bscotch/schema-builder": "^0.1.0-dev.0"
-  },
-  "peerDependencies": {
-    "@bscotch/utility": "^3"
-  }
+  "type": "module",
+  "version": "0.0.1-dev.0"
 }

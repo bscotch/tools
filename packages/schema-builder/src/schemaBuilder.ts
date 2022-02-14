@@ -5,22 +5,24 @@
 
 import { assert, Defined } from '@bscotch/utility';
 import {
-  CustomOptions,
-  RefKind,
-  TRef,
-  TSchema,
-  TValue,
-  TypeBuilder,
-  UnionKind,
-} from '@sinclair/typebox';
-import {
   ErrorObject as AjvErrorObject,
   Options as AjvOptions,
   ValidateFunction,
 } from 'ajv/dist/2019';
 import fs, { promises as fsPromises } from 'fs';
+import {
+  CustomOptions,
+  RefKind,
+  SchemaDefs,
+  TLiteralUnion,
+  TRef,
+  TSchema,
+  TValue,
+  TypeBuilder,
+  UnionKind,
+} from './typebox';
 import { createAjvInstance } from './validation.js';
-export * from '@sinclair/typebox';
+export * from './typebox';
 
 /**
  * The {@link SchemaBuilder}'s root schema (what defines the
@@ -72,34 +74,7 @@ export type StaticDefs<T extends SchemaBuilder<any, any>> =
 export type SchemaValidator<Root extends TSchema | undefined> =
   Root extends undefined ? undefined : ValidateFunction<Static<Defined<Root>>>;
 
-export type DefRecords = Record<string, TSchema>;
-
-/**
- * Additional type for `enum` schemas, created by
- * providing an array of literals.
- *
- * *Extension to TypeBox*
- */
-type StaticLiteralUnion<T extends readonly TValue[]> = {
-  [K in keyof T]: T[K] extends TValue ? T[K] : never;
-}[number];
-
-/**
- *
- * Additional type for `enum` schemas, created by
- * providing an array of literals.
- *
- * *Extension to TypeBox*
- */
-export interface TLiteralUnion<T extends TValue[]>
-  extends TSchema,
-    CustomOptions {
-  $static: StaticLiteralUnion<T>;
-  kind: typeof UnionKind;
-  enum: T;
-}
-
-export interface SchemaBuilderOptions<Defs extends DefRecords> {
+export interface SchemaBuilderOptions<Defs extends SchemaDefs> {
   /**
    * Optionally initialize the SchemaBuilder using
    * an already-existing collection of schemas,
@@ -126,7 +101,7 @@ export interface SchemaBuilderOptions<Defs extends DefRecords> {
  * (Powered by TypeBox)
  */
 export class SchemaBuilder<
-  Defs extends DefRecords = {},
+  Defs extends SchemaDefs = {},
   Root extends TRef<Defs[keyof Defs]> | undefined = undefined,
 > extends TypeBuilder {
   readonly $defs: Defs = {} as Defs;
@@ -310,7 +285,7 @@ export class SchemaBuilder<
    * Add a new schema to the stored definitions, for use
    * in local references for a final schema.
    */
-  public addDefinitions<NewDefs extends DefRecords>(
+  public addDefinitions<NewDefs extends SchemaDefs>(
     newDefs:
       | NewDefs
       | ((this: SchemaBuilder<Defs, Root>) => NewDefs)

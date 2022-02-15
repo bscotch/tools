@@ -111,7 +111,7 @@ Typescript tries to solve many of the same problems that JSON Schema does, at le
 
 - [TypeBox](https://github.com/sinclairzx81/typebox): Create a Schema and corresponding Typescript types *at the same time*. This reduces duplicate effort, and is the basis for `SchemaBuilder`.
 - [typescript-json-schema](https://www.npmjs.com/package/typescript-json-schema): Create a Schema from Typescript types.
-- [https://www.npmjs.com/package/json-schema-to-typescript](https://www.npmjs.com/package/json-schema-to-typescript): Exactly the opposite! Create a Typescript interface from a JSON Schema.
+- [json-schema-to-typescript](https://www.npmjs.com/package/json-schema-to-typescript): Exactly the opposite! Create a Typescript interface from a JSON Schema.
 
 
 ### Validators

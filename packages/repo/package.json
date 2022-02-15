@@ -1,4 +1,6 @@
 {
+  "name": "@bscotch/repo",
+  "version": "0.0.1-dev.0",
   "dependencies": {
     "@bscotch/schema-builder": "^0.1.0-dev.0",
     "@bscotch/schema-lib": "^0.0.1-dev.0",
@@ -18,12 +20,10 @@
   ],
   "license": "MIT",
   "main": "app/index.js",
-  "name": "@bscotch/repo",
   "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bscotch/tools.git"
   },
-  "type": "module",
-  "version": "0.0.1-dev.0"
+  "type": "module"
 }

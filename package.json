@@ -9,12 +9,9 @@
     "clean:build": "rimraf packages/*/app/**/* **/tsconfig.tsbuildinfo",
     "clean:deps": "rimraf **/node_modules",
     "clean:all": "npm run clean:build && npm run clean:deps",
-    "build": "npx tsc -b",
+    "build": "npx tsc -b && lerna run build",
     "watch": "npx tsc -b -w",
     "test": "npm run build && lerna run test",
-    "i:utility": "npx lerna add --scope=@bscotch/utility",
-    "i:schema-builder": "npx lerna add --scope=@bscotch/schema-builder",
-    "i:test": "npx lerna add --scope=@local/test",
     "preversion": "npm run _require-ci",
     "_require-ci": "[ \"${GITHUB_ACTIONS}\" = \"true\" ] || exit 1"
   },

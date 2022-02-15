@@ -6,6 +6,7 @@
     "@bscotch/schema-builder": "^0.1.0-dev.0",
     "json-schema-to-typescript": "^10.1.5",
     "node-fetch": "^3.2.0",
+    "prettier": "^2.5.1",
     "typescript-json-schema": "^0.53.0"
   },
   "description": "Library of @bscotch/schema-builder schemas for modularity.",
@@ -35,7 +36,7 @@
     "url": "git+https://github.com/bscotch/tools.git"
   },
   "scripts": {
-    "build": "node app/compile.js"
+    "build": "node app/compile.js && prettier -w src/artifacts/"
   },
   "type": "module",
   "version": "0.0.1-dev.0"

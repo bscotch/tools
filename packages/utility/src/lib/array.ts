@@ -172,14 +172,36 @@ export function isEmptyArray(value: any): value is EmptyArray {
   return Array.isArray(value) && value.length === 0;
 }
 
-export const array = {
-  arrayEveryPair,
-  arrayIsIncreasing,
-  arrayIsDecreasing,
-  arraySortNumeric,
-  arraySortNumericDescending,
-  arrayWrapped,
-  arrayUnwrapped,
-  isArray,
-  isEmptyArray,
-};
+/**
+ * Find an object in an array by one of its fields.
+ *
+ * For the value, use {@link findByField}
+ */
+export function findIndexByField<T>(
+  arr: T[],
+  field: keyof T,
+  value: T[keyof T],
+): number {
+  return arr.findIndex((item) => item[field] === value);
+}
+
+/**
+ * Find an object in an array by one of its fields.
+ *
+ * For the index position, use {@link findIndexByField}
+ */
+export function findByField<T>(arr: T[], field: keyof T, value: T[keyof T]): T {
+  return arr[findIndexByField(arr, field, value)];
+}
+
+/**
+ * Find an object in an array, and its index position, by one of its fields.
+ */
+export function findEntryAndIndexByField<T>(
+  arr: T[],
+  field: keyof T,
+  value: T[keyof T],
+): [entry: T, index: number] {
+  const idx = arr.findIndex((item) => item[field] === value);
+  return [arr[idx], idx];
+}

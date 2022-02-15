@@ -6,6 +6,9 @@ import {
   arraySortNumericDescending,
   arrayUnwrapped,
   arrayWrapped,
+  findByField,
+  findEntryAndIndexByField,
+  findIndexByField,
 } from '../lib/array';
 
 describe('Arrays', () => {
@@ -33,5 +36,35 @@ describe('Arrays', () => {
   it('can numerically sort arrays', function () {
     expect(arraySortNumeric([-100, 9.99, 9])).to.eql([-100, 9, 9.99]);
     expect(arraySortNumericDescending([-100, 9.99, 9])).to.eql([9.99, 9, -100]);
+  });
+  it('can find objects in an array by field', function () {
+    const arr = [
+      { id: 1, name: 'one' },
+      { id: 2, name: 'two' },
+      { id: 3, name: 'three' },
+    ];
+    expect(findByField(arr, 'id', 2)).to.eql({ id: 2, name: 'two' });
+    expect(findByField(arr, 'name', 'two')).to.eql({ id: 2, name: 'two' });
+    expect(findByField(arr, 'id', 4)).to.be.undefined;
+    expect(findByField(arr, 'name', 'four')).to.be.undefined;
+
+    expect(findIndexByField(arr, 'id', 2)).to.eql(1);
+    expect(findIndexByField(arr, 'name', 'two')).to.eql(1);
+    expect(findIndexByField(arr, 'id', 4)).to.equal(-1);
+    expect(findIndexByField(arr, 'name', 'four')).to.equal(-1);
+
+    expect(findEntryAndIndexByField(arr, 'id', 2)).to.eql([
+      { id: 2, name: 'two' },
+      1,
+    ]);
+    expect(findEntryAndIndexByField(arr, 'name', 'two')).to.eql([
+      { id: 2, name: 'two' },
+      1,
+    ]);
+    expect(findEntryAndIndexByField(arr, 'id', 4)).to.eql([undefined, -1]);
+    expect(findEntryAndIndexByField(arr, 'name', 'four')).to.eql([
+      undefined,
+      -1,
+    ]);
   });
 });

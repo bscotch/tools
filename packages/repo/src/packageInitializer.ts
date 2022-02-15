@@ -2,7 +2,7 @@ import { SchemaBuilder, Static } from '@bscotch/schema-builder';
 import fs from 'fs';
 import path from 'path';
 import simpleGit, { SimpleGit } from 'simple-git';
-import { PackageDotJson, PackageDotJsonContent } from './PackageDotJson.js';
+import { PackageDotJson, PackageDotJsonContent } from './packageDotJson.js';
 
 const packageNameRegex =
   /^(?<scope>@[a-z0-9-_.]{1,64}\/)?(?<name>[a-z0-9-_.]{1,64})$/;

@@ -118,8 +118,6 @@ export function objectPathsFromWildcardPath(path: string, object: any) {
   return [...new Set(matches)] as string[]; // ensure unique
 }
 
-type Transformer = (value: any) => any;
-
 /**
  * Apply a function to a value inside an object,
  * using a path string for complex data structures.
@@ -133,7 +131,7 @@ type Transformer = (value: any) => any;
 export function transformValueByPath(
   object: { [key: string]: any } | any[],
   path: string,
-  transformer: Transformer,
+  transformer: (value: any) => any,
 ) {
   if (!isPlainObjectOrArray(object)) {
     return object;

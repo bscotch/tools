@@ -1,5 +1,6 @@
-export { Spread } from './utility/spread';
+export type { Spread } from './utility/spread';
 export type EmptyArray = never[];
+export type NonEmptyArray<T = any> = [T, ...T[]];
 export type EmptyObject = Record<string, never>;
 export type HttpMethod =
   | 'GET'

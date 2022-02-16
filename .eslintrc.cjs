@@ -25,6 +25,7 @@ module.exports = {
     'prettier.config.js',
   ],
   rules: {
+    '@typescript-eslint/consistent-type-assertions': 'off',
     '@typescript-eslint/ban-ts-comment': 'warn',
     '@typescript-eslint/type-annotation-spacing': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
@@ -38,7 +39,6 @@ module.exports = {
     '@typescript-eslint/adjacent-overload-signatures': 'error',
     '@typescript-eslint/no-empty-interface': 'warn',
     camelcase: 'off',
-    '@typescript-eslint/consistent-type-assertions': 'error',
     'no-array-constructor': 'off',
     '@typescript-eslint/no-array-constructor': 'error',
     'no-empty': 'off',

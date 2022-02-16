@@ -37,5 +37,5 @@
   "scripts": {
     "test": "mocha --inspect --node-option=enable-source-maps=true --bail app/test"
   },
-  "version": "3.0.0"
+  "version": "3.1.0"
 }

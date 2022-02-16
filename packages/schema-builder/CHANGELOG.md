@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-dev.1](https://github.com/bscotch/tools/compare/@bscotch/schema-builder@0.1.0-dev.0...@bscotch/schema-builder@0.1.0-dev.1) (2022-02-16)
+
+
+### Bug Fixes
+
+* Move TypeBox override types into src so that they are available when SchemaBuilder is used as an external module. ([e15d92f](https://github.com/bscotch/tools/commit/e15d92fc6cc61e8fb4989cb994123305626bb47b))
+
+
+### Features
+
+* Change from commonjs to ESM. ([2a88d2e](https://github.com/bscotch/tools/commit/2a88d2e22c14b946bc7df5d661e03af525719b51))
+* Replace the TypeBox 'Static' type with one that understands SchemaBuilder instances, and remove now-redundant StaticRoot type. ([aa107c7](https://github.com/bscotch/tools/commit/aa107c7a5c7a567a114df7a8010961f701ff4fcf))
+* Update all dependencies. ([7ab0646](https://github.com/bscotch/tools/commit/7ab0646cfd7ddc2d975fcf23835d3ff3dfb1259a))
+
+
+
+
+
 # 0.1.0-dev.0 (2022-02-12)
 
 

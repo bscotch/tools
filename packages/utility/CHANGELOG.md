@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.1.0](https://github.com/bscotch/tools/compare/@bscotch/utility@3.0.0...@bscotch/utility@3.1.0) (2022-02-16)
+
+
+### Features
+
+* Add 'keyOf' function for getting an object keys with full type ([b070d69](https://github.com/bscotch/tools/commit/b070d69c8c9dc186cc77e3cf9a626d6279146dd0))
+* Add 'TupleOf' utility type. ([599746e](https://github.com/bscotch/tools/commit/599746e3c4a9a886a87f939fabb01294e0b961ec))
+
+
+
+
+
 # 3.0.0 (2022-02-12)
 
 

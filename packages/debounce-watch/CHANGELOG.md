@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/bscotch/tools/compare/@bscotch/debounce-watch@0.4.0...@bscotch/debounce-watch@0.5.0) (2022-02-16)
+
+
+### Bug Fixes
+
+* The package.json 'main' field points to the wrong file. ([e0abc7f](https://github.com/bscotch/tools/commit/e0abc7fc8fe67e59355123ee524ecbd338c79116))
+
+
+### Features
+
+* Change from commonjs to ESM. ([2a88d2e](https://github.com/bscotch/tools/commit/2a88d2e22c14b946bc7df5d661e03af525719b51))
+* Update all dependencies. ([7ab0646](https://github.com/bscotch/tools/commit/7ab0646cfd7ddc2d975fcf23835d3ff3dfb1259a))
+
+
+
+
+
 # 0.4.0 (2022-02-12)
 
 

@@ -1,18 +1,4 @@
-import { assert } from './errors';
-
-export function isValidDate(date: any): date is Date {
-  return date instanceof Date && !isNaN(date.getTime());
-}
-
-/** @alias isValidDate */
-export const dateIsValid = isValidDate;
-
-export function assertValidDate(date: any): asserts date is Date {
-  assert(isValidDate(date), `${date} is not a date`);
-}
-
-/** @alias assertValidDate */
-export const dateAssertIsValid = assertValidDate;
+import { assertValidDate } from './errors';
 
 /** Positive if date2 is in the past. */
 export function dateDifferenceMillis(date1: Date, date2: Date) {
@@ -98,28 +84,3 @@ export function chronologySortReverse(date1: Date, date2: Date) {
 
 /** @alias chronologySortReverse */
 export const dateSortDescending = chronologySortReverse;
-
-export const dates = {
-  dateSort,
-  dateSortDescending,
-  dateDifferenceMillis,
-  dateDifferenceSeconds,
-  dateDifferenceMinutes,
-  dateDifferenceHours,
-  dateDifferenceDays,
-  dateIsGreaterThan,
-  dateIsInTheFuture,
-  dateIsInThePast,
-  dateIsLessThan,
-  dateIsOlderThanMillisAgo,
-  dateIsOlderThanSecondsAgo,
-  dateIsOlderThanMinutesAgo,
-  dateIsOlderThanHoursAgo,
-  dateIsOlderThanDaysAgo,
-  dateIsValid,
-  dateAssertIsValid,
-  isValidDate,
-  assertValidDate,
-  chronologySort,
-  chronologySortReverse,
-};

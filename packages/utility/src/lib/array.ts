@@ -164,14 +164,6 @@ export function arraySortNumericDescending<N extends number | number[]>(
   return sortResult(numbersOrArrayItem1, array2Item, true);
 }
 
-export function isArray(value: any): value is any[] {
-  return Array.isArray(value);
-}
-
-export function isEmptyArray(value: any): value is EmptyArray {
-  return Array.isArray(value) && value.length === 0;
-}
-
 /**
  * Find an object in an array by one of its fields.
  *

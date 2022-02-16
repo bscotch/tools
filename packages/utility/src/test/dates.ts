@@ -1,7 +1,7 @@
 import { expect } from 'chai';
+import { assertValidDate, isValidDate } from 'lib/errors.js';
 import { arraySortNumeric, arraySortNumericDescending } from '../lib/array';
 import {
-  dateAssertIsValid,
   dateDifferenceDays,
   dateDifferenceHours,
   dateDifferenceMillis,
@@ -16,7 +16,6 @@ import {
   dateIsOlderThanMillisAgo,
   dateIsOlderThanMinutesAgo,
   dateIsOlderThanSecondsAgo,
-  dateIsValid,
   dateSort,
   dateSortDescending,
 } from '../lib/dates';
@@ -34,12 +33,12 @@ describe('Dates', function () {
     ];
     const validDates: Date[] = [new Date(), new Date(10000)];
     for (const invalid of invalidDates) {
-      expect(dateIsValid(invalid)).to.be.false;
-      expect(() => dateAssertIsValid(invalid)).to.throw();
+      expect(isValidDate(invalid)).to.be.false;
+      expect(() => assertValidDate(invalid)).to.throw();
     }
     for (const valid of validDates) {
-      expect(dateIsValid(valid)).to.be.true;
-      expect(() => dateAssertIsValid(valid)).to.not.throw();
+      expect(isValidDate(valid)).to.be.true;
+      expect(() => assertValidDate(valid)).to.not.throw();
     }
   });
   it('can sort dates', function () {

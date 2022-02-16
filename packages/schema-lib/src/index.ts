@@ -1,2 +1,2 @@
+export * from './artifacts/index.js';
 export * from './version.js';
-export * from './packageDotJson.js';

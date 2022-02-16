@@ -57,7 +57,7 @@ export function parentPaths(path: string) {
  */
 export function toPosixPath(pathString: string) {
   const parts = pathString
-    .replace(/^([a-z]):\\/i, (match, drive) => `/${drive.toLowerCase()}/`)
+    .replace(/^([a-z]):\\/i, (_match, drive) => `/${drive.toLowerCase()}/`)
     .split(/[/\\]+/g);
   const withPosixSeps = parts.join('/');
   // When converting a Windows absolute path, e.g. C:// must become /c/

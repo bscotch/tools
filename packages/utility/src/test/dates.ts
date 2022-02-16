@@ -1,28 +1,25 @@
 import { expect } from 'chai';
+import { arraySortNumeric, arraySortNumericDescending } from '../lib/array';
 import {
-  arraySortNumeric,
-  arraySortNumericDescending,
-} from '@bscotch/utility/app/lib/array';
-import {
-  dateSort,
-  dateSortDescending,
-  dateDifferenceMillis,
-  dateDifferenceSeconds,
-  dateDifferenceMinutes,
-  dateDifferenceHours,
+  dateAssertIsValid,
   dateDifferenceDays,
+  dateDifferenceHours,
+  dateDifferenceMillis,
+  dateDifferenceMinutes,
+  dateDifferenceSeconds,
   dateIsGreaterThan,
   dateIsInTheFuture,
   dateIsInThePast,
   dateIsLessThan,
-  dateIsOlderThanMillisAgo,
-  dateIsOlderThanSecondsAgo,
-  dateIsOlderThanMinutesAgo,
-  dateIsOlderThanHoursAgo,
   dateIsOlderThanDaysAgo,
+  dateIsOlderThanHoursAgo,
+  dateIsOlderThanMillisAgo,
+  dateIsOlderThanMinutesAgo,
+  dateIsOlderThanSecondsAgo,
   dateIsValid,
-  dateAssertIsValid,
-} from '@bscotch/utility/app/lib/dates';
+  dateSort,
+  dateSortDescending,
+} from '../lib/dates';
 
 describe('Dates', function () {
   it('can validate dates', function () {

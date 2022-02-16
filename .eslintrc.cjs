@@ -21,7 +21,7 @@ module.exports = {
     '**/package-lock.json',
     'src/tsconfig.json',
     'vetur.config.*',
-    '.eslintrc.js',
+    '.eslintrc*',
     'prettier.config.js',
   ],
   rules: {

@@ -1,12 +1,12 @@
 import { expect } from 'chai';
 import {
-  asObjectIfArray,
+  arrayToObject,
   flattenObjectPaths,
   getValueAtPath,
-  transformValueByPath,
   objectPathsFromWildcardPath,
   setValueAtPath,
-} from '@bscotch/utility/app/lib/objects';
+  transformValueByPath,
+} from '../lib/objects';
 
 describe('Objects', function () {
   const createTestObject = () => {
@@ -43,11 +43,11 @@ describe('Objects', function () {
   };
 
   it('can create a map from an array', function () {
-    expect(asObjectIfArray(['hello', 'world'])).to.eql({
+    expect(arrayToObject(['hello', 'world'])).to.eql({
       '0': 'hello',
       '1': 'world',
     });
-    expect(asObjectIfArray(['root', ['nested']])).to.eql({
+    expect(arrayToObject(['root', ['nested']])).to.eql({
       '0': 'root',
       '1': ['nested'],
     });

@@ -1,12 +1,6 @@
 import { expect } from 'chai';
-import {
-  waitForMillis,
-  waitForSeconds,
-} from '@bscotch/utility/app/lib/wait.js';
-import {
-  dateIsInThePast,
-  dateIsOlderThanMillisAgo,
-} from '@bscotch/utility/app/lib/dates.js';
+import { dateIsInThePast, dateIsOlderThanMillisAgo } from '../lib/dates.js';
+import { waitForMillis, waitForSeconds } from '../lib/wait.js';
 
 describe('Waits', function () {
   it('can wait', async function () {

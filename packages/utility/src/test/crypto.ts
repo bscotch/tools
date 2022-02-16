@@ -1,11 +1,5 @@
-import {
-  decrypt,
-  encrypt,
-  md5,
-  randomString,
-  sha256,
-} from '@bscotch/utility/app/lib/crypto';
 import { expect } from 'chai';
+import { decrypt, encrypt, md5, randomString, sha256 } from '../lib/crypto';
 
 describe('Crypto', function () {
   it('can create an md5 checksum', function () {

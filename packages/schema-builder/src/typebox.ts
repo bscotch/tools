@@ -1,4 +1,40 @@
+import { TKeyOf, TNumber, TRef, TString, TUnion } from '@sinclair/typebox';
+import { CustomOptions, TSchema, TValue, UnionKind } from './typebox';
 export * from '@sinclair/typebox';
+
+export type SchemaDefs = Record<string, TSchema>;
+
+export type TRecordKey =
+  | TString
+  | TNumber
+  | TKeyOf<any>
+  | TUnion<any>
+  | TRef<TString | TNumber | TKeyOf<any> | TUnion<any>>;
+
+/**
+ * Additional type for `enum` schemas, created by
+ * providing an array of literals.
+ *
+ * *Extension to TypeBox*
+ */
+export type StaticLiteralUnion<T extends readonly TValue[]> = {
+  [K in keyof T]: T[K] extends TValue ? T[K] : never;
+}[number];
+
+/**
+ *
+ * Additional type for `enum` schemas, created by
+ * providing an array of literals.
+ *
+ * *Extension to TypeBox*
+ */
+export interface TLiteralUnion<T extends TValue[]>
+  extends TSchema,
+    CustomOptions {
+  $static: StaticLiteralUnion<T>;
+  kind: typeof UnionKind;
+  enum: T;
+}
 
 declare module '@sinclair/typebox' {
   // Extend the default options for TypeBox for

@@ -15,7 +15,7 @@ Then build your schema:
 ```ts
 import {
   SchemaBuilder,
-  StaticRoot,
+  Static,
   StaticDefs
 } from '@bscotch/schema-builder';
 
@@ -55,7 +55,7 @@ const mySchema = new SchemaBuilder({ lib })
 
 // Get the root schema as a Typescript interface, which can
 // be used for static validation and intellisense.
-type MySchema = StaticRoot<typeof mySchema>;
+type MySchema = Static<typeof mySchema>;
 // {
 //     deepArray: (1|2|3)[];
 //     libRef: string[];
@@ -111,7 +111,7 @@ Typescript tries to solve many of the same problems that JSON Schema does, at le
 
 - [TypeBox](https://github.com/sinclairzx81/typebox): Create a Schema and corresponding Typescript types *at the same time*. This reduces duplicate effort, and is the basis for `SchemaBuilder`.
 - [typescript-json-schema](https://www.npmjs.com/package/typescript-json-schema): Create a Schema from Typescript types.
-- [https://www.npmjs.com/package/json-schema-to-typescript](https://www.npmjs.com/package/json-schema-to-typescript): Exactly the opposite! Create a Typescript interface from a JSON Schema.
+- [json-schema-to-typescript](https://www.npmjs.com/package/json-schema-to-typescript): Exactly the opposite! Create a Typescript interface from a JSON Schema.
 
 
 ### Validators

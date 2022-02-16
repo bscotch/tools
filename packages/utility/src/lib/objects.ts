@@ -20,7 +20,7 @@ export function isPlainObjectOrArray(
  * Convert an array into objects that use numeric
  * strings as indices. Non-array items are returned as-is.
  */
-export function asObjectIfArray(array: any[]) {
+export function arrayToObject(array: any[]) {
   if (!Array.isArray(array)) {
     return array;
   }
@@ -46,7 +46,7 @@ export function flattenObjectPaths(object: any) {
   const toReturn: { [key: string]: any } = {};
   for (const key of Object.keys(object)) {
     assert(!key.includes('.'), 'Keys must not have periods in them.');
-    object[key] = asObjectIfArray(object[key]);
+    object[key] = arrayToObject(object[key]);
     // Convert arrays to objects
     if (isPlainObject(object[key])) {
       const flatObject = flattenObjectPaths(object[key]);
@@ -146,13 +146,10 @@ export function transformValueByPath(
   return object;
 }
 
-export const objects = {
-  asObjectIfArray,
-  flattenObjectPaths,
-  getValueAtPath,
-  isPlainObject,
-  isPlainObjectOrArray,
-  objectPathsFromWildcardPath,
-  setValueAtPath,
-  transformValueByPath,
-};
+/**
+ * Get an object's keys. Simply uses `Object.keys`,
+ * but with type support.
+ */
+export function keysOf<T>(obj: T): (keyof T)[] {
+  return Object.keys(obj) as (keyof T)[];
+}

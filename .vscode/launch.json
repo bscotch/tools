@@ -12,7 +12,7 @@
       "preLaunchTask": "npm: build",
       "args": [
         "--require",
-        "source-map-support/register",
+        "--enable-source-maps",
         "--timeout",
         "999999",
         "--colors",

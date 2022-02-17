@@ -35,7 +35,7 @@
     "url": "git+ssh://git@github.com/bscotch/tools.git"
   },
   "scripts": {
-    "test": "mocha --inspect --node-option=enable-source-maps=true --bail app/test"
+    "test": "mocha --enable-source-maps --bail app/test"
   },
   "version": "3.1.0"
 }

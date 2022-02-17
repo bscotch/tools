@@ -10,3 +10,4 @@ tsconfig.tsbuildinfo
 app
 lerna-debug.log
 .npmrc
+.eslintcache

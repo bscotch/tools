@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0](https://github.com/bscotch/tools/compare/@bscotch/utility@3.1.0...@bscotch/utility@4.0.0) (2022-02-17)
+
+
+### Bug Fixes
+
+* An import has an invalid path, causing a runtime error. ([9e97f8e](https://github.com/bscotch/tools/commit/9e97f8ef02dc3a02073450fe89060127d03294f6))
+* Typeguard methods for arrays are defined and exported twice. ([9354883](https://github.com/bscotch/tools/commit/935488322a764b74fbf059e9a013606819123c56))
+
+
+### Features
+
+* Add a non-empty array utility type. ([fb03d79](https://github.com/bscotch/tools/commit/fb03d7936c7af85ddb051bdde49bc4013bf8da42))
+* Add type-guard functions for e.g. 'isBoolean', 'isNonEmptyArray', etc. ([7c20bd6](https://github.com/bscotch/tools/commit/7c20bd6433f9f31eece8d31939c0e5a5fe5e61d5))
+* Remove 'dates' object export from date-related methods. ([0af9406](https://github.com/bscotch/tools/commit/0af9406779876ee84ea2bc56d7fb06c90092a7d6))
+
+
+### BREAKING CHANGES
+
+* Exported 'dates' object no longer available. This
+object bundled together date-related functions, which mostly just adds
+confusing overhead.
+
+
+
+
+
 # [3.1.0](https://github.com/bscotch/tools/compare/@bscotch/utility@3.0.0...@bscotch/utility@3.1.0) (2022-02-16)
 
 

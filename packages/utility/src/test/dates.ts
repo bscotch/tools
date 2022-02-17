@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-import { assertValidDate, isValidDate } from 'lib/errors.js';
 import { arraySortNumeric, arraySortNumericDescending } from '../lib/array';
 import {
   dateDifferenceDays,
@@ -19,6 +18,7 @@ import {
   dateSort,
   dateSortDescending,
 } from '../lib/dates';
+import { assertValidDate, isValidDate } from '../lib/errors.js';
 
 describe('Dates', function () {
   it('can validate dates', function () {

@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import fs from 'fs-extra';
 import path from 'path';
 import {
+  findParentByFileSync,
   listFilesByExtensionSync,
   listFilesSync,
   listFoldersSync,
@@ -16,6 +17,11 @@ describe('Files', function () {
   function fullSamplePaths(relativeSamplePaths: string[]) {
     return relativeSamplePaths.map((p) => path.join(samplePathsRoot, p));
   }
+
+  it('can find package root', function () {
+    const root = findParentByFileSync('package.json', __dirname);
+    expect(path.basename(root)).to.equal('utility');
+  });
 
   it('can list all paths in a directory', function () {
     const recursive = false;

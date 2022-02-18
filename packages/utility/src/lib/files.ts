@@ -1,6 +1,7 @@
 import fs from 'fs';
-import { AnyFunction } from '../types/utility.js';
 import path from 'path';
+import { fileURLToPath } from 'url';
+import { AnyFunction } from '../types/utility.js';
 import { sortedPaths } from './paths';
 
 export interface ListPathOptions {
@@ -170,14 +171,53 @@ export function writeJsonFileSync(
   fs.writeFileSync(filePath, JSON.stringify(data, replacer, spaces));
 }
 
-export const files = {
-  listFilesByExtensionSync,
-  listFilesSync,
-  listFoldersSync,
-  listPathsSync,
-  removeEmptyDirsSync,
-  writeAsModule,
-  asModuleString,
-  readJsonFileSync,
-  writeJsonFileSync,
-};
+/**
+ * From within an ESM module, call with `import.meta` as the
+ * argument to obtain a clean filepath to the module.
+ */
+export function getModuleFilepath(meta: { url: string }) {
+  if (!meta?.url) {
+    throw new Error(`Provided object does not have a url property`);
+  }
+  return fileURLToPath(new URL(meta.url));
+}
+
+/**
+ * From within an ESM module, call with `import.meta` as the
+ * argument to obtain a clean filepath to the module.
+ *
+ * For the full filepath, use {@link getModuleFilepath}
+ */
+export function getModuleDir(meta: { url: string }) {
+  return path.dirname(getModuleFilepath(meta));
+}
+
+/**
+ * Work backwards, starting from `startDir` (inclusive),
+ * to find the first parent directory containing a given
+ * file (or directory) `findFile`.
+ *
+ * @example
+ * ```ts
+ * // Find the `package.json` file corresponding to the
+ * // package that contains the current commonjs module.
+ * findParentWithFile('package.json',__dirname);
+ * ```
+ */
+export function findParentByFileSync(
+  findFile: string,
+  startDir = process.cwd(),
+) {
+  let currentDir = startDir;
+  while (currentDir) {
+    const filePath = path.join(currentDir, findFile);
+    if (fs.existsSync(filePath)) {
+      return currentDir;
+    }
+    if (path.dirname(currentDir) === currentDir) {
+      break;
+    }
+    currentDir = path.dirname(currentDir);
+  }
+  throw new Error(`File ${findFile} not found in any parent of ${startDir}`);
+}

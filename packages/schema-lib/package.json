@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "@bscotch/schema-builder": "^0.1.0-dev.0",
+    "commander": "^9.0.0",
     "json-schema-to-typescript": "^10.1.5",
     "node-fetch": "^3.2.0",
     "prettier": "^2.5.1",
@@ -37,7 +38,11 @@
     "url": "git+https://github.com/bscotch/tools.git"
   },
   "scripts": {
-    "build": "node app/compile.js && prettier -w src/artifacts/"
+    "build": "node app/compile.js --update-remote-schemas",
+    "build-cdk": "node app/compile.js --update-cdk-schemas"
   },
-  "type": "module"
+  "type": "module",
+  "volta": {
+    "node": "16.14.0"
+  }
 }

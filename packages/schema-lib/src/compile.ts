@@ -2,27 +2,18 @@
  * @file Create types from schemas and schemas from types, given a
  * source of "truth".
  */
-import { capitalize, writeJsonFileSync } from '@bscotch/utility';
-import { mkdirSync, readdirSync, rmSync, writeFileSync } from 'fs';
-import { compile } from 'json-schema-to-typescript';
-import fetch from 'node-fetch';
+import { capitalize } from '@bscotch/utility';
+import { program } from 'commander';
+import { readdirSync, writeFileSync } from 'fs';
 import path from 'path';
+import { createCdkSchemasAndTypes } from './compile/cdkSchemas.js';
+import {
+  downloadAndTypeRemoteSchemas,
+  RemoteSchema,
+} from './compile/remoteSchemas.js';
+import { typesRoot } from './lib/utility.js';
 
-const dir = path.dirname(import.meta.url).replace(/^file:\/+/, '');
-const typesRoot = path.join(dir, '..', 'src', 'artifacts');
-const schemasRoot = path.join(dir, '../schemas');
-
-interface SchemaDownload {
-  /**
-   * The file basename (without the schema/typescript extension)
-   * corresponding to this schema.
-   */
-  basename: string;
-  url: string;
-  title: string;
-}
-
-const schemaDownload: SchemaDownload[] = [
+const schemasToDownload: RemoteSchema[] = [
   {
     basename: 'package',
     url: 'https://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/package.json',
@@ -35,37 +26,9 @@ const schemaDownload: SchemaDownload[] = [
   },
 ];
 
-function writeSchema(basename: string, schema: any) {
-  writeJsonFileSync(path.join(schemasRoot, `${basename}.json`), schema);
-}
-
-function writeTypes(basename: string, types: string) {
-  writeFileSync(path.join(typesRoot, `${basename}.ts`), types);
-}
-
-async function convertSchemaToTypes(schema: any, options: SchemaDownload) {
-  // Clone with new Titles to get better and safer type names.
-  schema.title = options.title;
-  const types = await compile(schema, options.title, {
-    bannerComment: `// @ts-nocheck\n/* Automatically generated from JSON Schema. Do not edit. */`,
-    cwd: typesRoot,
-    unreachableDefinitions: true,
-  });
-  writeTypes(options.basename, types);
-}
-
-/**
- * Download a JSON Schema and generate its typescript types.
- */
-async function downloadAndConvertSchemaToTypes(info: SchemaDownload) {
-  const schema = await fetch(info.url).then((r) => r.json());
-  writeSchema(info.basename, schema);
-  await convertSchemaToTypes(schema, info);
-}
-
-function createIndex() {
+function updateIndex() {
   const types = readdirSync(typesRoot)
-    .filter((f) => f.endsWith('.ts'))
+    .filter((f) => f.endsWith('.ts') && f != 'index.ts')
     .map((f) => f.replace(/\.ts$/, ''));
 
   const indexContents = [
@@ -75,18 +38,28 @@ function createIndex() {
   writeFileSync(path.join(typesRoot, 'index.ts'), indexContents.join('\n'));
 }
 
-function nukeFolder(folder: string) {
-  try {
-    rmSync(folder, { recursive: true });
-  } catch {}
-  mkdirSync(folder, { recursive: true });
+interface CompilerOptions {
+  updateRemoteSchemas?: boolean;
+  updateCdkSchemas?: boolean;
 }
 
-async function main() {
-  nukeFolder(typesRoot);
-  nukeFolder(schemasRoot);
-  await Promise.all(schemaDownload.map(downloadAndConvertSchemaToTypes));
-  createIndex();
+async function compile(options?: CompilerOptions) {
+  console.log(options);
+  if (options?.updateRemoteSchemas) {
+    await downloadAndTypeRemoteSchemas(schemasToDownload);
+  }
+  if (options?.updateCdkSchemas) {
+    await createCdkSchemasAndTypes();
+  }
+  updateIndex();
 }
 
-void main();
+program
+  .option('--update-remote-schemas', 'Download and type remote schemas')
+  .option(
+    '--update-cdk-schemas',
+    'Compile custom schemas and types for AWS CDK (requires local aws cli with proper credentials)',
+  );
+
+program.parse(process.argv);
+void compile(program.opts());

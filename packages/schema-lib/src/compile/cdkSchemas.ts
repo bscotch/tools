@@ -1,6 +1,20 @@
+/**
+ * @file The AWS CDK library is partially typed. This file
+ * contains functions to convert fetched information
+ * (via the AWS CLI) into types and schemas to make the
+ * AWS CDK library easier to use.
+ */
+
+// TODO
+// 1. Convert all of the merged data into proper SCHEMAS and, from there, TYPES.
+// 2. Somehow include a "recommended" list of options that should be set
+// 3. Move into a separate package for CDK extensions
+// 4. Separate this compiler into a different CLI command to allow for calling *without* also fetching sample data and to allow for specifying the target SolutionStack
+
 import { assert, writeJsonFileSync } from '@bscotch/utility';
 import { execSync } from 'child_process';
 import fetch from 'node-fetch';
+import { isDeepStrictEqual } from 'util';
 
 interface SolutionStackList {
   SolutionStacks: string[];
@@ -16,7 +30,13 @@ interface SolutionStackOption {
   ChangeSeverity: string;
   UserDefined: boolean;
   DefaultValue: string;
-  ValueType: string;
+  ValueType: // Replace 'List' with 'CommaSeparatedList' in data
+  | 'List'
+    | 'Scalar'
+    | 'Boolean'
+    | 'Json'
+    | 'CommaSeparatedList'
+    | 'KeyValueList';
   ValueOptions?: string[];
   MinValue?: number;
   MaxValue?: number;
@@ -57,16 +77,6 @@ type ElasticbeanstalkEnvOptionInfo = {
   'Valid values': string;
 };
 
-// TODO: Also get SAMPLE VALUES to compare to types
-//
-// TODO: Create some sort of output type
-// that will maximally help populating the CDK
-// options, e.g. a nested thing allowing for:
-//
-// namespaces "aws:elb:loadbalancer", "aws:elasticbeanstalk:xray",
-//
-// `populateOption("aws:elasticbeanstalk:xray", "XRayEnabled", "true", resourceName);`
-
 /**
  * Pulled from the AWS CDK types for reference. This is the data structure
  * that needs to be provided when setting Elasticbeanstalk options via the
@@ -105,52 +115,28 @@ interface OptionSettingProperty {
   value?: string;
 }
 
-/**
- * The data structure that needs to be provided when setting Elasticbeanstalk
- * options via the CDK.
- */
-interface OptionSetting {
-  /**
-   * A unique namespace that identifies the option's associated AWS resource.
-   *
-   * @external
-   * @link http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-beanstalk-option-settings.html#cfn-beanstalk-optionsettings-namespace
-   */
-  namespace: string;
-  /**
-   * The name of the configuration option.
-   *
-   * @external
-   * @link http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-beanstalk-option-settings.html#cfn-beanstalk-optionsettings-optionname
-   */
-  optionName: string;
-  /**
-   * A unique resource name for the option setting.
-   *
-   * Use it for a time–based scaling configuration option.
-   *
-   * @external
-   * @link http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-beanstalk-option-settings.html#cfn-elasticbeanstalk-environment-optionsetting-resourcename
-   */
-  resourceName?: string;
-  /**
-   * The current value for the configuration option.
-   *
-   * @external
-   * @link http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-beanstalk-option-settings.html#cfn-beanstalk-optionsettings-value
-   */
-  value?: string;
-}
-
-type NestedGroup<T> = {
-  [group: string]: T | NestedGroup<T>;
+type CompoundLookup<T> = {
+  [group: string]: T | CompoundLookup<T>;
 };
 
-function groupByFields<T extends Record<string, any>, By extends keyof T>(
-  arr: T[],
-  fieldNames: By[],
-): NestedGroup<T> {
-  const grouped = {} as NestedGroup<T>;
+/**
+ * Convert an array of objects into a single object,
+ * such that each initial object can be found under a nested
+ * (compound) key based on its values for a series of fields.
+ *
+ * @example
+ * const arr = [
+ *   {field1:'value1',field2:'value2'},
+ *   {field1:'value3',field2:'value4'},
+ *   {field1:'value1',field2:'value5'},
+ * ];
+ * arrayToIndexedObjects(arr, ['field1', 'field2']);
+ */
+function createCompoundLookup<
+  T extends Record<string, any>,
+  By extends keyof T,
+>(arr: T[], fieldNames: By[]): CompoundLookup<T> {
+  const grouped = {} as CompoundLookup<T>;
   for (const item of arr) {
     let subGroup = grouped;
     for (let i = 0; i < fieldNames.length; i++) {
@@ -170,7 +156,7 @@ function groupByFields<T extends Record<string, any>, By extends keyof T>(
       // Ensure that the next structure exists
       subGroup[value] ||= isLastField ? item : {};
       if (!isLastField) {
-        subGroup = subGroup[value] as NestedGroup<T>;
+        subGroup = subGroup[value] as CompoundLookup<T>;
       }
     }
   }
@@ -318,9 +304,12 @@ interface OptionSummary {
   type: string;
   description: string;
   rules: {
-    default: string;
+    default?: string;
+    /** If has same choice as someone else */
+    choicesRef?: { namespace: string; name: string };
     choices?: string[];
-    sample?: string;
+    // Whether or not the sample contains this option
+    sample?: boolean;
     min?: SolutionStackOption['MinValue'];
     max?: SolutionStackOption['MaxValue'];
     pattern?: string;
@@ -342,8 +331,9 @@ function summarizeOptions(
 ) {
   // Collect exhaustive list of field values to ensure
   // comprehensive type information.
-  const types: Set<string> = new Set();
   const choiceLists: string[][] = [];
+  const choiceListRefs: Map<string[], { namespace: string; name: string }[]> =
+    new Map();
   const namespaces = Object.keys(definitions);
 
   // The `definitions` are the source of truth, so we want to
@@ -358,47 +348,100 @@ function summarizeOptions(
     };
     for (const optionName of Object.keys(definitions[namespace])) {
       const definition = definitions[namespace][optionName];
+
+      const { type, choices } = cleanDefinition(definition);
+
+      // Many "sample" values are the same as the default, so
+      // only mention those that exist and are different.
+      const sample =
+        samples[namespace]?.[optionName]?.Value == definition.DefaultValue
+          ? undefined
+          : true;
+
+      const defaultValue =
+        definition.DefaultValue === '' ? undefined : definition.DefaultValue;
+
       const option: OptionSummary = {
-        name: definition.Name,
+        name: optionName,
         description: docs[namespace]?.[optionName]?.Description,
-        type: definition.ValueType,
+        type,
         rules: {
-          choices: definition.ValueOptions,
-          default: definition.DefaultValue,
-          sample:
-            samples[namespace]?.[optionName]?.Value == definition.DefaultValue
-              ? undefined
-              : samples[namespace]?.[optionName]?.Value,
+          choices,
+          default: defaultValue,
+          sample,
           min: definition.MinValue,
           max: definition.MaxValue,
           pattern: definition.Regex,
           maxlength: definition.MaxLength,
         },
       };
+      if (option.rules.choices) {
+        const hasMatch = choiceLists.find((choiceList) =>
+          isDeepStrictEqual(option.rules.choices, choiceList),
+        );
+        if (!hasMatch) {
+          choiceLists.push(option.rules.choices);
+          choiceListRefs.set(option.rules.choices, []);
+        }
+        choiceListRefs
+          .get(hasMatch || option.rules.choices)!
+          .push({ namespace, name: optionName });
+      }
       summary.options.push(option);
     }
     summaries.push(summary);
   }
+  const repeatedChoiceLists: {
+    choices: string[];
+    refs: { namespace: string; name: string }[];
+  }[] = [];
+  for (const [choiceList, refs] of choiceListRefs.entries()) {
+    if (refs.length > 1) {
+      repeatedChoiceLists.push({
+        choices: choiceList,
+        refs,
+      });
+    }
+  }
+
+  writeJsonFileSync('tmp.json', repeatedChoiceLists);
+
   return summaries;
+}
+
+function cleanDefinition(definition: SolutionStackOption) {
+  // There are some "Scalar" types whos values are listed
+  // as "true" or "false", thus making them BOOLEANS
+  let type = definition.ValueType;
+  if (isDeepStrictEqual(definition.ValueOptions, ['true', 'false'])) {
+    type = 'Boolean';
+  } else if (type == 'List') {
+    // This seems to be the same thing as a "CommaSeparatedList",
+    // but the latter is more common, so presumably "List" is legacy.
+    type = 'CommaSeparatedList';
+  }
+
+  const choices = type != 'Boolean' ? definition.ValueOptions : undefined;
+  return { type, choices };
 }
 
 export async function createCdkSchemasAndTypes() {
   const stackName = getLatestDockerSolutionStack();
-  const optionDefinitions = groupByFields(
+  const optionDefinitions = createCompoundLookup(
     getSolutionStackConfigOptions(stackName),
     ['Namespace', 'Name'],
   ) as OptionDefinitions;
 
   const _docs = await parseOptionDocs();
-  const namespaceDescriptions = groupByFields(_docs.namespaces, [
+  const namespaceDescriptions = createCompoundLookup(_docs.namespaces, [
     'namespace',
   ]) as NamespaceDescriptions;
-  const optionDocs = groupByFields(_docs.options, [
+  const optionDocs = createCompoundLookup(_docs.options, [
     'Namespace',
     'Name',
   ]) as OptionDocs;
 
-  const optionSamples = groupByFields(
+  const optionSamples = createCompoundLookup(
     getSampleConfigValues('rumpus', 'rumpus-www'),
     ['Namespace', 'OptionName'],
   ) as OptionSamples;
